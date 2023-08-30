@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/30 12:46:33 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/30 15:36:01 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,13 @@
 
 # define SUCCESS 0
 
+enum e_state
+{
+	STATE_GENERAL,
+	STATE_IN_QUOTE,
+	STATE_IN_DOUBLE_QUOTE
+};
+
 enum e_type
 {
 	TYPE_GENERAL,
@@ -29,15 +36,17 @@ enum e_type
 	TYPE_LEFT_PARENTHESIS,
 	TYPE_RIGHT_PARENTHESIS,
 	TYPE_REDIR,
-	TYPE_SPACE,
-	TYPE_TAB,
-	TYPE_NEWLINE
+	TYPE_NEWLINE,
+	TYPE_QUOTE,
+	TYPE_DOUBLE_QUOTE
 };
 
 typedef struct s_token
 {
-	char		*word;
-	enum e_type	type;
+	char			*word;
+	size_t			len;
+	enum e_type		type;
+	enum e_state	state;
 }	t_token;
 
 typedef struct s_token_list
@@ -46,7 +55,8 @@ typedef struct s_token_list
 	t_token			token;
 }	t_token_list;
 
-int		display_prompt(void);
-void	launch_executable(const char *exe_path);
+int				display_prompt(void);
+void			launch_executable(const char *exe_path);
+t_token_list	*tokenize(const char *str);
 
 #endif
