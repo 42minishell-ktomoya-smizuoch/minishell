@@ -53,7 +53,9 @@ SRCS = ./ft_isalpha.c \
 	./ft_lstclear.c \
 	./ft_lstiter.c \
 	./ft_lstmap.c \
-	./ft_printf.c
+	./ft_printf.c \
+	./ft_xmalloc.c \
+	./ft_xcalloc.c \
 
 OBJS = ${SRCS:.c=.o}
 
