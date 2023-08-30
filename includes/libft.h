@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 11:25:31 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/16 17:58:27 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/30 15:56:22 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <float.h>
 # include <stdarg.h>
 # include <inttypes.h>
+# include <stdbool.h>
 
 # define SUCCESS 0
 # define FAILURE 1
