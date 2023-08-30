@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/30 11:37:58 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/30 12:46:33 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 # define SUCCESS 0
 
-typedef enum
+enum e_type
 {
 	TYPE_GENERAL,
 	TYPE_PIPE,
@@ -32,19 +32,19 @@ typedef enum
 	TYPE_SPACE,
 	TYPE_TAB,
 	TYPE_NEWLINE
-}	e_type;
+};
 
 typedef struct s_token
 {
 	char		*word;
-	e_type		type;
+	enum e_type	type;
 }	t_token;
 
-typedef struct s_list
+typedef struct s_token_list
 {
 	struct s_list	*next;
 	t_token			token;
-}	t_list;
+}	t_token_list;
 
 int		display_prompt(void);
 void	launch_executable(const char *exe_path);
