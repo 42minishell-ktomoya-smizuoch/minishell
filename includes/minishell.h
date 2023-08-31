@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 13:03:36 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/08/31 14:49:53 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef struct s_token
 typedef struct s_token_list
 {
 	struct s_token_list	*next;
-	t_token				token;
+	t_token				*token;
 }	t_token_list;
 
 int				display_prompt(void);
