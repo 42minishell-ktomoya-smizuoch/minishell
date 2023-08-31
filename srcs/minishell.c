@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 15:52:48 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 17:16:33 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int main()
 
     while (current != NULL)
     {
-        printf("Token: %s, Type: %d\n", current->word, current->type);
+        printf("Token: %s, Type: %d, State: %d\n", current->word, current->type, current->state);
         current = current->next;
     }
 
