@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:17:52 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 18:13:46 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 18:29:07 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,32 +35,6 @@ void	set_errno_and_exit(const char *err_msg, int errno_num)
 	ft_putstr_fd(err_msg, STDERR_FILENO);
 	exit(FAILURE);
 }
-
-// enum e_state	get_token_state(const char *str)
-// {
-// 	enum e_state	state;
-
-// 	if (*str == '\'')
-// 		state = STATE_IN_QUOTE;
-// 	else if (*str == '\"')
-// 		state = STATE_IN_DOUBLE_QUOTE;
-// 	else
-// 		state = STATE_GENERAL;
-// 	return (state);
-// }
-
-// enum e_state	update_token_state(const char *str, enum e_state state)
-// {
-// 	enum e_state	new_state;
-
-// 	if (*str == '\'')
-// 		new_state = STATE_IN_QUOTE;
-// 	else if (*str == '\"')
-// 		new_state = STATE_IN_DOUBLE_QUOTE;
-// 	else
-// 		new_state = STATE_GENERAL;
-// 	return (new_state);
-// }
 
 enum e_state	update_token_state(const char *str, enum e_state prev_state)
 {
