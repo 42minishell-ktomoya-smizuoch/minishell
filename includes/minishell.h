@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 16:17:07 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 17:31:49 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,6 @@ void			set_errno_and_exit(const char *err_msg, int errno_num);
 t_token			*create_token(const char *str);
 void			lstadd_back_token(t_token **lst, t_token *new);
 enum e_type		get_token_type(const char *str);
-char			*get_word(const char *str);
+char			*get_token_word(const char *str);
 
 #endif
