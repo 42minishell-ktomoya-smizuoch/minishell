@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 15:51:22 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 16:17:07 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,5 @@ t_token			*create_token(const char *str);
 void			lstadd_back_token(t_token **lst, t_token *new);
 enum e_type		get_token_type(const char *str);
 char			*get_word(const char *str);
-
-
 
 #endif
