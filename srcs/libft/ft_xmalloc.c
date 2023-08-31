@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_xmalloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:05:14 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/08/30 17:14:04 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/08/31 12:51:44 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	*ft_xmalloc(size_t size)
 {
 	void	*memory;
 
+	memory = NULL;
 	if (!(memory == malloc(size)))
 	{
 		ft_putendl_fd("malloc error", 2);
