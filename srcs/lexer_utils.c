@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:17:52 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 18:29:07 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 18:39:59 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ enum e_state	update_token_state(const char *str, enum e_state prev_state)
 	return (new_state);
 }
 
-t_token *create_token(const char *str, enum e_state prev_state)
+t_token	*create_token(const char *str, enum e_state prev_state)
 {
-	t_token *new;
+	t_token	*new;
 
 	new = (t_token *)ft_xmalloc(sizeof(t_token));
 	if (!new)
