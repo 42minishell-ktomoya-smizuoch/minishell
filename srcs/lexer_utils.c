@@ -3,24 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:17:52 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 14:19:33 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/08/31 15:49:22 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	lstadd_back_token(t_token_list **lst, t_token *new)
+void	lstadd_back_token(t_token **lst, t_token *new)
 {
-	t_token_list	*last;
+	t_token	*last;
 
 	if (!lst || !new)
 		set_errno_and_exit("lstadd_back_token: invalid argument\n", EINVAL);
 	if (!*lst)
 	{
-		(*lst)->token = new;
+		*lst = new;
 		return ;
 	}
 	last = *lst;
@@ -46,5 +46,6 @@ t_token *create_token(const char *str)
 	new->word = get_word(str);
 	new->len = ft_strlen(new->word);
 	new->state = STATE_GENERAL;
+	new->next = NULL;
 	return (new);
 }
