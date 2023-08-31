@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/30 15:36:01 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 12:54:46 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ typedef struct s_token
 
 typedef struct s_token_list
 {
-	struct s_list	*next;
-	t_token			token;
+	struct s_token_list	*next;
+	t_token				token;
 }	t_token_list;
 
 int				display_prompt(void);
