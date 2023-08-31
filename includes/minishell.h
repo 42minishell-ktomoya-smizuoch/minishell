@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 17:31:49 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 18:27:03 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int				display_prompt(void);
 void			launch_executable(const char *exe_path);
 t_token			*tokenize(const char *str);
 void			set_errno_and_exit(const char *err_msg, int errno_num);
-t_token			*create_token(const char *str);
+t_token			*create_token(const char *str, enum e_state prev_state);
 void			lstadd_back_token(t_token **lst, t_token *new);
 enum e_type		get_token_type(const char *str);
 char			*get_token_word(const char *str);

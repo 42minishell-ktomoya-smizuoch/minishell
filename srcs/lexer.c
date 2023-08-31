@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 17:30:36 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 18:21:04 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,12 @@ t_token	*tokenize(const char *str)
 	if (!str)
 		set_errno_and_exit("tokenize: str is NULL\n", EINVAL);
 	head = NULL;
+	new_token = create_token(str, STATE_GENERAL);
 	while (*str)
 	{
-		new_token = create_token(str);
 		lstadd_back_token(&head, new_token);
 		str += new_token->len;
+		new_token = create_token(str, new_token->state);
 	}
 	return (head);
 }
