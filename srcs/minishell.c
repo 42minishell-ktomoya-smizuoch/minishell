@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/30 22:47:38 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/08/31 15:52:48 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@
 int main()
 {
     const char *command = "echo \"Hello, world!\"";
-    t_token_list *tokens = tokenize(command);
-    t_token_list *current = tokens;
+    t_token     *tokens = tokenize(command);
+    t_token      *current = tokens;
 
     while (current != NULL)
     {
-        printf("Token: %s, Type: %d\n", current->token.word, current->token.type);
+        printf("Token: %s, Type: %d\n", current->word, current->type);
         current = current->next;
     }
 
