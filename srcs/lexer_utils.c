@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:17:52 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/30 20:48:27 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 14:19:33 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	lstadd_back_token(t_token_list **lst, t_token *new)
 		set_errno_and_exit("lstadd_back_token: invalid argument\n", EINVAL);
 	if (!*lst)
 	{
-		*lst = new;
+		(*lst)->token = new;
 		return ;
 	}
 	last = *lst;
