@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 11:25:31 by ktomoya           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/08/30 15:56:22 by ktomoya          ###   ########.fr       */
+=======
+/*   Updated: 2023/08/30 18:14:51 by smizuoch         ###   ########.fr       */
+>>>>>>> origin/main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +87,8 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 int		ft_printf(const char *format, ...);
+
+void	*ft_xmalloc(size_t size);
+void	*ft_xcalloc(size_t count, size_t size);
 
 #endif
