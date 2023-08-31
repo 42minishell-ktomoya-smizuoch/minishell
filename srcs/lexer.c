@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 16:13:13 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 17:30:36 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool	is_metachar(char c)
 		|| c == '\"');
 }
 
-char	*get_word(const char *str)
+char	*get_token_word(const char *str)
 {
 	char	*word;
 	size_t	len;
