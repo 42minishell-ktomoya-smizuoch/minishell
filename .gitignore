@@ -52,4 +52,5 @@ Mkfile.old
 dkms.conf
 .DS_Store
 settings.json
+launch.json
 ```
