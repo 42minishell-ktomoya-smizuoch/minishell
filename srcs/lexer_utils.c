@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:17:52 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 18:39:59 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 19:03:39 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_token	*create_token(const char *str, enum e_state prev_state)
 	if (!new)
 		set_errno_and_exit("malloc error\n", ENOMEM);
 	new->type = get_token_type(str);
-	new->word = get_token_word(str);
+	new->word = get_token_word(str, prev_state);
 	new->len = ft_strlen(new->word);
 	new->state = update_token_state(str, prev_state);
 	new->next = NULL;

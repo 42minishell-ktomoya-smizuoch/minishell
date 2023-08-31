@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 18:47:48 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 20:22:37 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,39 @@
 
 bool	is_metachar(char c)
 {
-	return (c == ' ' || c == '\t' || c == '\n' || c == '|' || c == '&'
+	return (c == '\n' || c == '|' || c == '&'
 		|| c == '(' || c == ')' || c == '<' || c == '>' || c == '\''
 		|| c == '\"');
 }
 
-char	*get_token_word(const char *str)
+// char	*get_token_word(const char *str, enum e_state prev_state)
+// {
+// 	char	*word;
+// 	size_t	len;
+
+// 	len = 0;
+// 	if (is_metachar(*str))
+// 		len++;
+// 	else
+// 	{
+// 		while (str[len] && !is_metachar(str[len]))
+// 			len++;
+// 	}
+// 	word = ft_substr(str, 0, len);
+// 	return (word);
+// }
+
+char	*get_token_word(const char *str, enum e_state prev_state)
 {
 	char	*word;
 	size_t	len;
 
 	len = 0;
-	if (is_metachar(*str))
-		len++;
+	if (prev_state == STATE_IN_QUOTE || prev_state == STATE_IN_DOUBLE_QUOTE)
+	{
+		while (str[len] && !is_metachar(str[len]) && str[len] != ' ')
+			len++;
+	}
 	else
 	{
 		while (str[len] && !is_metachar(str[len]))
