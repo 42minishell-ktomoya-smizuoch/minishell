@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 12:54:46 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/08/31 13:03:36 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,10 @@ typedef struct s_token_list
 int				display_prompt(void);
 void			launch_executable(const char *exe_path);
 t_token_list	*tokenize(const char *str);
+void			set_errno_and_exit(const char *err_msg, int errno_num);
+t_token 		*create_token(const char *str);
+void			lstadd_back_token(t_token_list **lst, t_token *new);
+
+
 
 #endif
