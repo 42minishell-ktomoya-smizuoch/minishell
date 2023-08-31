@@ -5,6 +5,8 @@ SRCS_DIR = ./srcs
 LIBFT_DIR = $(SRCS_DIR)/libft
 
 FILES = minishell.c \
+	lexer.c \
+	lexer_utils.c \
 	display_prompt.c \
 	launch_executable.c \
 

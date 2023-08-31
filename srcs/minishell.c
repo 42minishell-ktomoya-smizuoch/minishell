@@ -3,20 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/21 19:20:49 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 15:52:48 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	main(int argc, char **argv)
+// int	main(int argc, char **argv)
+// {
+// 	if (argc < 2)
+// 		return (FAILURE);
+// //	display_prompt();
+// 	// launch_executable((const char *)argv[1]);
+// 	return (SUCCESS);
+// }
+
+int main()
 {
-	if (argc < 2)
-		return (FAILURE);
-//	display_prompt();
-	launch_executable((const char *)argv[1]);
-	return (SUCCESS);
+    const char *command = "echo \"Hello, world!\"";
+    t_token     *tokens = tokenize(command);
+    t_token      *current = tokens;
+
+    while (current != NULL)
+    {
+        printf("Token: %s, Type: %d\n", current->word, current->type);
+        current = current->next;
+    }
+
+    return 0;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_xcalloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:14:49 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/08/30 17:16:26 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/08/31 16:03:47 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,11 @@ void	*ft_xcalloc(size_t count, size_t size)
 {
 	void	*memory;
 
-	if (!(memory == ft_calloc(count, size)))
+	memory = ft_calloc(count, size);
+	if (!memory)
 	{
-		ft_putendl_fd("calloc error", 2);
+		ft_putendl_fd("calloc error", stderr);
 		exit(FAILURE);
 	}
-	return (memory);	
+	return (memory);
 }

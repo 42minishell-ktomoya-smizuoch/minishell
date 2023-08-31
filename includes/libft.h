@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 11:25:31 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/30 18:14:51 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/08/31 12:32:27 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <float.h>
 # include <stdarg.h>
 # include <inttypes.h>
+# include <stdbool.h>
 
 # define SUCCESS 0
 # define FAILURE 1
