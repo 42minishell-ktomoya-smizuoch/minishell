@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/30 20:38:30 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 16:13:13 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,10 @@ void	skip_spaces(const char **str)
 // 	return (head);
 // }
 
-t_token_list	*tokenize(const char *str)
+t_token	*tokenize(const char *str)
 {
-	t_token			*new_token;
-	t_token_list	*head;
+	t_token	*new_token;
+	t_token	*head;
 
 	if (!str)
 		set_errno_and_exit("tokenize: str is NULL\n", EINVAL);
@@ -98,11 +98,6 @@ t_token_list	*tokenize(const char *str)
 	while (*str)
 	{
 		new_token = create_token(str);
-		// if (!new)
-		// 	set_errno_and_exit("malloc error\n", ENOMEM);
-		// token.type = get_token_type(str);
-		// token.word = get_word(str);
-		// token.len = ft_strlen(token.word);
 		lstadd_back_token(&head, new_token);
 		str += new_token->len;
 	}
