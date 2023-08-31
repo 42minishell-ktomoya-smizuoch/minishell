@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 18:21:04 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/08/31 18:47:48 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,26 +66,6 @@ void	skip_spaces(const char **str)
 	while (**str == ' ' || **str == '\t')
 		(*str)++;
 }
-
-// t_token_list	*tokenize(const char *str)
-// {
-// 	t_token_list	*head;
-// 	t_token_list	*tmp;
-// 	t_token			token;
-
-// 	head = (t_token_list *)malloc(sizeof(t_token_list));
-// 	if (!head)
-// 		set_errno_and_exit("malloc error\n", ENOMEM);
-// 	while (*str)
-// 	{
-// 		skip_spaces(&str);
-// 		token.type = get_token_type(str);
-// 		token.word = get_word(str);
-// 		token.len = ft_strlen(token.word);
-// 		str += token.len;
-// 	}
-// 	return (head);
-// }
 
 t_token	*tokenize(const char *str)
 {
