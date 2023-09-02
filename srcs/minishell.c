@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 15:52:48 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/02 11:29:01 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,23 @@
 // 	return (SUCCESS);
 // }
 
-int main()
+int	main()
 {
-    const char *command = "echo \"Hello, world!\"";
-    t_token     *tokens = tokenize(command);
-    t_token      *current = tokens;
+	t_token		*tokens;
+	t_token		*current;
+	const char	*command;
 
-    while (current != NULL)
-    {
-        printf("Token: %s, Type: %d\n", current->word, current->type);
-        current = current->next;
-    }
-
-    return 0;
+	while (1)
+	{
+		command = readline("minishell$ ");
+		tokens = tokenize(command);
+		current = tokens;
+		while (current != NULL)
+		{
+			printf("Token: %s, Type: %d\n", current->word, current->type);
+			current = current->next;
+		}
+		free ((void *)command);
+	}
+	return (0);
 }
