@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 11:25:31 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 12:32:27 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/02 17:44:27 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,6 @@ int		ft_printf(const char *format, ...);
 
 void	*ft_xmalloc(size_t size);
 void	*ft_xcalloc(size_t count, size_t size);
+int		ft_strcmp(const char *s1, const char *s2);
 
 #endif
