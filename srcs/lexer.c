@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 20:22:37 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/01 22:07:16 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool	is_metachar(char c)
 {
-	return (c == '\n' || c == '|' || c == '&'
+	return (c == ' ' || c == '\t' || c == '\n' || c == '|' || c == '&'
 		|| c == '(' || c == ')' || c == '<' || c == '>' || c == '\''
 		|| c == '\"');
 }
@@ -36,21 +36,38 @@ bool	is_metachar(char c)
 // 	return (word);
 // }
 
-char	*get_token_word(const char *str, enum e_state prev_state)
+bool	is_space_or_tab(char c)
+{
+	return (c == ' ' || c == '\t');
+}
+
+bool	is_metachar_except_space(char c)
+{
+	return (c == '\n' || c == '|' || c == '&' || c == '(' || c == ')'
+		|| c == '<' || c == '>' || c == '\'' || c == '\"');
+}
+
+char	*get_token_word(const char *str, enum e_state prev)
 {
 	char	*word;
 	size_t	len;
 
 	len = 0;
-	if (prev_state == STATE_IN_QUOTE || prev_state == STATE_IN_DOUBLE_QUOTE)
+	if (prev == STATE_IN_QUOTE || prev == STATE_IN_DOUBLE_QUOTE)
 	{
-		while (str[len] && !is_metachar(str[len]) && str[len] != ' ')
+		// メタ文字以外、ただし、スペースとタブは除くときlen++
+		while (str[len] && !is_metachar_except_space(str[len]))
 			len++;
 	}
 	else
 	{
-		while (str[len] && !is_metachar(str[len]))
+		if (is_space_or_tab(*str))
 			len++;
+		else
+		{
+			while (str[len] && !is_metachar(str[len]))
+				len++;
+		}
 	}
 	word = ft_substr(str, 0, len);
 	return (word);
@@ -81,16 +98,20 @@ enum e_type	get_token_type(const char *str)
 	return (type);
 }
 
-void	skip_spaces(const char **str)
+void	skip_spaces(const char **str, enum e_state prev)
 {
-	while (**str == ' ' || **str == '\t')
-		(*str)++;
+	if (prev == STATE_GENERAL)
+	{
+		while (**str && is_space_or_tab(**str))
+			(*str)++;
+	}
 }
 
 t_token	*tokenize(const char *str)
 {
-	t_token	*new_token;
-	t_token	*head;
+	t_token			*new_token;
+	t_token			*head;
+	enum e_state	current;
 
 	if (!str)
 		set_errno_and_exit("tokenize: str is NULL\n", EINVAL);

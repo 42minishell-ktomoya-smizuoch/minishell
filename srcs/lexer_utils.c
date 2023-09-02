@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:17:52 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/31 19:03:39 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/01 15:49:52 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,33 @@ enum e_state	update_token_state(const char *str, enum e_state prev_state)
 			new_state = STATE_IN_DOUBLE_QUOTE;
 	}
 	return (new_state);
+}
+
+size_t	get_token_len(const char *str, enum e_state current)
+{
+	size_t	len;
+
+	len = 0;
+	if (current == STATE_GENERAL)
+	{
+		if (is_metachar(str[len]))
+			len++;
+		else
+		{
+			while (str[len] && !is_metachar(str[len]))
+				len++;
+		}
+	}
+	else if (current == STATE_IN_QUOTE)
+	{
+		while (str[len] && str[len] != '\'')
+			len++;
+	}
+	else if (current == STATE_IN_DOUBLE_QUOTE)
+	{
+		while (str[len] && str[len] != '\"')
+			len++;
+	}
 }
 
 t_token	*create_token(const char *str, enum e_state prev_state)
