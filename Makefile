@@ -6,9 +6,26 @@ LIBFT_DIR = $(SRCS_DIR)/libft
 
 FILES = minishell.c \
 	lexer.c \
-	lexer_utils.c \
 	display_prompt.c \
 	launch_executable.c \
+	skip_spaces.c \
+	is_space_or_tab.c \
+	set_errno_and_exit.c \
+	is_metachar.c \
+	is_metachar_except_space.c \
+	read_pipe.c \
+	read_ampersand.c \
+	read_redirect.c \
+	read_single_quote.c \
+	read_double_quote.c \
+	read_general.c \
+	lstadd_back_token.c \
+	# get_token_type.c \
+	create_token.c \
+	update_token_state.c \
+	get_token_word.c \
+	get_token_len.c \
+	lexer_utils.c \
 
 SRCS = $(addprefix $(SRCS_DIR)/, $(FILES))
 OBJS = $(SRCS:.c=.o)

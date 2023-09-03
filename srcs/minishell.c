@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/02 14:39:00 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/09/02 19:10:05 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	main()
 		current = tokens;
 		while (current != NULL)
 		{
-			printf("Token: %s, Type: %d, State: %d\n", current->word, current->type, current->state);
+			printf("Token: %s, Type: %d\n", current->word, current->type);
 			current = current->next;
 		}
 		free ((void *)command);
