@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/03 16:52:54 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/04 11:40:54 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,18 +65,20 @@ t_token	*tokenize(const char *str)
 		if (!*str)
 			break ;
 		else if (*str == '|')
-			new_token = read_pipe(&str);
+			new_token = read_pipe(*str);
 		else if (*str == '&')
-			new_token = read_ampersand(&str);
+			new_token = read_ampersand(*str);
 		else if (*str == '<' || *str == '>')
-			new_token = read_redirect(&str);
+			new_token = read_redirect(str);
 		else if (*str == '\'')
-			new_token = read_single_quote(&str);
+			new_token = read_single_quote(str);
 		else if (*str == '\"')
-			new_token = read_double_quote(&str);
+			new_token = read_double_quote(str);
 		else
-			new_token = read_general(&str);
+			new_token = read_general(str);
+		new_token->word = ft_substr(str, 0, new_token->len);
 		lstadd_back_token(&list, new_token);
+		str += new_token->len;
 	}
 	return (list);
 }

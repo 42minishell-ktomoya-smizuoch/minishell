@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/03 20:48:30 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/04 11:38:24 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,12 @@ void			skip_spaces(const char **str);
 bool			is_metachar(char c);
 bool			is_space_or_tab(char c);
 void			set_errno_and_exit(const char *str, int errnum);
-t_token			*read_pipe(const char **str);
-t_token			*read_ampersand(const char **str);
-t_token			*read_redirect(const char **str);
-t_token			*read_single_quote(const char **str);
-t_token			*read_double_quote(const char **str);
-t_token			*read_general(const char **str);
+t_token			*read_pipe(const char c);
+t_token			*read_ampersand(const char c);
+t_token			*read_redirect(const char *str);
+t_token			*read_single_quote(const char *str);
+t_token			*read_double_quote(const char *str);
+t_token			*read_general(const char *str);
 enum e_type		get_token_type(const char *str);
 
 #endif
