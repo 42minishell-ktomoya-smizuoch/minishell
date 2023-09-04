@@ -13,6 +13,7 @@ FILES = minishell.c \
 	set_errno_and_exit.c \
 	is_metachar.c \
 	is_metachar_except_space.c \
+	is_quoted.c \
 	read_pipe.c \
 	read_ampersand.c \
 	read_redirect.c \
@@ -20,12 +21,14 @@ FILES = minishell.c \
 	read_double_quote.c \
 	read_general.c \
 	lstadd_back_token.c \
+	# get_double_quoted_size.c \
 	# get_token_type.c \
 	create_token.c \
 	update_token_state.c \
 	get_token_word.c \
 	get_token_len.c \
 	lexer_utils.c \
+	read_quoted.c \
 
 SRCS = $(addprefix $(SRCS_DIR)/, $(FILES))
 OBJS = $(SRCS:.c=.o)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/04 11:40:54 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/04 15:23:02 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,12 @@ t_token	*tokenize(const char *str)
 			new_token = read_ampersand(*str);
 		else if (*str == '<' || *str == '>')
 			new_token = read_redirect(str);
-		else if (*str == '\'')
-			new_token = read_single_quote(str);
-		else if (*str == '\"')
-			new_token = read_double_quote(str);
+		// else if (*str == '\'')
+		// 	new_token = read_single_quote(str);
+		// else if (*str == '\"')
+		// 	new_token = read_double_quote(str);
+		// else if (is_quoted(*str))
+		// 	new_token = read_quoted(str);
 		else
 			new_token = read_general(str);
 		new_token->word = ft_substr(str, 0, new_token->len);

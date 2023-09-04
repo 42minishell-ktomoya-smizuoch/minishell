@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/04 11:38:24 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/04 19:16:25 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@
 
 # define SUCCESS 0
 
-// enum e_state
-// {
-// 	STATE_GENERAL,
-// 	STATE_IN_QUOTE,
-// 	STATE_IN_DOUBLE_QUOTE
-// };
+enum e_state
+{
+	STATE_GENERAL,
+	STATE_IN_QUOTE,
+	STATE_IN_DOUBLE_QUOTE
+};
 
 enum e_type
 {
@@ -67,6 +67,7 @@ void			skip_spaces(const char **str);
 // enum e_state	update_token_state(const char *str, enum e_state prev_state);
 bool			is_metachar(char c);
 bool			is_space_or_tab(char c);
+bool			is_quoted(const char c);
 void			set_errno_and_exit(const char *str, int errnum);
 t_token			*read_pipe(const char c);
 t_token			*read_ampersand(const char c);
@@ -74,6 +75,8 @@ t_token			*read_redirect(const char *str);
 t_token			*read_single_quote(const char *str);
 t_token			*read_double_quote(const char *str);
 t_token			*read_general(const char *str);
+// t_token			*read_quoted(const char *str);
 enum e_type		get_token_type(const char *str);
+size_t			get_double_quoted_size(const char *str);
 
 #endif
