@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 14:58:59 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 19:12:47 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	skip_spaces(const char **str)
 {
-	while (is_space_or_tab(**str))
+	while (is_blank(**str))
 		(*str)++;
 }
 
