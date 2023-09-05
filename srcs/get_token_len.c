@@ -6,13 +6,13 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:03:23 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 14:06:58 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 14:42:01 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-size_t	get_general_len(const char *str)
+static size_t	get_general_len(const char *str)
 {
 	size_t			len;
 	enum e_state	state;
@@ -29,7 +29,7 @@ size_t	get_general_len(const char *str)
 	return (len);
 }
 
-size_t	get_redirect_len(const char *str)
+static size_t	get_redirect_len(const char *str)
 {
 	size_t	len;
 

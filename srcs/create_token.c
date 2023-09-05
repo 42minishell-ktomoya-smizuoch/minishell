@@ -6,13 +6,13 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:17:52 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 14:22:49 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 14:42:38 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-enum e_type	get_token_type(const char *str)
+static enum e_type	get_token_type(const char *str)
 {
 	enum e_type	type;
 

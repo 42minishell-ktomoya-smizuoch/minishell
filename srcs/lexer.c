@@ -6,13 +6,13 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 13:52:36 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 14:39:42 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-t_token	*create_token_list(const char *str)
+static t_token	*create_token_list(const char *str)
 {
 	t_token	*list;
 	size_t	token_len;
