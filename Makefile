@@ -12,16 +12,14 @@ FILES = minishell.c \
 	is_space_or_tab.c \
 	set_errno_and_exit.c \
 	is_metachar.c \
-	is_metachar_except_space.c \
 	is_quoted.c \
 	lstadd_back_token.c \
-	get_redirect_len.c \
 	create_token.c \
 	update_state.c \
 	get_token_len.c \
-	get_general_len.c \
 	get_token_type.c \
 	# get_double_quoted_size.c \
+	is_metachar_except_space.c \
 	get_token_word.c \
 	lexer_utils.c \
 	read_quoted.c \
