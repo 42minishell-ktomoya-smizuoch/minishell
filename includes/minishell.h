@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 13:14:28 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 14:11:24 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,7 @@ void			lstadd_back_token(t_token **lst, t_token *new);
 // char			*get_token_word(const char *str, enum e_state prev_state);
 void			skip_spaces(const char **str);
 enum e_state	update_state(const char c, enum e_state state);
-bool			is_metachar(char c);
 bool			is_space_or_tab(char c);
-bool			is_quoted(const char c);
 void			set_errno_and_exit(const char *str, int errnum);
 t_token			*read_pipe(const char c);
 t_token			*read_ampersand(const char c);

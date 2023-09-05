@@ -11,8 +11,6 @@ FILES = minishell.c \
 	skip_spaces.c \
 	is_space_or_tab.c \
 	set_errno_and_exit.c \
-	is_metachar.c \
-	is_quoted.c \
 	lstadd_back_token.c \
 	create_token.c \
 	update_state.c \
