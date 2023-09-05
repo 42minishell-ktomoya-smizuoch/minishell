@@ -15,7 +15,6 @@ FILES = minishell.c \
 	create_token.c \
 	update_state.c \
 	get_token_len.c \
-	get_token_type.c \
 	# get_double_quoted_size.c \
 	is_metachar_except_space.c \
 	get_token_word.c \
