@@ -6,11 +6,40 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:03:23 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 14:42:01 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 14:52:06 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static enum e_state	update_state(const char c, enum e_state prev)
+{
+	enum e_state	new;
+
+	new = STATE_GENERAL;
+	if (prev == STATE_GENERAL)
+	{
+		if (c == '\'')
+			new = STATE_IN_QUOTE;
+		else if (c == '\"')
+			new = STATE_IN_DOUBLE_QUOTE;
+	}
+	else if (prev == STATE_IN_QUOTE)
+	{
+		if (c == '\'')
+			new = STATE_GENERAL;
+		else
+			new = STATE_IN_QUOTE;
+	}
+	else if (prev == STATE_IN_DOUBLE_QUOTE)
+	{
+		if (c == '\"')
+			new = STATE_GENERAL;
+		else
+			new = STATE_IN_DOUBLE_QUOTE;
+	}
+	return (new);
+}
 
 static size_t	get_general_len(const char *str)
 {

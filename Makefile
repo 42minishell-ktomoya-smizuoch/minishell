@@ -12,7 +12,6 @@ FILES = minishell.c \
 	set_errno_and_exit.c \
 	lstadd_back_token.c \
 	create_token.c \
-	update_state.c \
 	get_token_len.c \
 	# get_double_quoted_size.c \
 	is_metachar_except_space.c \
