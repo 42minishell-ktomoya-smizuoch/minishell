@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 16:49:55 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 17:05:01 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,6 @@ typedef struct s_token
 	enum e_type		type;
 	struct s_token	*next;
 }	t_token;
-
-// typedef struct s_token_list
-// {
-// 	struct s_token_list	*next;
-// 	t_token				*token;
-// }	t_token_list;
 
 int				display_prompt(void);
 void			launch_executable(const char *exe_path);
