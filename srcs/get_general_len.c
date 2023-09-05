@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_token_type.c                                   :+:      :+:    :+:   */
+/*   get_general_len.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/03 15:58:43 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 13:05:04 by kudoutomoya      ###   ########.fr       */
+/*   Created: 2023/09/05 11:42:37 by kudoutomoya       #+#    #+#             */
+/*   Updated: 2023/09/05 12:05:36 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-enum e_type	get_token_type(const char *str)
+size_t	get_general_len(const char *str)
 {
-	enum e_type	type;
+	size_t			len;
+	enum e_state	state;
 
-	if (*str == '|')
-		type = TYPE_PIPE;
-	else if (*str == '&')
-		type = TYPE_AMPERSAND;
-	else if (*str == '<' || *str == '>')
-		type = TYPE_REDIRECT;
-	else
-		type = TYPE_GENERAL;
-	return (type);
+	len = 0;
+	state = STATE_GENERAL;
+	while (str[len] && str[len] != '|' && str[len] != '&' && str[len] != '<' && str[len] != '>')
+	{
+		state = update_state(str[len], state);
+		if (str[len] == ' ' && state == STATE_GENERAL)
+			break ;
+		len++;
+	}
+	return (len);
 }
