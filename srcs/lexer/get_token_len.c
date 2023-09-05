@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:03:23 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 14:58:51 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 16:54:39 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,10 @@ static size_t	get_general_len(const char *str)
 
 	len = 0;
 	state = STATE_GENERAL;
-	while (str[len] && str[len] != '|' && str[len] != '&' && str[len] != '<' && str[len] != '>')
+	while (str[len])
 	{
 		state = update_state(str[len], state);
-		if (str[len] == ' ' && state == STATE_GENERAL)
+		if (is_metachar(str[len]) && state == STATE_GENERAL)
 			break ;
 		len++;
 	}

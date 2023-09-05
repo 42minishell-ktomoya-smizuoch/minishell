@@ -14,7 +14,7 @@ OBJS = $(SRCS:.c=.o)
 
 LEXER_DIR = $(SRCS_DIR)/lexer
 LEXER_FILES = lexer.c \
-	is_space_or_tab.c \
+	lexer_bool.c \
 	lstadd_back_token.c \
 	create_token.c \
 	get_token_len.c \
