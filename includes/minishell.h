@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 14:42:18 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 14:48:53 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ typedef struct s_token
 int				display_prompt(void);
 void			launch_executable(const char *exe_path);
 t_token			*lexer(const char *str);
-void			skip_spaces(const char **str);
 size_t			get_token_len(const char *str);
 t_token			*create_token(const char *str, size_t token_len);
 void			set_errno_and_exit(const char *err_msg, int errno_num);

@@ -8,7 +8,6 @@ FILES = minishell.c \
 	lexer.c \
 	display_prompt.c \
 	launch_executable.c \
-	skip_spaces.c \
 	is_space_or_tab.c \
 	set_errno_and_exit.c \
 	lstadd_back_token.c \

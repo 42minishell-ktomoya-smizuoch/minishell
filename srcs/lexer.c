@@ -6,11 +6,17 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 14:39:42 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 14:49:05 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static void	skip_spaces(const char **str)
+{
+	while (is_space_or_tab(**str))
+		(*str)++;
+}
 
 static t_token	*create_token_list(const char *str)
 {
