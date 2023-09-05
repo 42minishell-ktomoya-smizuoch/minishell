@@ -13,17 +13,6 @@ FILES = minishell.c \
 	lstadd_back_token.c \
 	create_token.c \
 	get_token_len.c \
-	# get_double_quoted_size.c \
-	is_metachar_except_space.c \
-	get_token_word.c \
-	lexer_utils.c \
-	read_quoted.c \
-	read_pipe.c \
-	read_ampersand.c \
-	read_redirect.c \
-	read_single_quote.c \
-	read_double_quote.c \
-	read_general.c \
 
 SRCS = $(addprefix $(SRCS_DIR)/, $(FILES))
 OBJS = $(SRCS:.c=.o)
