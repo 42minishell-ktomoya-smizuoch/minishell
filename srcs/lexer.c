@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/04 20:18:51 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/05 13:05:49 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,43 @@
 // 	return (lst);
 // }
 
-t_token	*tokenize(const char *str)
+// t_token	*tokenize(const char *str)
+// {
+// 	t_token	*list;
+// 	t_token	*new_token;
+
+// 	list = NULL;
+// 	while (*str)
+// 	{
+// 		skip_spaces(&str);
+// 		if (!*str)
+// 			break ;
+// 		else if (*str == '|')
+// 			new_token = read_pipe(*str);
+// 		else if (*str == '&')
+// 			new_token = read_ampersand(*str);
+// 		else if (*str == '<' || *str == '>')
+// 			new_token = read_redirect(str);
+// 		// else if (*str == '\'')
+// 		// 	new_token = read_single_quote(str);
+// 		// else if (*str == '\"')
+// 		// 	new_token = read_double_quote(str);
+// 		// else if (is_quoted(*str))
+// 		// 	new_token = read_quoted(str);
+// 		else
+// 			new_token = read_general(str);
+// 		new_token->word = ft_substr(str, 0, new_token->len);
+// 		lstadd_back_token(&list, new_token);
+// 		str += new_token->len;
+// 	}
+// 	return (list);
+// }
+
+t_token	*create_token_list(const char *str)
 {
 	t_token	*list;
-	t_token	*new_token;
+	size_t	token_len;
+	t_token	*token;
 
 	list = NULL;
 	while (*str)
@@ -64,42 +97,16 @@ t_token	*tokenize(const char *str)
 		skip_spaces(&str);
 		if (!*str)
 			break ;
-		else if (*str == '|')
-			new_token = read_pipe(*str);
-		else if (*str == '&')
-			new_token = read_ampersand(*str);
-		else if (*str == '<' || *str == '>')
-			new_token = read_redirect(str);
-		// else if (*str == '\'')
-		// 	new_token = read_single_quote(str);
-		// else if (*str == '\"')
-		// 	new_token = read_double_quote(str);
-		// else if (is_quoted(*str))
-		// 	new_token = read_quoted(str);
-		else
-			new_token = read_general(str);
-		new_token->word = ft_substr(str, 0, new_token->len);
-		lstadd_back_token(&list, new_token);
-		str += new_token->len;
+		token_len = get_token_len(str);
+		if (!token_len)
+			continue ;
+		token = create_token(str, token_len);
+		if (!token)
+			set_errno_and_exit("create_token_list: token is NULL\n", ENOMEM);
+		lstadd_back_token(&list, token);
+		str += token_len;
 	}
 	return (list);
-}
-
-t_token	*create_token_list(const char *str)
-{
-	t_token	*list;
-	t_token	*new_token;
-	size_t	token_len;
-
-	list = NULL;
-	token_len = 0;
-	while (*str)
-	{
-		token_len = get_token_len(str);
-		new_token = create_token(str);
-		lstadd_back_token(&list, new_token);
-		str += new_token->len;
-	}
 }
 
 t_token	*lexer(const char *str)
@@ -107,7 +114,7 @@ t_token	*lexer(const char *str)
 	t_token	*token_list;
 
 	if (!str)
-		set_errno_and_exit("tokenize: str is NULL\n", EINVAL);
+		ft_putendl_fd("lexer: str is NULL", STDERR_FILENO);
 	token_list = create_token_list(str);
 	return (token_list);
 }
