@@ -6,11 +6,11 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 14:49:05 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 14:58:59 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static void	skip_spaces(const char **str)
 {

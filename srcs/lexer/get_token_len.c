@@ -6,11 +6,11 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:03:23 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 14:52:06 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 14:58:51 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static enum e_state	update_state(const char c, enum e_state prev)
 {

@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   is_spaces_or_tab.c                                 :+:      :+:    :+:   */
+/*   is_space_or_tab.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 15:48:20 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/03 15:48:39 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/05 14:58:55 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 bool	is_space_or_tab(char c)
 {
