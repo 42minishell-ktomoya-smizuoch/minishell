@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 14:11:24 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/05 14:14:25 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,7 @@ void			set_errno_and_exit(const char *err_msg, int errno_num);
 t_token			*create_token(const char *str, size_t token_len);
 void			lstadd_back_token(t_token **lst, t_token *new);
 // enum e_type		get_token_type(const char *str);
-// char			*get_token_word(const char *str);
 // size_t			get_token_len(const char *str, enum e_state current);
-// char			*get_token_word(const char *str, enum e_state prev_state);
 void			skip_spaces(const char **str);
 enum e_state	update_state(const char c, enum e_state state);
 bool			is_space_or_tab(char c);
