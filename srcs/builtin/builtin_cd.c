@@ -1,19 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin.h                                          :+:      :+:    :+:   */
+/*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/02 12:37:10 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/09/05 10:10:17 by smizuoch         ###   ########.fr       */
+/*   Created: 2023/09/03 16:40:39 by smizuoch          #+#    #+#             */
+/*   Updated: 2023/09/05 11:38:28 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTIN_H
-# define BUILTIN_H
+#include "../../includes/builtin.h"
 
-# include <libc.h>
-# include "libft.h"
-
-# endif
+int	builtin_cd(char **argv)
+{
+	if (!argv[1])
+		return (1);
+	if (chdir(*argv[1]) != 0)
+	{
+		perror ("chdir");
+		return (FAILURE);
+	}
+	return (SUCCESS);
+}

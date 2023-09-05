@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   my_echo.c                                          :+:      :+:    :+:   */
+/*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/03 16:09:46 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/09/03 16:39:52 by smizuoch         ###   ########.fr       */
+/*   Created: 2023/09/05 09:39:54 by smizuoch          #+#    #+#             */
+/*   Updated: 2023/09/05 11:39:50 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/builtin.h"
 
-int	builtin_echo(char *arg)
+int	builtin_exit(char **argv)
 {
-	if (arg)
-		printf("%s\n", arg);
-	return (0);
+	if (argv[1] == NULL)
+		exit(ft_atoi(argv[1]));
+	if (argv[2])
+	{
+		perror("exit");
+		return (FAILURE);
+	}
+	exit(255);
 }
