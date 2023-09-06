@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lstadd_back_token.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:05:17 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/03 16:05:34 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/05 14:59:04 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 void	lstadd_back_token(t_token **lst, t_token *new)
 {

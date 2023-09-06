@@ -4,40 +4,30 @@ INC_DIR = ./includes
 SRCS_DIR = ./srcs
 LIBFT_DIR = $(SRCS_DIR)/libft
 
-FILES = minishell.c \
-	lexer.c \
+SRCS_FILES = minishell.c \
 	display_prompt.c \
 	launch_executable.c \
-	skip_spaces.c \
-	is_space_or_tab.c \
 	set_errno_and_exit.c \
-	is_metachar.c \
-	is_metachar_except_space.c \
-	is_quoted.c \
-	read_pipe.c \
-	read_ampersand.c \
-	read_redirect.c \
-	read_single_quote.c \
-	read_double_quote.c \
-	read_general.c \
-	lstadd_back_token.c \
-	# get_double_quoted_size.c \
-	# get_token_type.c \
-	create_token.c \
-	update_token_state.c \
-	get_token_word.c \
-	get_token_len.c \
-	lexer_utils.c \
-	read_quoted.c \
 
-SRCS = $(addprefix $(SRCS_DIR)/, $(FILES))
+SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 OBJS = $(SRCS:.c=.o)
+
+LEXER_DIR = $(SRCS_DIR)/lexer
+LEXER_FILES = lexer.c \
+	lexer_bool.c \
+	lstadd_back_token.c \
+	create_token.c \
+	get_token_len.c \
+
+LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
+LEXER_OBJS = $(LEXER_SRCS:.c=.o)
+OBJS += $(LEXER_OBJS)
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR)
-DEBUGFLAGS = -g3 -O0 -fsanitize=address
+DEBUGFLAGS = -g3 -O0
 RM = rm
 RMFLAGS = -f
 
