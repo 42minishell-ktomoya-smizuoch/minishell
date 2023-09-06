@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/02 14:39:00 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/09/05 13:11:28 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ int	main()
 	while (1)
 	{
 		command = readline("minishell$ ");
-		tokens = tokenize(command);
+		tokens = lexer(command);
 		current = tokens;
 		while (current != NULL)
 		{
-			printf("Token: %s, Type: %d, State: %d\n", current->word, current->type, current->state);
+			printf("Token: %s, Type: %d\n", current->word, current->type);
 			current = current->next;
 		}
 		free ((void *)command);
