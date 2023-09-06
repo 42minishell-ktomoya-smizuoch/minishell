@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 13:11:28 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/06 16:36:55 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,28 @@
 // 	return (SUCCESS);
 // }
 
-int	main()
+int	main(int argc, char **argv)
 {
 	t_token		*tokens;
 	t_token		*current;
-	const char	*command;
+	const char	*line;
 
+	(void)argv;
+	if (argc != 1)
+		return (FAILURE);
 	while (1)
 	{
-		command = readline("minishell$ ");
-		tokens = lexer(command);
+		line = readline("minishell$ ");
+		if (*line)
+			add_history(line);
+		tokens = lexer(line);
 		current = tokens;
 		while (current != NULL)
 		{
 			printf("Token: %s, Type: %d\n", current->word, current->type);
 			current = current->next;
 		}
-		free ((void *)command);
+		free ((void *)line);
 	}
 	return (0);
 }
