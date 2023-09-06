@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 11:25:31 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/02 17:44:27 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/09/05 10:54:57 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,10 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 int		ft_printf(const char *format, ...);
 
-void	*ft_xmalloc(size_t size);
-void	*ft_xcalloc(size_t count, size_t size);
-int		ft_strcmp(const char *s1, const char *s2);
+void		*ft_xmalloc(size_t size);
+void		*ft_xcalloc(size_t count, size_t size);
+int			ft_strcmp(const char *s1, const char *s2);
+int			ft_atoi_base(const char *str, int str_base);
+long int	ft_strtol(const char *nptr, char **endptr, int base);
 
 #endif
