@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/06 16:36:55 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/09 17:52:11 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 // 	return (SUCCESS);
 // }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
 	t_token		*tokens;
 	t_token		*current;
