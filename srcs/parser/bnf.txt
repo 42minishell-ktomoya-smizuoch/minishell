@@ -1,56 +1,39 @@
-<ALPHA> ::= a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|
-             A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z
-<DIGIT> ::= 0|1|2|3|4|5|6|7|8|9
-<NUMBER> ::= <DIGIT>
-           | <NUMBER> <DIGIT>
-<WORD> ::= <ALPHA>
-         | <WORD> <ALPHA>
-         | <WORD> '_'
-<WORD-LIST> ::= <WORD>
-             |  <WORD-LIST> <WORD>
-<ASSIGNMENT-WORD> ::= <WORD> '=' <WORD>
-<REDIRECTION> ::=  '>' <WORD>
-                |  '<' <WORD>
-                |  <NUMBER> '>' <WORD>
-                |  <NUMBER> '<' <WORD>
-                |  '>>' <WORD>
-                |  <NUMBER> '>>' <WORD>
-                |  '<<' <WORD>
-                |  <NUMBER> '<<' <WORD>
-                |  '<&' <NUMBER>
-                |  <NUMBER> '<&' <NUMBER>
-                |  '>&' <NUMBER>
-                |  <NUMBER> '>&' <NUMBER>
-                |  '<&' <WORD>
-                |  <NUMBER> '<&' <WORD>
-                |  '>&' <WORD>
-                |  <NUMBER> '>&' <WORD>
-                |  '<<-' <WORD>
-                |  <NUMBER> '<<-' <WORD>
-                |  '>&' '-'
-                |  <NUMBER> '>&' '-'
-                |  '<&' '-'
-                |  <NUMBER> '<&' '-'
-                |  '&>' <WORD>
-                |  <NUMBER> '<>' <WORD>
-                |  '<>' <WORD>
-                |  '>|' <WORD>
-                |  <NUMBER> '>|' <WORD>
-<SIMPLE-COMMAND-ELEMENT> ::= <WORD>
-                          |  <ASSIGNMENT-WORD>
-                          |  <REDIRECTION>
-<REDIRECTION-LIST> ::= <REDIRECTION>
-                    |  <REDIRECTION-LIST> <REDIRECTION>
-<SIMPLE-COMMAND> ::=  <SIMPLE-COMMAND-ELEMENT>
-                   |  <SIMPLE-COMMAND> <SIMPLE-COMMAND-ELEMENT>
-<COMMAND> ::=  <SIMPLE-COMMAND>
-            |  <SHELL-COMMAND>
-            |  <SHELL-COMMAND> <REDIRECTION-LIST>
-<GROUP-COMMAND> ::=  '{' <LIST> '}'
+<job>	     :== <builtin> | <external_program>
+<external_program> :== <redirect> | <pipe> | <program> | <run>
+<builtin>    :== jobs | killjob <digit> <digit> | fg <digit> | bg <digit>
+	         | cd     | cd <argument> | exit |  status | set | setenv | unsetenv | unset | show
+<run>	     :==  run(<program>)
+<redirect>   :== redirect(<identifier>,<identifier>,<identifier>, <program>)
+		 | redirect(<identifier>, <program>)
+		 | redirect(<identifier>, <identifier>, <program>)
+		 | redirect(, <identifier>, <identifier>, <program>)
+		 | redirect(, , <identifier>, <program>)
+		 | redirect( <identifier>, , , <program>)
+<pipe>	     :== pipe(<program>, <program>)
+		 | pipe(<pipe>, <program>)
+		 | pipe(<program>, <pipe>)
+		 | pipe(<redirect>, <program>)
+		 | pipe(<program>, <redirect>)
+		 | pipe(<redirect>,<redirect>) 
+		 | pipe(<pipe>,<pipe>)
+<program>    :== <identifier> | <identifier> -<option> | <identifier> <argument>
+<argument>   :== <argument> <letter> | <argument> <digit> |<empty> 
+<option>     :== <option> <letter> | <option> <digit> | <empty>
+<identifier> :== <identifier> <character> | <character>
+<character>  :== <letter> | <digit> | <symbol>
+<letter>     :== A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | [ | a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
+<symbol>     :== ! | " | # | $ | % | & | ' | ( | ) | * | + | , | - | . | /
+<digit>      :== 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
 これから実装するもの
 
 echo aaaa
+
+<job>       :== <builtin>
+<builtin>   :== echo <argument>
+<argument>  :== <argument> <letter> | <argument> <digit> | <empty>
+<letter>    :== A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | [ | a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
+<digit>     :== 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
 command_list = command | command_list command
 command = "echo" word_list
@@ -66,13 +49,3 @@ char =
                       | <simple command> '>' <filename>
 <simple command>    ::= <path name>
                       | <simple command> <token>
-
-shellgrammarから抜粋：
-
-simple_command = cmd_prefix cmd_word cmd_suffix
-               = cmd_prefix cmd_word
-               = cmd_name cmd_suffix
-               = cmd_name
-
-cmd_name = word
-cmd_word = word
