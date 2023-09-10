@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/09 17:52:11 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/10 18:43:14 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int	main(int argc, char **argv, char **envp)
 	const char	*line;
 
 	(void)argv;
+	(void)envp;
 	if (argc != 1)
 		return (FAILURE);
 	while (1)
