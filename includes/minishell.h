@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/09 17:55:20 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/10 19:35:57 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,34 @@ enum e_type
 	TYPE_REDIRECT
 };
 
+typedef enum e_node_kind
+{
+	NODE_GENERAL,
+	NODE_PIPE,
+	NODE_AMPERSAND,
+	NODE_REDIRECT,
+	NODE_COMMAND,
+	NODE_ARGUMENT,
+	NODE_FILE,
+	NODE_ENV,
+	NODE_ENV_KEY,
+	NODE_ENV_VALUE
+}	t_node_kind;
+
 typedef struct s_token
 {
 	char			*word;
 	enum e_type		type;
 	struct s_token	*next;
 }	t_token;
+
+typedef struct s_ast
+{
+	t_node_kind		kind;
+	char			*data;
+	struct s_ast	*left;
+	struct s_ast	*right;
+}	t_ast;
 
 typedef struct s_env
 {
