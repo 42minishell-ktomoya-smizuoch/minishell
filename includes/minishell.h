@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/10 19:35:57 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/11 14:54:41 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,11 @@ enum e_type
 typedef enum e_node_kind
 {
 	NODE_GENERAL,
+	NODE_COMMAND,
+	NODE_ARGUMENT,
 	NODE_PIPE,
 	NODE_AMPERSAND,
 	NODE_REDIRECT,
-	NODE_COMMAND,
-	NODE_ARGUMENT,
-	NODE_FILE,
-	NODE_ENV,
-	NODE_ENV_KEY,
-	NODE_ENV_VALUE
 }	t_node_kind;
 
 typedef struct s_token
@@ -81,5 +77,7 @@ void			lstadd_back_token(t_token **lst, t_token *new);
 bool			is_blank(char c);
 bool			is_metachar(const char c);
 void			set_errno_and_exit(const char *str, int errnum);
+
+t_ast			*parser(t_token *tokens);
 
 #endif

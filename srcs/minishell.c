@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/10 18:43:14 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/11 15:47:26 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_token		*tokens;
-	t_token		*current;
+	t_ast		*ast;
 	const char	*line;
 
 	(void)argv;
@@ -37,12 +37,8 @@ int	main(int argc, char **argv, char **envp)
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
-		current = tokens;
-		while (current != NULL)
-		{
-			printf("Token: %s, Type: %d\n", current->word, current->type);
-			current = current->next;
-		}
+		ast = parser(tokens);
+		printf("command: %s, args: %s\n", ast->data, ast->left->data);
 		free ((void *)line);
 	}
 	return (0);
