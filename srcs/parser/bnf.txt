@@ -49,3 +49,26 @@ char =
                       | <simple command> '>' <filename>
 <simple command>    ::= <path name>
                       | <simple command> <token>
+
+shell grammarより抜粋
+
+simple_command   : cmd_prefix cmd_word cmd_suffix
+                 | cmd_prefix cmd_word
+                 | cmd_prefix
+                 | cmd_name cmd_suffix
+                 | cmd_name
+                 ;
+cmd_name         : WORD                   /* Apply rule 7a */
+                 ;
+cmd_word         : WORD                   /* Apply rule 7b */
+                 ;
+cmd_prefix       :            io_redirect
+                 | cmd_prefix io_redirect
+                 |            ASSIGNMENT_WORD
+                 | cmd_prefix ASSIGNMENT_WORD
+                 ;
+cmd_suffix       :            io_redirect
+                 | cmd_suffix io_redirect
+                 |            WORD
+                 | cmd_suffix WORD
+                 ;

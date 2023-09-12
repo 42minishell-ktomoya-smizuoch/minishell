@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/10 18:43:14 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/12 14:09:15 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_token		*tokens;
-	t_token		*current;
+	t_node_tree	*cmd;
+	t_node_tree	*child;
 	const char	*line;
 
 	(void)argv;
@@ -37,13 +38,18 @@ int	main(int argc, char **argv, char **envp)
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
-		current = tokens;
-		while (current != NULL)
+		cmd = parser(tokens);
+		
+		printf("command: %s, args: ", cmd->first_child->word);
+		child = cmd->first_child->next_sibling;
+		while (child->next_sibling != NULL)
 		{
-			printf("Token: %s, Type: %d\n", current->word, current->type);
-			current = current->next;
+			printf("%s", child->word);
+			printf(", ");
+			child = child->next_sibling;
 		}
-		free ((void *)line);
+		printf("\n");
+		free((void *)line);
 	}
 	return (0);
 }
