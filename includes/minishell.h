@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/10 19:35:57 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/12 16:07:39 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,6 @@ typedef struct s_ast
 	struct s_ast	*left;
 	struct s_ast	*right;
 }	t_ast;
-
-typedef struct s_env
-{
-	char			*key;
-	char			*value;
-	struct s_env	*next;
-}	t_env;
 
 int				display_prompt(void);
 void			launch_executable(const char *exe_path);
