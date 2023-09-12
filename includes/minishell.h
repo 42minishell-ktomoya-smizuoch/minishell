@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/11 14:54:41 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/12 16:07:35 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ enum e_type
 
 typedef enum e_node_kind
 {
-	NODE_GENERAL,
 	NODE_COMMAND,
 	NODE_ARGUMENT,
 	NODE_PIPE,
@@ -53,13 +52,13 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-typedef struct s_ast
+typedef struct s_node_tree
 {
-	t_node_kind		kind;
-	char			*data;
-	struct s_ast	*left;
-	struct s_ast	*right;
-}	t_ast;
+	t_node_kind			kind;
+	char				*word;
+	struct s_node_tree	*first_child;
+	struct s_node_tree	*next_sibling;
+}	t_node_tree
 
 typedef struct s_env
 {
@@ -78,6 +77,6 @@ bool			is_blank(char c);
 bool			is_metachar(const char c);
 void			set_errno_and_exit(const char *str, int errnum);
 
-t_ast			*parser(t_token *tokens);
+t_node_tree			*parser(t_token *tokens);
 
 #endif

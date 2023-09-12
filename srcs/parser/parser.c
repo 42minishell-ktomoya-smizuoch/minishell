@@ -6,21 +6,27 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:48:39 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/11 16:21:55 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/12 15:03:27 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../includes/parser.h"
 
-// トークン列を受け取り、ASTを返す
-// 入力：echo hello
-// 出力：command: echo, args: hello
+// 次の目標: argsを複数入れられるようにする
+// 入力：echo hello world !
+// 出力：command: echo, args: hello, world, !
 // 作りたいBNF
-// <job>       :== <builtin>
-// <builtin>   :== echo <argument>
-// <argument>  :== <argument> <letter> | <argument> <digit> | <empty>
-// <letter>    :== A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | [ | a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z
-// <digit>     :== 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+// simple_command: cmd_name cmd_suffix
+// cmd_name: word
+// cmd_suffix: word
+// 			 | cmd_suffix word
+
+void	free_token(t_token *token)
+{
+	if (token->word != NULL)
+		free(token->word);
+	free(token);
+}
 
 void	free_token_list(t_token *tokens)
 {
@@ -31,47 +37,93 @@ void	free_token_list(t_token *tokens)
 	while (current != NULL)
 	{
 		next = current->next;
-		free(current->word);
-		free(current);
+		free_token(current);
 		current = next;
 	}
 }
 
-t_ast	*new_node(t_node_kind kind, char *word, t_ast *left, t_ast *right)
-{
-	t_ast	*node;
+// t_node_tree	*new_node(t_node_kind kind, char *word, t_node_tree *left, t_node_tree *right)
+// {
+// 	t_node_tree	*node;
 
-	node = ft_calloc(1, sizeof(t_ast));
-	if (!node)
-		exit(FAILURE);
-	node->kind = kind;
-	node->data = ft_strdup(word);
-	if (!node->data)
-		exit(FAILURE);
-	node->left = left;
-	node->right = right;
-	return (node);
+// 	node = ft_calloc(1, sizeof(t_node_tree));
+// 	if (!node)
+// 		exit(FAILURE);
+// 	node->kind = kind;
+// 	node->data = ft_strdup(word);
+// 	if (!node->data)
+// 		exit(FAILURE);
+// 	node->left = left;
+// 	node->right = right;
+// 	return (node);
+// }
+
+// t_node_tree	*create_ast(t_token *tokens)
+// {
+// 	t_node_tree	*ast;
+// 	t_node_tree	*node;
+
+// 	// echo
+// 	ast = new_node(NODE_COMMAND, tokens->word, NULL, NULL);
+// 	tokens = tokens->next;
+// 	// hello world !
+// 	while (tokens->next != NULL)
+// 	{
+// 		node = new_node(NODE_ARGUMENT, tokens->word, NULL, NULL);
+// 		// echoのargsにhello, world !を入れる
+// 		add_args(ast->args);
+// 		tokens = tokens->next;
+// 	}
+// 	ast->left = left;
+// 	return (ast);
+// }
+
+t_node_tree	*parse_simple_command(t_token *tokens)
+{
+	t_node_tree	*cmd;
+	t_node_tree	*arg;
+	t_token		*token;
+	
+	if (tokens == NULL)
+		return (NULL);
+	cmd = new_node(NODE_COMMAND);
+	if (cmd == NULL)
+	{
+		free_token_list(tokens);
+		return (NULL);
+	}
+	token = tokens;
+	while (token->next != NULL)
+	{
+		arg = new_node(NODE_ARGUMENT);
+		if (arg == NULL)
+		{
+			free_node_tree(cmd);
+			free_token_list(tokens);
+			return (NULL);
+		}
+		arg->word = ft_strdup(tokens->word);
+		if (arg->word == NULL)
+		{
+			free_node_tree(cmd);
+			free_token_list(tokens);
+			free(arg);
+			return (NULL);
+		}
+		add_child_node(cmd, arg);
+		token = token->next;
+	}
+	return (cmd);
 }
 
-t_ast	*create_ast(t_token *tokens)
+t_node_tree	*parser(t_token *tokens)
 {
-	t_ast	*ast;
-	t_ast	*left;
-
-	ast = new_node(NODE_COMMAND, tokens->word, NULL, NULL);
-	tokens = tokens->next;
-	left = new_node(NODE_ARGUMENT, tokens->word, NULL, NULL);
-	ast->left = left;
-	return (ast);
-}
-
-t_ast	*parser(t_token *tokens)
-{
-	t_ast	*ast;
+	t_node_tree	*simple_command;
 
 	if (tokens == NULL)
 		return (NULL);
-	ast = create_ast(tokens);
+	// ast = create_ast(tokens);
+	simple_command = parse_simple_command(tokens);
 	free_token_list(tokens);
-	return (ast);
+	return (simple_command);
 }
