@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:48:39 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/12 15:03:27 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/12 17:38:03 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ void	free_token(t_token *token)
 	free(token);
 }
 
-void	free_token_list(t_token *tokens)
+void	free_token_list(t_token *tok_lst)
 {
 	t_token	*current;
 	t_token	*next;
 
-	current = tokens;
+	current = tok_lst;
 	while (current != NULL)
 	{
 		next = current->next;
@@ -58,55 +58,55 @@ void	free_token_list(t_token *tokens)
 // 	return (node);
 // }
 
-// t_node_tree	*create_ast(t_token *tokens)
+// t_node_tree	*create_ast(t_token *tok_lst)
 // {
 // 	t_node_tree	*ast;
 // 	t_node_tree	*node;
 
 // 	// echo
-// 	ast = new_node(NODE_COMMAND, tokens->word, NULL, NULL);
-// 	tokens = tokens->next;
+// 	ast = new_node(NODE_COMMAND, tok_lst->word, NULL, NULL);
+// 	tok_lst = tok_lst->next;
 // 	// hello world !
-// 	while (tokens->next != NULL)
+// 	while (tok_lst->next != NULL)
 // 	{
-// 		node = new_node(NODE_ARGUMENT, tokens->word, NULL, NULL);
+// 		node = new_node(NODE_ARGUMENT, tok_lst->word, NULL, NULL);
 // 		// echoのargsにhello, world !を入れる
 // 		add_args(ast->args);
-// 		tokens = tokens->next;
+// 		tok_lst = tok_lst->next;
 // 	}
 // 	ast->left = left;
 // 	return (ast);
 // }
 
-t_node_tree	*parse_simple_command(t_token *tokens)
+t_node_tree	*parse_simple_command(t_token *tok_lst)
 {
 	t_node_tree	*cmd;
 	t_node_tree	*arg;
 	t_token		*token;
-	
-	if (tokens == NULL)
+
+	if (tok_lst == NULL)
 		return (NULL);
 	cmd = new_node(NODE_COMMAND);
 	if (cmd == NULL)
 	{
-		free_token_list(tokens);
+		free_token_list(tok_lst);
 		return (NULL);
 	}
-	token = tokens;
-	while (token->next != NULL)
+	token = tok_lst;
+	while (token)
 	{
 		arg = new_node(NODE_ARGUMENT);
 		if (arg == NULL)
 		{
 			free_node_tree(cmd);
-			free_token_list(tokens);
+			free_token_list(tok_lst);
 			return (NULL);
 		}
-		arg->word = ft_strdup(tokens->word);
+		arg->word = ft_strdup(token->word);
 		if (arg->word == NULL)
 		{
 			free_node_tree(cmd);
-			free_token_list(tokens);
+			free_token_list(tok_lst);
 			free(arg);
 			return (NULL);
 		}
@@ -116,14 +116,13 @@ t_node_tree	*parse_simple_command(t_token *tokens)
 	return (cmd);
 }
 
-t_node_tree	*parser(t_token *tokens)
+t_node_tree	*parser(t_token *tok_lst)
 {
 	t_node_tree	*simple_command;
 
-	if (tokens == NULL)
+	if (tok_lst == NULL)
 		return (NULL);
-	// ast = create_ast(tokens);
-	simple_command = parse_simple_command(tokens);
-	free_token_list(tokens);
+	simple_command = parse_simple_command(tok_lst);
+	free_token_list(tok_lst);
 	return (simple_command);
 }

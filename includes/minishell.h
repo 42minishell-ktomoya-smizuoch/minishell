@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/12 16:16:33 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/12 16:34:38 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ typedef struct s_node_tree
 	char				*word;
 	struct s_node_tree	*first_child;
 	struct s_node_tree	*next_sibling;
-}	t_node_tree
+}	t_node_tree;
 
 int				display_prompt(void);
 void			launch_executable(const char *exe_path);
@@ -70,6 +70,6 @@ bool			is_blank(char c);
 bool			is_metachar(const char c);
 void			set_errno_and_exit(const char *str, int errnum);
 
-t_node_tree			*parser(t_token *tokens);
+t_node_tree		*parser(t_token *tokens);
 
 #endif
