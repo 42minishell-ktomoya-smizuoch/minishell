@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:48:39 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/12 17:38:03 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/14 18:14:36 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 
 void	free_token(t_token *token)
 {
-	if (token->word != NULL)
-		free(token->word);
+	if (token->str != NULL)
+		free(token->str);
 	free(token);
 }
 
@@ -64,12 +64,12 @@ void	free_token_list(t_token *tok_lst)
 // 	t_node_tree	*node;
 
 // 	// echo
-// 	ast = new_node(NODE_COMMAND, tok_lst->word, NULL, NULL);
+// 	ast = new_node(NODE_COMMAND, tok_lst->str, NULL, NULL);
 // 	tok_lst = tok_lst->next;
 // 	// hello world !
 // 	while (tok_lst->next != NULL)
 // 	{
-// 		node = new_node(NODE_ARGUMENT, tok_lst->word, NULL, NULL);
+// 		node = new_node(NODE_ARGUMENT, tok_lst->str, NULL, NULL);
 // 		// echoのargsにhello, world !を入れる
 // 		add_args(ast->args);
 // 		tok_lst = tok_lst->next;
@@ -102,7 +102,7 @@ t_node_tree	*parse_simple_command(t_token *tok_lst)
 			free_token_list(tok_lst);
 			return (NULL);
 		}
-		arg->word = ft_strdup(token->word);
+		arg->word = ft_strdup(token->str);
 		if (arg->word == NULL)
 		{
 			free_node_tree(cmd);

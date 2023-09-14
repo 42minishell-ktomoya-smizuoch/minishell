@@ -37,7 +37,7 @@ t_token	*create_token(const char *str, size_t token_len)
 	if (!new)
 		set_errno_and_exit("malloc error\n", ENOMEM);
 	new->type = get_token_type(str);
-	new->word = ft_substr(str, 0, token_len);
+	new->str = ft_substr(str, 0, token_len);
 	new->next = NULL;
 	return (new);
 }

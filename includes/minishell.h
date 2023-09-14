@@ -47,9 +47,9 @@ typedef enum e_node_kind
 
 typedef struct s_token
 {
-	char			*word;
 	enum e_type		type;
 	struct s_token	*next;
+	char			*str;
 }	t_token;
 
 typedef struct s_node_tree
