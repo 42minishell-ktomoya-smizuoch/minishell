@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/12 17:26:44 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/15 13:35:55 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_token		*tokens;
-	t_token		*cur;
 	t_node_tree	*cmd;
 	t_node_tree	*child;
 	const char	*line;
@@ -39,16 +38,15 @@ int	main(int argc, char **argv, char **envp)
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
-		cur = tokens;
-		printf("\n");
 		cmd = parser(tokens);
 		printf("command: %s, args: ", cmd->first_child->word);
 		child = cmd->first_child;
-		while (child->next_sibling != NULL)
+		while (child->next_sibling)
 		{
 			child = child->next_sibling;
 			printf("%s", child->word);
-			printf(", ");
+			if (child->next_sibling)
+				printf(", ");
 		}
 		printf("\n");
 		free((void *)line);

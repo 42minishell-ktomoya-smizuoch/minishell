@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:17:52 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/06 15:56:31 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/15 14:12:47 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,28 @@ static enum e_type	get_token_type(const char *str)
 	return (type);
 }
 
-t_token	*create_token(const char *str, size_t token_len)
+// t_token	*create_token(const char *str, size_t token_len)
+// {
+// 	t_token	*new;
+
+// 	if (!token_len)
+// 		return (NULL);
+// 	new = (t_token *)malloc(sizeof(t_token));
+// 	if (!new)
+// 		set_errno_and_exit("malloc error\n", ENOMEM);
+// 	new->type = get_token_type(str);
+// 	new->str = ft_substr(str, 0, token_len);
+// 	new->next = NULL;
+// 	return (new);
+// }
+
+t_token	*create_token(const char *str)
 {
-	t_token	*new;
+	t_token	*token;
+	size_t	len;
 
-	if (!token_len)
+	if (*str == NULL)
 		return (NULL);
-	new = (t_token *)malloc(sizeof(t_token));
-	if (!new)
-		set_errno_and_exit("malloc error\n", ENOMEM);
-	new->type = get_token_type(str);
-	new->str = ft_substr(str, 0, token_len);
-	new->next = NULL;
-	return (new);
+	len = get_token_len(str);
+	return (token);
 }
-
-//t_token	*create_token(const char *str)
-//{
-//	t_token	*token;
-//
-//
-//	return (token);
-//}

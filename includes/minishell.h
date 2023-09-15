@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/12 16:34:38 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/15 14:24:34 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,8 @@ enum e_state
 enum e_type
 {
 	TYPE_GENERAL,
-	TYPE_PIPE,
-	TYPE_AMPERSAND,
-	TYPE_REDIRECT
+	TYPE_EOF,
+	TYPE_NEWLINE
 };
 
 typedef enum e_node_kind
@@ -65,8 +64,8 @@ int				display_prompt(void);
 void			launch_executable(const char *exe_path);
 t_token			*lexer(const char *str);
 size_t			get_token_len(const char *str);
-t_token			*create_token(const char *str, size_t token_len);
-//t_token			*create_token(const char *str);
+// t_token			*create_token(const char *str, size_t token_len);
+t_token			*create_token(const char *str);
 void			lstadd_back_token(t_token **lst, t_token *new);
 bool			is_blank(char c);
 bool			is_metachar(const char c);
