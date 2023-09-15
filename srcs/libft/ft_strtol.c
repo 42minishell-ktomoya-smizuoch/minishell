@@ -6,48 +6,52 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 10:16:40 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/09/06 17:07:40 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/09/15 13:51:56 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/libft.h"
 
-long int	charck_errornoa(long result, int base, char n, int sign)
+long long	check_errornoa(long long result, int base, char n, int sign)
 {
-	long long	i;
+	long long	over_div;
+	long long	over_mod;
 
-	i = 0;
-	i = result * base * sign + (ft_tolower(n) - 'a' + 10);
-	if (i > LONG_MAX)
+	over_div = LONG_MAX / base;
+	over_mod = LONG_MAX % base;
+	if (errno == ERANGE)
+		return (result);
+	if (result > over_div || (over_div == result
+			&& over_mod < (ft_tolower(n) - 'a' + 10)))
 	{
 		errno = ERANGE;
-		return (LONG_MAX);
+		if (sign == 1)
+			return (LONG_MAX);
+		else
+			return (LONG_MIN);
 	}
-	else if (i < LONG_MIN)
-	{
-		errno = ERANGE;
-		return (LONG_MIN);
-	}
-	return (i);
+	return (result * base + (ft_tolower(n) - 'a' + 10));
 }
 
-long int	chaeck_errornod(long result, int base, char n, int sign)
+long long	check_errornod(long long result, int base, char n, int sign)
 {
-	long long	i;
+	long long	over_div;
+	long long	over_mod;
 
-	i = 0;
-	i = result * base * sign + (n - '0');
-	if (i > LONG_MAX)
+	over_div = LONG_MAX / base;
+	over_mod = LONG_MAX % base;
+	if (errno == ERANGE)
+		return (result);
+	if (result > over_div || (over_div == result
+			&& over_mod < (n - '0')))
 	{
 		errno = ERANGE;
-		return (LONG_MAX);
+		if (sign == 1)
+			return (LONG_MAX);
+		else
+			return (LONG_MIN);
 	}
-	else if (i < LONG_MIN)
-	{
-		errno = ERANGE;
-		return (LONG_MIN);
-	}
-	return (i);
+	return (result * base + (n - '0'));
 }
 
 int	chaeck_base(int base)
@@ -57,6 +61,15 @@ int	chaeck_base(int base)
 		errno = EINVAL;
 		return (FAILURE);
 	}
+	return (SUCCESS);
+}
+
+bool	check_e(char **endptr, const char *nptr)
+{
+	if (errno == ERANGE)
+		return (FAILURE);
+	if (endptr)
+		*endptr = (char *)nptr;
 	return (SUCCESS);
 }
 
@@ -77,22 +90,28 @@ long int	ft_strtol(const char *nptr, char **endptr, int base)
 		nptr++;
 	while (ft_isalnum(*nptr))
 	{
-		if (ft_isdigit(*nptr))
-			result = chaeck_errornod(result, base, *nptr, sign);
-		else if (ft_isalpha(*nptr) && base > 10)
-			result = charck_errornoa(result, base, *nptr, sign);
+		printf("%lld\n", result);
+		if (ft_isalpha(*nptr) && base > 10)
+			result = check_errornoa(result, base, *nptr, sign);
+		else if (ft_isdigit(*nptr))
+			result = check_errornod(result, base, *nptr, sign);
 		nptr++;
 	}
-	if (endptr)
-		*endptr = (char *)nptr;
+	if (check_e(endptr, nptr) == FAILURE)
+		return (result);
 	return (result * sign);
 }
 
 // int	main(void)
 // {
-// 	char	*str = "3050abc";
+// 	char	*str = "-3456700000000000000008926";
 // 	int		str_base = 10;
 
+// 	errno = 0;
 // 	printf("%ld\n", ft_strtol(str, NULL, str_base));
+// 	printf("%d\n", errno);
+// 	errno = 0;
+// 	printf("%ld\n", strtol(str, NULL, str_base));
+// 	printf("%d\n", errno);
 // 	return (0);
 // }
