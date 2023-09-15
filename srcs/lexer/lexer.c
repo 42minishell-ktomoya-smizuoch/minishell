@@ -18,13 +18,13 @@ static void	skip_spaces(const char **str)
 		(*str)++;
 }
 
-static t_token	*create_token_list(const char *str)
+static t_token	*tokenize(const char *str)
 {
-	t_token	*list;
+	t_token	*head;
 	size_t	token_len;
 	t_token	*token;
 
-	list = NULL;
+	head = NULL;
 	while (*str)
 	{
 		skip_spaces(&str);
@@ -35,19 +35,39 @@ static t_token	*create_token_list(const char *str)
 			continue ;
 		token = create_token(str, token_len);
 		if (!token)
-			set_errno_and_exit("create_token_list: token is NULL\n", ENOMEM);
-		lstadd_back_token(&list, token);
+			set_errno_and_exit("tokenize: token is NULL\n", ENOMEM);
+		lstadd_back_token(&head, token);
 		str += token_len;
 	}
-	return (list);
+	return (head);
 }
+
+//static t_token	*tokenize(const char *str)
+//{
+//	t_token	*head;
+//	t_token	*token;
+//
+//	head = NULL;
+//	while (*str)
+//	{
+//		skip_spaces(&str);
+//		if (*str == '\0')
+//			break ;
+//		token = create_token(str);
+//		if (!token)
+//			exit(1);
+//		lstadd_back_token(&head, token);
+//		str += token->len;
+//	}
+//	return (head);
+//}
 
 t_token	*lexer(const char *str)
 {
-	t_token	*token_list;
+	t_token	*token;
 
 	if (!str)
 		ft_putendl_fd("lexer: str is NULL", STDERR_FILENO);
-	token_list = create_token_list(str);
-	return (token_list);
+	token = tokenize(str);
+	return (token);
 }

@@ -41,3 +41,11 @@ t_token	*create_token(const char *str, size_t token_len)
 	new->next = NULL;
 	return (new);
 }
+
+//t_token	*create_token(const char *str)
+//{
+//	t_token	*token;
+//
+//
+//	return (token);
+//}

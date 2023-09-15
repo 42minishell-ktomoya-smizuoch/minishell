@@ -50,6 +50,7 @@ typedef struct s_token
 	enum e_type		type;
 	struct s_token	*next;
 	char			*str;
+	size_t 			len;
 }	t_token;
 
 typedef struct s_node_tree
@@ -65,6 +66,7 @@ void			launch_executable(const char *exe_path);
 t_token			*lexer(const char *str);
 size_t			get_token_len(const char *str);
 t_token			*create_token(const char *str, size_t token_len);
+//t_token			*create_token(const char *str);
 void			lstadd_back_token(t_token **lst, t_token *new);
 bool			is_blank(char c);
 bool			is_metachar(const char c);
