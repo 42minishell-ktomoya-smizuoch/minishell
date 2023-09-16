@@ -24,8 +24,8 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_token		*tokens;
-	t_node_tree	*cmd;
-	t_node_tree	*child;
+//	t_node_tree	*cmd;
+//	t_node_tree	*child;
 	const char	*line;
 
 	(void)argv;
@@ -38,17 +38,22 @@ int	main(int argc, char **argv, char **envp)
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
-		cmd = parser(tokens);
-		printf("command: %s, args: ", cmd->first_child->word);
-		child = cmd->first_child;
-		while (child->next_sibling)
+//		cmd = parser(tokens);
+//		printf("command: %s, args: ", cmd->first_child->word);
+//		child = cmd->first_child;
+//		while (child->next_sibling)
+//		{
+//			child = child->next_sibling;
+//			printf("%s", child->word);
+//			if (child->next_sibling)
+//				printf(", ");
+//		}
+//		printf("\n");
+		while (tokens)
 		{
-			child = child->next_sibling;
-			printf("%s", child->word);
-			if (child->next_sibling)
-				printf(", ");
+			printf("type: %d, str: %s, len: %zu\n", tokens->type, tokens->str, tokens->len);
+			tokens = tokens->next;
 		}
-		printf("\n");
 		free((void *)line);
 	}
 	return (0);

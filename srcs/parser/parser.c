@@ -21,26 +21,26 @@
 // cmd_suffix: word
 // 			 | cmd_suffix word
 
-void	free_token(t_token *token)
-{
-	if (token->str != NULL)
-		free(token->str);
-	free(token);
-}
+//void	free_token(t_token *token)
+//{
+//	if (token->str != NULL)
+//		free(token->str);
+//	free(token);
+//}
 
-void	free_token_list(t_token *tok_lst)
-{
-	t_token	*current;
-	t_token	*next;
-
-	current = tok_lst;
-	while (current != NULL)
-	{
-		next = current->next;
-		free_token(current);
-		current = next;
-	}
-}
+//void	free_token_list(t_token *tok_lst)
+//{
+//	t_token	*current;
+//	t_token	*next;
+//
+//	current = tok_lst;
+//	while (current != NULL)
+//	{
+//		next = current->next;
+//		free_token(current);
+//		current = next;
+//	}
+//}
 
 // t_node_tree	*new_node(t_node_kind kind, char *word, t_node_tree *left, t_node_tree *right)
 // {
@@ -89,7 +89,7 @@ t_node_tree	*parse_simple_command(t_token *tok_lst)
 	cmd = new_node(NODE_COMMAND);
 	if (cmd == NULL)
 	{
-		free_token_list(tok_lst);
+		free(tok_lst);
 		return (NULL);
 	}
 	token = tok_lst;
@@ -99,14 +99,14 @@ t_node_tree	*parse_simple_command(t_token *tok_lst)
 		if (arg == NULL)
 		{
 			free_node_tree(cmd);
-			free_token_list(tok_lst);
+			free(tok_lst);
 			return (NULL);
 		}
 		arg->word = ft_strdup(token->str);
 		if (arg->word == NULL)
 		{
 			free_node_tree(cmd);
-			free_token_list(tok_lst);
+			free(tok_lst);
 			free(arg);
 			return (NULL);
 		}
@@ -123,6 +123,6 @@ t_node_tree	*parser(t_token *tok_lst)
 	if (tok_lst == NULL)
 		return (NULL);
 	simple_command = parse_simple_command(tok_lst);
-	free_token_list(tok_lst);
+	free(tok_lst);
 	return (simple_command);
 }

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../includes/lexer.h"
 
 static void	skip_spaces(const char **str)
 {
@@ -18,45 +18,26 @@ static void	skip_spaces(const char **str)
 		(*str)++;
 }
 
-// static t_token	*tokenize(const char *str)
-// {
-// 	t_token	*head;
-// 	size_t	token_len;
-// 	t_token	*token;
-
-// 	head = NULL;
-// 	while (*str)
-// 	{
-// 		skip_spaces(&str);
-// 		if (!*str)
-// 			break ;
-// 		token_len = get_token_len(str);
-// 		if (!token_len)
-// 			continue ;
-// 		token = create_token(str, token_len);
-// 		if (!token)
-// 			set_errno_and_exit("tokenize: token is NULL\n", ENOMEM);
-// 		lstadd_back_token(&head, token);
-// 		str += token_len;
-// 	}
-// 	return (head);
-// }
-
 static t_token	*tokenize(const char *str)
 {
 	t_token	*head;
 	t_token	*token;
 
 	head = NULL;
-	while (*str)
+	while (1)
 	{
 		skip_spaces(&str);
-		if (*str == '\0')
+		if (*str == '\0' && head == NULL)
 			break ;
-		token = create_token(str);
+		else if (*str == '\0')
+			token = new_token(TYPE_EOF, str, 0);
+		else
+			token = create_token(str);
 		if (!token)
-			exit(1);
+			return (NULL);
 		lstadd_back_token(&head, token);
+		if (token->type == TYPE_EOF)
+			break ;
 		str += token->len;
 	}
 	return (head);
@@ -69,5 +50,7 @@ t_token	*lexer(const char *str)
 	if (!str)
 		ft_putendl_fd("lexer: str is NULL", STDERR_FILENO);
 	token = tokenize(str);
+	if (!token)
+		return (NULL);
 	return (token);
 }

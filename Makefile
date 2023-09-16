@@ -14,10 +14,8 @@ OBJS = $(SRCS:.c=.o)
 
 LEXER_DIR = $(SRCS_DIR)/lexer
 LEXER_FILES = lexer.c \
-	lexer_bool.c \
-	lstadd_back_token.c \
-	create_token.c \
-	get_token_len.c \
+	bool.c \
+	token.c \
 
 LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
 LEXER_OBJS = $(LEXER_SRCS:.c=.o)

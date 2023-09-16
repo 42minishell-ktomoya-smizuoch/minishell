@@ -10,11 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../includes/lexer.h"
 
 bool	startwith(const char *s1, const char *s2)
 {
-	return (ft_memcmp(s1, s2, ft_strlen(s2)));
+	return (ft_memcmp(s1, s2, ft_strlen(s2)) == 0);
 }
 
 bool	is_metachar(const char c)
