@@ -29,10 +29,7 @@ static t_token	*tokenize(const char *str)
 		skip_spaces(&str);
 		if (*str == '\0' && head == NULL)
 			break ;
-		else if (*str == '\0')
-			token = new_token(TYPE_EOF, str, 0);
-		else
-			token = create_token(str);
+		token = create_token(str);
 		if (!token)
 			return (NULL);
 		lstadd_back_token(&head, token);

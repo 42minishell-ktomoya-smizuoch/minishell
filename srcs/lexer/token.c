@@ -65,10 +65,12 @@ static size_t	get_token_len(const char *s)
 
 	len = 0;
 	state = STATE_GENERAL;
-	if (startwith(s, ">>") || startwith(s, "<<")
+	if (s[0] == '\0')
+		len = 0;
+	else if (startwith(s, ">>") || startwith(s, "<<")
 		|| startwith(s, "||"))
 		len = 2;
-	else if (ft_strchr("><|&", *s))
+	else if (ft_strchr("><|&", *s) != NULL)
 		len = 1;
 	else
 	{
@@ -105,8 +107,9 @@ t_token	*create_token(const char *str)
 		return (NULL);
 	len = get_token_len(str);
 	if (len == 0)
-		return (NULL);
-	token = new_token(TYPE_GENERAL, str, len);
+		token = new_token(TYPE_EOF, str, len);
+	else
+		token = new_token(TYPE_GENERAL, str, len);
 	if (!token)
 		return (NULL);
 	return (token);
