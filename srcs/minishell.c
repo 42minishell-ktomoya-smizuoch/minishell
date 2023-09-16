@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/09 17:52:11 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/16 15:13:27 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,31 @@
 // 	return (SUCCESS);
 // }
 
+static int	envp_init(char **envp)
+{
+	int		i;
+
+	i = 0;
+	if (!envp)
+		return (FAILURE);
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], "_=", 2) == 0)
+		{
+			envp[i] = NULL;
+			break ;
+		}
+		i++;
+	}
+	if (envp[i] == NULL)
+	{
+		envp[i] = ft_strdup("OLDPWD");
+		if (!envp[i])
+			return (FAILURE);
+	}
+	return (SUCCESS);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_token		*tokens;
@@ -28,6 +53,7 @@ int	main(int argc, char **argv, char **envp)
 	const char	*line;
 
 	(void)argv;
+	envp_init(envp);
 	if (argc != 1)
 		return (FAILURE);
 	while (1)
