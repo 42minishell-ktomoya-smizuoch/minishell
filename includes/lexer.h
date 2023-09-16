@@ -29,4 +29,4 @@ bool			is_blank(char c);
 bool			is_metachar(const char c);
 bool			startwith(const char *s1, const char *s2);
 
-#endif //MINISHELL_LEXER_H
+#endif
