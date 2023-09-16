@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   node.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 11:27:06 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/12 17:38:11 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/16 18:46:51 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
 
-t_node_tree	*new_node(t_node_kind kind)
+t_node_tree	*new_node(t_node_kind kind, const char *p, size_t len)
 {
 	t_node_tree	*node;
 
@@ -20,6 +20,8 @@ t_node_tree	*new_node(t_node_kind kind)
 	if (node == NULL)
 		return (NULL);
 	node->kind = kind;
+	node->str = p;
+	node->len = len;
 	return (node);
 }
 

@@ -16,8 +16,8 @@
 # include "minishell.h"
 
 t_node_tree	*parse_simple_command(t_token *tokens);
-t_node_tree	*new_node(t_node_kind kind);
+t_node_tree	*new_node(t_node_kind kind, const char *p, size_t len);
 void		add_child_node(t_node_tree *parent, t_node_tree *child);
-void	free_node_tree(t_node_tree *node);
+void		free_node_tree(t_node_tree *node);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:48:39 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/14 18:14:36 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/16 18:51:18 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_node_tree	*parse_simple_command(t_token *tok_lst)
 
 	if (tok_lst == NULL)
 		return (NULL);
-	cmd = new_node(NODE_COMMAND);
+	cmd = new_node(NODE_COMMAND, tok_lst->str, tok_lst->len);
 	if (cmd == NULL)
 	{
 		free(tok_lst);
@@ -95,19 +95,11 @@ t_node_tree	*parse_simple_command(t_token *tok_lst)
 	token = tok_lst;
 	while (token)
 	{
-		arg = new_node(NODE_ARGUMENT);
+		arg = new_node(NODE_ARGUMENT, token->str, token->len);
 		if (arg == NULL)
 		{
 			free_node_tree(cmd);
 			free(tok_lst);
-			return (NULL);
-		}
-		arg->word = ft_strdup(token->str);
-		if (arg->word == NULL)
-		{
-			free_node_tree(cmd);
-			free(tok_lst);
-			free(arg);
 			return (NULL);
 		}
 		add_child_node(cmd, arg);

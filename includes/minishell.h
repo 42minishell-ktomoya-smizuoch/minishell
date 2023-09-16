@@ -25,7 +25,7 @@ typedef enum e_type
 {
 	TYPE_GENERAL,
 	TYPE_EOF,
-	TYPE_NEWLINE
+	TYPE_NEWLINE,
 }	t_type;
 
 typedef enum e_node_kind
@@ -49,9 +49,10 @@ typedef struct s_token
 typedef struct s_node_tree
 {
 	t_node_kind			kind;
-	char				*word;
 	struct s_node_tree	*first_child;
 	struct s_node_tree	*next_sibling;
+	const char			*str;
+	size_t				len;
 }	t_node_tree;
 
 int				display_prompt(void);
