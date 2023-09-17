@@ -16,6 +16,7 @@ LEXER_DIR = $(SRCS_DIR)/lexer
 LEXER_FILES = lexer.c \
 	bool.c \
 	token.c \
+	value.c \
 
 LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
 LEXER_OBJS = $(LEXER_SRCS:.c=.o)
@@ -24,6 +25,8 @@ OBJS += $(LEXER_OBJS)
 PARSER_DIR = $(SRCS_DIR)/parser
 PARSER_FILES = parser.c \
 	node.c \
+	grammar.c \
+	check.c \
 
 PARSER_SRCS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)

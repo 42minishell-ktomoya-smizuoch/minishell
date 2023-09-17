@@ -24,6 +24,8 @@ typedef enum e_state
 
 t_token			*create_token(const char *str);
 t_token			*new_token(t_type type, const char *str, size_t len);
+size_t			get_token_len(const char *s);
+t_type			get_token_type(const char c);
 void			lstadd_back_token(t_token **lst, t_token *new);
 bool			is_blank(char c);
 bool			is_metachar(const char c);

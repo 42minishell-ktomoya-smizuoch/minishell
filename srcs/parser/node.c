@@ -12,48 +12,60 @@
 
 #include "../../includes/parser.h"
 
-t_node_tree	*new_node(t_node_kind kind, const char *p, size_t len)
+t_node	*new_node(t_node_kind kind)
 {
-	t_node_tree	*node;
+	t_node	*node;
 
-	node = ft_calloc(1, sizeof(t_node_tree));
+	node = ft_calloc(1, sizeof(t_node));
 	if (node == NULL)
 		return (NULL);
 	node->kind = kind;
-	node->str = p;
-	node->len = len;
 	return (node);
 }
 
-void	add_child_node(t_node_tree *parent, t_node_tree *child)
+//t_node	*new_node(t_node_kind kind, t_node *left, t_node *right)
+//{
+//	t_node	*node;
+//
+//	node = ft_calloc(1, sizeof(t_node));
+//	if (!node)
+//		return (NULL);
+//	node->kind = kind;
+//	node->left = left;
+//	node->right = right;
+//	return (node);
+//}
+
+//void	add_child_node(t_node *parent, t_node *child)
+//{
+//	t_node	*sibling;
+//
+//	if (!parent || !child)
+//		return ;
+//	if (parent->first_child == NULL)
+//		parent->first_child = child;
+//	else
+//	{
+//		sibling = parent->first_child;
+//		while (sibling->next_sibling != NULL)
+//			sibling = sibling->next_sibling;
+//		sibling->next_sibling = child;
+//	}
+//}
+
+void	lstadd_back_node(t_node **lst, t_node *new)
 {
-	t_node_tree	*sibling;
+	t_node *last;
 
-	if (!parent || !child)
+	if (!lst || !new)
 		return ;
-	if (parent->first_child == NULL)
-		parent->first_child = child;
-	else
+	if (*lst == NULL)
 	{
-		sibling = parent->first_child;
-		while (sibling->next_sibling != NULL)
-			sibling = sibling->next_sibling;
-		sibling->next_sibling = child;
-	}
-}
-
-void	free_node_tree(t_node_tree *node)
-{
-	t_node_tree	*child;
-	t_node_tree	*next;
-
-	if (node == NULL)
+		*lst = new;
 		return ;
-	child = node->first_child;
-	while (child->next_sibling != NULL)
-	{
-		next = child->next_sibling;
-		free_node_tree(child);
-		child = next;
 	}
+	last = *lst;
+	while (last->right)
+		last = last->right;
+	last->right = new;
 }

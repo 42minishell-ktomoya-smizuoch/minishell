@@ -32,6 +32,7 @@ static t_token	*tokenize(const char *str)
 		token = create_token(str);
 		if (!token)
 			return (NULL);
+		token->head = head;
 		lstadd_back_token(&head, token);
 		if (token->type == TYPE_EOF)
 			break ;
