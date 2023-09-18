@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/15 14:24:34 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/18 10:45:00 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_token
 	struct s_token	*cur;
 	struct s_token	*next;
 	const char		*str;
-	size_t 			len;
+	size_t			len;
 }	t_token;
 
 //typedef struct s_node
