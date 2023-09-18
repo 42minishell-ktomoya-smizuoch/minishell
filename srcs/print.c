@@ -40,7 +40,9 @@ void	print_argument_list(t_node *node, int depth)
 {
 	if (node == NULL)
 		return ;
-	printf("%s, ", node->word);
+	printf("%s", node->word);
+	if (node->right)
+		printf(", ");
 	print_argument_list(node->right, depth + 1);
 }
 

@@ -27,10 +27,7 @@ t_node	*new_branch(t_node_kind kind, t_node *left, t_node *right)
 {
 	t_node	*node;
 
-	node = ft_calloc(1, sizeof(t_node));
-	if (!node)
-		return (NULL);
-	node->kind = kind;
+	node = new_node(kind);
 	node->left = left;
 	node->right = right;
 	return (node);

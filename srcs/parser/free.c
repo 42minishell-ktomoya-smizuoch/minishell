@@ -15,7 +15,7 @@
 void	free_token(t_token *token)
 {
 	if (token->str != NULL)
-		free(token->str);
+		free((char *)token->str);
 	free(token);
 }
 
@@ -54,6 +54,7 @@ void	free_node_list(t_node *head)
 	t_node *current;
 	t_node *next;
 
+	current = head;
 	while (current)
 	{
 		// nextの代わりにrightを繋げるようにする
