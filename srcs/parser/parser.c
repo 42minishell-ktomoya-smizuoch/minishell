@@ -58,11 +58,11 @@
 
 t_node	*parser(t_token *token)
 {
-	t_node	*simple_command;
+	t_node	*pipe_line;
 
 	if (token == NULL)
 		return (NULL);
-	simple_command = command(token);
+	pipe_line = pipeline(token);
 //	free(tok_lst);
-	return (simple_command);
+	return (pipe_line);
 }

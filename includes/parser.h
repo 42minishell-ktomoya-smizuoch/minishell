@@ -23,7 +23,7 @@ t_node	*new_branch(t_node_kind kind, t_node *left, t_node *right);
 void	add_child_node(t_node *parent, t_node *child);
 void	lstadd_back_node(t_node **lst, t_node *new);
 bool	consume(const char *op, t_token *tok);
-void	free_token(t_token *token);
+void	free_token(t_token *tok);
 void	free_token_list(t_token *head);
 void	free_node_tree(t_node *node);
 
