@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check.c                                            :+:      :+:    :+:   */
+/*   consume.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 05:25:30 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/17 05:25:31 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/18 12:51:09 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 bool	consume(const char *op, t_token *tok)
 {
-	// 文字列の長さを計る必要はあるか？→パイプと多段パイプの違いがわからないので必要
 	if (ft_strlen(op) != tok->len || ft_memcmp(tok->str, op, tok->len))
 		return (false);
 	tok->cur = tok->next;

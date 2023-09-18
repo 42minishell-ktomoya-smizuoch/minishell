@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:14:23 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/12 13:26:17 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/18 12:06:04 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define PARSER_H
 
 # include "minishell.h"
-# include "lexer.h"
 
 t_node	*pipeline(t_token *tokens);
 t_node	*command(t_token *tok);

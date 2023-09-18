@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:56:33 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/16 16:56:44 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/18 12:02:12 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_LEXER_H
-# define MINISHELL_LEXER_H
+#ifndef LEXER_H
+# define LEXER_H
 
 # include "minishell.h"
 

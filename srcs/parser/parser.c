@@ -3,22 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:48:39 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/17 17:57:58 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/18 11:30:08 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
 
-// 次の目標: パイプの文法を追加する
-// EBNF
-// pipe = command ('|' command | "||" command)*
-// command = cmd_name (arg)*
-// cmd_name = "echo"
-// 入力：echo hello world ! | grep
-// 出力：command: echo, args: hello, world, !
+/* 次の目標: パイプの文法を追加する
+ * EBNF
+ * pipe = command ('|' command | "||" command)*
+ * command = (argument)*
+ * argument = word
+ *
+ * 入力: echo hello | world || ! 
+ * 出力: command: echo args: hello
+ *		pipe: |
+ *		command: world args:
+ *      pipe: ||
+ * 		command: ! args:
+ * 
+ * 準目標: 構文木をprintする関数を作る
+ * 
+ */
 
 // t_node	*new_node(t_node_kind kind, char *word, t_node *left, t_node *right)
 // {

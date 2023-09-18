@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   node.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 11:27:06 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/16 18:46:51 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/18 10:56:23 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,18 @@ t_node	*new_node(t_node_kind kind)
 	return (node);
 }
 
-//t_node	*new_node(t_node_kind kind, t_node *left, t_node *right)
-//{
-//	t_node	*node;
-//
-//	node = ft_calloc(1, sizeof(t_node));
-//	if (!node)
-//		return (NULL);
-//	node->kind = kind;
-//	node->left = left;
-//	node->right = right;
-//	return (node);
-//}
+t_node	*new_branch(t_node_kind kind, t_node *left, t_node *right)
+{
+	t_node	*node;
+
+	node = ft_calloc(1, sizeof(t_node));
+	if (!node)
+		return (NULL);
+	node->kind = kind;
+	node->left = left;
+	node->right = right;
+	return (node);
+}
 
 //void	add_child_node(t_node *parent, t_node *child)
 //{
@@ -55,7 +55,7 @@ t_node	*new_node(t_node_kind kind)
 
 void	lstadd_back_node(t_node **lst, t_node *new)
 {
-	t_node *last;
+	t_node	*last;
 
 	if (!lst || !new)
 		return ;

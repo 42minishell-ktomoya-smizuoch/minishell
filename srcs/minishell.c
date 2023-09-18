@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/18 10:44:05 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/18 12:46:17 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_token		*tokens;
-	t_node		*arg;
-	t_node		*cur;
+	t_node		*ast;
 	const char	*line;
 
 	(void)argv;
@@ -30,22 +29,10 @@ int	main(int argc, char **argv, char **envp)
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
-		arg = parser(tokens);
-		if (!arg)
+		if (!tokens)
 			continue ;
-		cur = arg;
-		printf("command: %s, args: ", cur->word);
-		free((char *)cur->word);
-		cur = cur->right;
-		while (cur)
-		{
-			printf("%s", cur->word);
-			free((char *)cur->word);
-			if (cur->right)
-				printf(", ");
-			cur = cur->right;
-		}
-		printf("\n");
+		ast = parser(tokens);
+		print_ast(ast);
 		free((void *)line);
 	}
 	return (0);

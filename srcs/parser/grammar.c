@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   grammar.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 22:16:56 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/17 18:04:24 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/18 16:10:50 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@
  * 準目標: tokenの構造体にトークンの消費位置を示すポインタcurを追加する
  * 準目標: tokenのタイプを追加する
  * 準目標: consume関数を作り直す→問題なし
- * 準目標: new_node関数を作り直す
+ * 準目標: new_node関数を作り直す->new_branch関数を作った
+ * 準目標: command関数のループ条件を変更する
  */
 
 /*
@@ -31,15 +32,22 @@
  */
 t_node	*pipeline(t_token *tok)
 {
-	t_node *node;
+	t_node	*node;
 
 	node = command(tok->cur);
+	printf("tok->cur: %p\n", tok->cur);
 	while (1)
 	{
 		if (consume("||", tok->cur))
-			node = new_node(NODE_PIPE, node, command(tok));
+		{
+			printf("tok->cur: %p\n", tok->cur);
+			node = new_branch(NODE_PIPE, node, command(tok));
+		}
 		else if (consume("|", tok->cur))
-			node = new_node(NODE_PIPE, node, command(tok));
+		{
+			printf("tok->cur: %p\n", tok->cur);
+			node = new_branch(NODE_PIPE, node, command(tok));
+		}
 		else
 			return (node);
 	}
@@ -88,7 +96,7 @@ t_node *command(t_token *tok)
 
 	cmd = NULL;
 	cur = tok;
-	while (cur->type != TYPE_EOF)
+	while (cur->type != TYPE_EOF && cur->type != TYPE_PIPE)
 	{
 		node = new_node(NODE_ARGUMENT);
 		if (!node)
@@ -108,4 +116,3 @@ t_node *command(t_token *tok)
 	tok->cur = cur;
 	return (cmd);
 }
-

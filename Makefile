@@ -7,6 +7,7 @@ LIBFT_DIR = $(SRCS_DIR)/libft
 SRCS_FILES = minishell.c \
 	display_prompt.c \
 	launch_executable.c \
+	print.c \
 	set_errno_and_exit.c \
 
 SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))

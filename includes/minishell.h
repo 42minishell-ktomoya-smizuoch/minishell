@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 14:47:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/18 10:45:00 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/18 12:48:28 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,15 @@ typedef struct s_node
 }	t_node;
 
 
-int				display_prompt(void);
-void			launch_executable(const char *exe_path);
-t_token			*lexer(const char *str);
-void			set_errno_and_exit(const char *str, int errnum);
+int		display_prompt(void);
+void	launch_executable(const char *exe_path);
+t_token	*lexer(const char *str);
+void	set_errno_and_exit(const char *str, int errnum);
 
-t_node		*parser(t_token *tokens);
+t_node	*parser(t_token *tokens);
+
+void	print_ast(t_node *root);
+void	print_argument_list(t_node *node, int depth);
+void	print_node_tree(t_node *node, int depth);
 
 #endif
