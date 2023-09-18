@@ -23,14 +23,14 @@ void	print_node_tree(t_node *node, int depth)
 		printf("  ");
 	if (node->kind == NODE_ARGUMENT)
 	{
-		printf("command: %s, args: ", node->word);
+		printf("[%d]command: %s, args: ", depth, node->word);
 		free((char *)node->word);
 		print_argument_list(node->right, depth + 1);
 		printf("\n");
 	}
 	else if (node->kind == NODE_PIPE)
 	{
-		printf("pipe: %s\n", node->word);
+		printf("[%d]pipe\n", depth);
 		print_node_tree(node->left, depth + 1);
 		print_node_tree(node->right, depth + 1);
 	}
@@ -51,11 +51,3 @@ void	print_ast(t_node *root)
 	print_node_tree(root, 0);
 }
 
-void	print_pipeline(t_token *tok)
-{
-	t_node	*root;
-
-	root = pipeline(tok);
-	print_ast(root);
-	// free_node_tree(root);
-}

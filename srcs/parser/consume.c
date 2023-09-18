@@ -14,8 +14,11 @@
 
 bool	consume(const char *op, t_token *tok)
 {
-	if (ft_strlen(op) != tok->len || ft_memcmp(tok->str, op, tok->len))
+	t_token	*cur;
+
+	cur = tok->cur;
+	if (ft_strlen(op) != cur->len || ft_memcmp(cur->str, op, cur->len))
 		return (false);
-	tok->cur = tok->next;
+	tok->cur = cur->next;
 	return (true);
 }

@@ -20,72 +20,26 @@
  */
 
 /*
- * 準目標: tokenの構造体にトークンの消費位置を示すポインタcurを追加する
- * 準目標: tokenのタイプを追加する
- * 準目標: consume関数を作り直す→問題なし
- * 準目標: new_node関数を作り直す->new_branch関数を作った
- * 準目標: command関数のループ条件を変更する
- */
-
-/*
  * pipeline = command ('|' command | "||" command)*
  */
 t_node	*pipeline(t_token *tok)
 {
 	t_node	*node;
 
-	node = command(tok->cur);
-	printf("tok->cur: %p\n", tok->cur);
+	node = command(tok);
 	while (1)
 	{
-		if (consume("||", tok->cur))
-		{
-			printf("tok->cur: %p\n", tok->cur);
+		if (consume("||", tok))
 			node = new_branch(NODE_PIPE, node, command(tok));
-		}
-		else if (consume("|", tok->cur))
-		{
-			printf("tok->cur: %p\n", tok->cur);
+		else if (consume("|", tok))
 			node = new_branch(NODE_PIPE, node, command(tok));
-		}
 		else
 			return (node);
 	}
 }
 
-/* command = cmd_name (arg)* */
-//t_node	*command(t_token *tok_lst)
-//{
-//	t_node	*cmd;
-//	t_node	*arg;
-//	t_token		*token;
-//
-//	if (tok_lst == NULL)
-//		return (NULL);
-//	cmd = new_node(NODE_COMMAND, tok_lst->str, tok_lst->len);
-//	if (cmd == NULL)
-//	{
-//		free(tok_lst);
-//		return (NULL);
-//	}
-//	token = tok_lst;
-//	while (token->type != TYPE_EOF)
-//	{
-//		arg = new_node(NODE_ARGUMENT, token->str, token->len);
-//		if (arg == NULL)
-//		{
-//			free_node_tree(cmd);
-//			free(tok_lst);
-//			return (NULL);
-//		}
-//		add_child_node(cmd, arg);
-//		token = token->next;
-//	}
-//	tok_lst->cur = token;
-//	return (cmd);
-//}
-
-/* command = argument (argument)*
+/*
+ * command = argument (argument)*
  * argument = word
  */
 t_node *command(t_token *tok)
@@ -95,7 +49,7 @@ t_node *command(t_token *tok)
 	t_node 	*node;
 
 	cmd = NULL;
-	cur = tok;
+	cur = tok->cur;
 	while (cur->type != TYPE_EOF && cur->type != TYPE_PIPE)
 	{
 		node = new_node(NODE_ARGUMENT);
