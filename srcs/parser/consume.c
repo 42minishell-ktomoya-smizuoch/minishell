@@ -14,6 +14,7 @@
 
 bool	consume(const char *op, t_token *tok)
 {
+	// 文字列の長さを計る必要はあるか？→パイプと多段パイプの違いがわからないので必要
 	if (ft_strlen(op) != tok->len || ft_memcmp(tok->str, op, tok->len))
 		return (false);
 	tok->cur = tok->next;

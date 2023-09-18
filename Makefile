@@ -26,7 +26,7 @@ PARSER_DIR = $(SRCS_DIR)/parser
 PARSER_FILES = parser.c \
 	node.c \
 	grammar.c \
-	check.c \
+	consume.c \
 
 PARSER_SRCS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
