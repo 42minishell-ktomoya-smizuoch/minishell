@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:48:39 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/18 11:30:08 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/18 19:16:42 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,6 @@ t_node	*parser(t_token *token)
 	if (token == NULL)
 		return (NULL);
 	pipe_line = pipeline(token);
-//	free(tok_lst);
+//	free(token);
 	return (pipe_line);
 }

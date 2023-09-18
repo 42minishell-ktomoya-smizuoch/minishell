@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 16:43:04 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/17 16:43:17 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/18 19:39:04 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,12 @@ void	free_token_list(t_token *head)
 
 void	free_node_list(t_node *head)
 {
-	t_node *current;
-	t_node *next;
+	t_node	*current;
+	t_node	*next;
 
 	current = head;
 	while (current)
 	{
-		// nextの代わりにrightを繋げるようにする
 		next = current->right;
 		free(current);
 		current = next;

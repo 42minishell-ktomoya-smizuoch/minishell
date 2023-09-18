@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 11:30:42 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/18 13:43:32 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/18 19:23:19 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,12 @@ void	print_node_tree(t_node *node, int depth)
 
 	if (node == NULL)
 		return ;
-	for (i = 0; i < depth; i++)
+	i = 0;
+	while (i < depth)
+	{
 		printf("  ");
+		i++;
+	}
 	if (node->kind == NODE_ARGUMENT)
 	{
 		printf("[%d]command: %s, args: ", depth, node->word);
@@ -52,4 +56,3 @@ void	print_ast(t_node *root)
 		return ;
 	print_node_tree(root, 0);
 }
-

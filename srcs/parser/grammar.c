@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 22:16:56 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/18 16:10:50 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/18 19:17:25 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ t_node	*pipeline(t_token *tok)
  * command = argument (argument)*
  * argument = word
  */
-t_node *command(t_token *tok)
+t_node	*command(t_token *tok)
 {
-	t_node 	*cmd;
+	t_node	*cmd;
 	t_token	*cur;
-	t_node 	*node;
+	t_node	*node;
 
 	cmd = NULL;
 	cur = tok->cur;
