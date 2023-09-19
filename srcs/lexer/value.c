@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_token_len.c                                    :+:      :+:    :+:   */
+/*   value.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/03 16:03:23 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 16:54:39 by kudoutomoya      ###   ########.fr       */
+/*   Created: 2023/09/17 19:38:37 by kudoutomoya       #+#    #+#             */
+/*   Updated: 2023/09/17 19:38:39 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../includes/lexer.h"
 
 static enum e_state	update_state(const char c, enum e_state prev)
 {
@@ -41,53 +41,43 @@ static enum e_state	update_state(const char c, enum e_state prev)
 	return (new);
 }
 
-static size_t	get_general_len(const char *str)
+size_t	get_token_len(const char *s)
 {
-	size_t			len;
-	enum e_state	state;
+	size_t	len;
+	t_state	state;
 
 	len = 0;
 	state = STATE_GENERAL;
-	while (str[len])
-	{
-		state = update_state(str[len], state);
-		if (is_metachar(str[len]) && state == STATE_GENERAL)
-			break ;
-		len++;
-	}
-	return (len);
-}
-
-static size_t	get_redirect_len(const char *str)
-{
-	size_t	len;
-
-	len = 0;
-	if (str[len] == '>')
-	{
-		len++;
-		if (str[len] == '>')
-			len++;
-	}
-	else if (str[len] == '<')
-	{
-		len++;
-		if (str[len] == '<')
-			len++;
-	}
-	return (len);
-}
-
-size_t	get_token_len(const char *str)
-{
-	size_t	len;
-
-	len = 0;
-	if (str[len] == '|' || str[len] == '&')
-		len++;
-	else if (str[len] == '>' || str[len] == '<')
-		len = get_redirect_len(str);
+	if (*s == '\0')
+		len = 0;
+	else if (startwith(s, ">>") || startwith(s, "<<")
+			 || startwith(s, "||"))
+		len = 2;
+	else if (ft_strchr("><|&", *s) != NULL)
+		len = 1;
 	else
-		len = get_general_len(str);
+	{
+		while (s[len])
+		{
+			state = update_state(s[len], state);
+			if (is_metachar(s[len]) && state == STATE_GENERAL)
+				break ;
+			len++;
+		}
+	}
 	return (len);
+}
+
+t_type	get_token_type(const char c)
+{
+	if (c == '|')
+		return (TYPE_PIPE);
+	else if (c == '&')
+		return (TYPE_AMPERSAND);
+	else if (c == '>' || c == '<')
+		return (TYPE_REDIRECT);
+	else if (c == '\0')
+		return (TYPE_EOF);
+	else
+		return (TYPE_GENERAL);
 }

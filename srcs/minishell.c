@@ -6,28 +6,21 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/09 17:52:11 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/09/18 12:46:17 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// int	main(int argc, char **argv)
-// {
-// 	if (argc < 2)
-// 		return (FAILURE);
-// //	display_prompt();
-// 	// launch_executable((const char *)argv[1]);
-// 	return (SUCCESS);
-// }
-
+// parser test
 int	main(int argc, char **argv, char **envp)
 {
 	t_token		*tokens;
-	t_token		*current;
+	t_node		*ast;
 	const char	*line;
 
 	(void)argv;
+	(void)envp;
 	if (argc != 1)
 		return (FAILURE);
 	while (1)
@@ -36,13 +29,39 @@ int	main(int argc, char **argv, char **envp)
 		if (*line)
 			add_history(line);
 		tokens = lexer(line);
-		current = tokens;
-		while (current != NULL)
-		{
-			printf("Token: %s, Type: %d\n", current->word, current->type);
-			current = current->next;
-		}
-		free ((void *)line);
+		if (!tokens)
+			continue ;
+		ast = parser(tokens);
+		print_ast(ast);
+		free((void *)line);
 	}
 	return (0);
 }
+
+// lexer test
+//int	main(int argc, char **argv)
+//{
+//	t_token		*token;
+//	const char	*line;
+//	char 		*word;
+//
+//	(void)argv;
+//	if (argc != 1)
+//		return (FAILURE);
+//	while (1)
+//	{
+//		line = readline("minishell$ ");
+//		if (*line)
+//			add_history(line);
+//		token = lexer(line);
+//		while (token)
+//		{
+//			word = ft_substr(token->str, 0, token->len);
+//			printf("type: %d, word: %s\n", token->type, word);
+//			free(word);
+//			token = token->next;
+//		}
+//		free((void *)line);
+//	}
+//	return (0);
+//}

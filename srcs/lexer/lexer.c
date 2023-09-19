@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/05 19:12:47 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/15 13:41:22 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../../includes/lexer.h"
 
 static void	skip_spaces(const char **str)
 {
@@ -18,36 +18,37 @@ static void	skip_spaces(const char **str)
 		(*str)++;
 }
 
-static t_token	*create_token_list(const char *str)
+static t_token	*tokenize(const char *str)
 {
-	t_token	*list;
-	size_t	token_len;
+	t_token	*head;
 	t_token	*token;
 
-	list = NULL;
-	while (*str)
+	head = NULL;
+	while (1)
 	{
 		skip_spaces(&str);
-		if (!*str)
+		if (*str == '\0' && head == NULL)
 			break ;
-		token_len = get_token_len(str);
-		if (!token_len)
-			continue ;
-		token = create_token(str, token_len);
+		token = create_token(str);
 		if (!token)
-			set_errno_and_exit("create_token_list: token is NULL\n", ENOMEM);
-		lstadd_back_token(&list, token);
-		str += token_len;
+			return (NULL);
+		token->head = head;
+		lstadd_back_token(&head, token);
+		if (token->type == TYPE_EOF)
+			break ;
+		str += token->len;
 	}
-	return (list);
+	return (head);
 }
 
 t_token	*lexer(const char *str)
 {
-	t_token	*token_list;
+	t_token	*token;
 
 	if (!str)
 		ft_putendl_fd("lexer: str is NULL", STDERR_FILENO);
-	token_list = create_token_list(str);
-	return (token_list);
+	token = tokenize(str);
+	if (!token)
+		return (NULL);
+	return (token);
 }
