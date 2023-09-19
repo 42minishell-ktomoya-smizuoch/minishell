@@ -1,34 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   expansion.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/03 16:10:06 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/09/09 15:49:46 by smizuoch         ###   ########.fr       */
+/*   Created: 2023/09/19 18:25:53 by smizuoch          #+#    #+#             */
+/*   Updated: 2023/09/19 18:28:15 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/builtin.h"
+#ifndef EXPANSION_H
+# define EXPANSION_H
 
-int	builtin_pwd(char **argv)
+# include "libft.h"
+# include <stdio.h>
+
+typedef struct s_env
 {
-	char	*current_directory;
+	char			*key;
+	struct s_env	*next;
+	struct s_env	*prev;
+}	t_env;
 
-	(void)argv;
-	current_directory = getcwd(NULL, 0);
-	if (current_directory == NULL)
-	{
-		perror("getcwd");
-		return (FAILURE);
-	}
-	printf ("%s\n", current_directory);
-	free(current_directory);
-	return (SUCCESS);
-}
-
-// int	main()
-// {
-// 	builtin_pwd();
-// }
+#endif
