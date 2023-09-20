@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 15:38:20 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/09/20 09:44:35 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/09/20 12:56:53 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	env_add_back(t_env *env, char *envp)
 	return (0);
 }	
 
-static void	env_clear(t_env *env)
+void	env_clear(t_env *env)
 {
 	t_envnode	*tmp;
 
@@ -54,11 +54,19 @@ static void	env_clear(t_env *env)
 
 static int	add_oldpwd(t_env *env)
 {
-	int		i;
-	char	*oldpwd;
-	char	*tmp;
+	int			i;
+	char		*oldpwd;
+	t_envnode	*tmp;
 
 	i = 0;
+	tmp = env->head;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, "OLDPWD") == 0
+			|| ft_strncmp(tmp->key, "OLDPWD=", 7) == 0)
+			return (0);
+		tmp = tmp->next;
+	}
 	oldpwd = ft_calloc(7, sizeof(char));
 	if (!oldpwd)
 	{
@@ -69,11 +77,8 @@ static int	add_oldpwd(t_env *env)
 	i = env_add_back(env, oldpwd);
 	free(oldpwd);
 	if (i != 0)
-	{
 		env_clear(env);
-		return (1);
-	}
-	return (0);
+	return (i);
 }
 
 int	env_init(t_env *env, char **envp)
@@ -89,7 +94,7 @@ int	env_init(t_env *env, char **envp)
 			break ;
 		if (envp[i][0] == '=')
 		{
-			ft_putendl_fd("minishell: env: `=': not a valid identifier", 2);
+			ft_putendl_fd("env: `=': not a valid identifier", 2);
 			return (1);
 		}
 		if (envp[i][0] != '\0')
