@@ -6,18 +6,18 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 15:38:20 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/09/19 16:43:37 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/09/20 09:44:35 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../includes/expansion.h"
 
-static int	env_add_back(t_env **env, char *envp)
+static int	env_add_back(t_env *env, char *envp)
 {
-	t_env	*new;
-	t_env	*tmp;
+	t_envnode	*new;
+	t_envnode	*tmp;
 
-	new = (t_env *)malloc(sizeof(t_env));
+	new = (t_envnode *)malloc(sizeof(t_envnode));
 	if (!new)
 		return (1);
 	new->key = ft_strdup(envp);
@@ -25,11 +25,11 @@ static int	env_add_back(t_env **env, char *envp)
 		return (1);
 	new->next = NULL;
 	new->prev = NULL;
-	if (!(*env))
-		*env = new;
+	if (!env->head)
+		env->head = new;
 	else
 	{
-		tmp = *env;
+		tmp = env->head;
 		while (tmp->next)
 			tmp = tmp->next;
 		new->prev = tmp;
@@ -38,22 +38,21 @@ static int	env_add_back(t_env **env, char *envp)
 	return (0);
 }	
 
-static void	env_clear(t_env **env)
+static void	env_clear(t_env *env)
 {
-	t_env	*tmp;
+	t_envnode	*tmp;
 
-	while ((*env)->prev)
-		*env = (*env)->prev;
-	while (*env)
+	while (env->head)
 	{
-		tmp = *env;
-		*env = (*env)->next;
-		free(tmp->key);
+		tmp = env->head;
+		env->head = env->head->next;
+		if (tmp->key)
+			free(tmp->key);
 		free(tmp);
 	}
 }
 
-static int	add_oldpwd(t_env **env)
+static int	add_oldpwd(t_env *env)
 {
 	int		i;
 	char	*oldpwd;
@@ -77,7 +76,7 @@ static int	add_oldpwd(t_env **env)
 	return (0);
 }
 
-int	env_init(t_env **env, char **envp)
+int	env_init(t_env *env, char **envp)
 {
 	int	i;
 	int	j;
@@ -105,21 +104,22 @@ int	env_init(t_env **env, char **envp)
 	return (add_oldpwd(env));
 }
 
-// int	main(int argc, char **argv, char **envp)
+// int	main(int ac, char **av, char **envp)
 // {
-// 	t_env	*env;
+// 	t_env	env;
 
-// 	(void)argc;
-// 	(void)argv;
-// 	env = NULL;
+// 	(void)ac;
+// 	(void)av;
+// 	env.head = NULL;
 // 	if (env_init(&env, envp) != 0)
 // 		return (1);
-// 	while (env->next)
+// 	t_envnode	*tmp;
+// 	tmp = env.head;
+// 	while (tmp)
 // 	{
-// 		ft_putendl_fd(env->key, 1);
-// 		env = env->next;
+// 		printf("%s\n", tmp->key);
+// 		tmp = tmp->next;
 // 	}
-// 	ft_putendl_fd(env->key, 1);
 // 	env_clear(&env);
 // 	return (0);
 // }
