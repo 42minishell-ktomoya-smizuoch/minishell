@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/19 19:03:51 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/09/26 13:59:50 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	execute_command(char *const argv[])
 	}
 	else if (pid == 0) /* 子プロセス */
 	{
-		if (execve("/bin/ls", argv, NULL) == ERROR)
+		if (execve(argv[0], argv, NULL) == ERROR)
 		{
 			perror("execve");
 			exit(FAILURE);
