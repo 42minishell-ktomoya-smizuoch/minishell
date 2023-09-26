@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/02 12:37:10 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/09/05 10:10:17 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/09/19 18:27:39 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,8 @@
 
 # include <libc.h>
 # include "libft.h"
+# include "expansion.h"
+
+
 
 # endif
