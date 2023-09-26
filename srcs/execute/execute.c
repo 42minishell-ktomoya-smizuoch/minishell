@@ -44,7 +44,11 @@ void	execute_command(char *const argv[])
 	}
 	else /* 親プロセス */
 	{
-		wait(&status);
+		if (wait(&status) != pid)
+		{
+			perror("wait");
+			exit(FAILURE);
+		}
 	}
 }
 
