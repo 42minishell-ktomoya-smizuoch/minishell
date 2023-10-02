@@ -1,4 +1,4 @@
-NAME = execute
+NAME = a.out
 
 INC_DIR = ../../includes
 
