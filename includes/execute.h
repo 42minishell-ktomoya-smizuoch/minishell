@@ -17,6 +17,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-void	execute_command(char *const argv[]);
+int	execute_command(char *const argv[]);
 
 #endif

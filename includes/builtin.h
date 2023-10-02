@@ -17,6 +17,12 @@
 # include "libft.h"
 # include "expansion.h"
 
-
+int	builtin_echo(char **argv);
+int builtin_cd(char **argv, t_env *env);
+int builtin_pwd(char **argv);
+int	builtin_export(char **argv, char **env);
+int	builtin_unset(char **argv, char **env);
+int	builtin_env(char **argv, char **env);
+int builtin_exit(char **argv);
 
 # endif

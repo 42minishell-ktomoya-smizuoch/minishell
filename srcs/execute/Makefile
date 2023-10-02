@@ -21,6 +21,19 @@ LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
 LEXER_OBJS = $(LEXER_SRCS:.c=.o)
 OBJS += $(LEXER_OBJS)
 
+BUILTIN_DIR = $(SRCS_DIR)/builtin
+BUILTIN_FILES = builtin_echo.c \
+	builtin_pwd.c \
+	builtin_exit.c \
+#	builtin_cd.c \
+	builtin_export.c \
+	builtin_unset.c \
+	builtin_env.c \
+
+BUILTIN_SRCS = $(addprefix $(BUILTIN_DIR)/, $(BUILTIN_FILES))
+BUILTIN_OBJS = $(BUILTIN_SRCS:.c=.o)
+OBJS += $(BUILTIN_OBJS)
+
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR)
 DEBUGFLAGS = -g3 -O0

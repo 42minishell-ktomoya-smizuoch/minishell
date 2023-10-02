@@ -3,38 +3,71 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/26 13:59:50 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/10/01 20:16:31 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../includes/execute.h"
+#include "../../includes/builtin.h"
 
 /*
- * 目標: ファイルのパスを検索してそのファイルを起動できるようにする
- * 準目標: execve関数の理解
- * 準目標: fork関数の理解
- * 準目標: execve関数を使ってみる
- * 準目標: fork関数を使ってみる
- * 準目標: forkの後にexecveをする関数を作る
- * 準目標: wait関数の理解
+ * 目標: ビルトインコマンドを実行する
+ * 準目標: ビルトインechoを実行する
+ * 準目標: ビルトインpwdを実行する
+ * 準目標: ビルトインexitを実行する
+ * 準目標: getenvについて理解する
+ * 準目標: ビルトインcdを実行する
  */
 
-void	execute_command(char *const argv[])
+/*
+ * そもそもビルトインコマンドを実行するのにexecve関数を使う必要性を感じない
+ * execve関数がいらないなら、fork関数もいらない
+ * 違う、コマンドがパス扱いだった場合の挙動を一緒にしなければならない
+ */
+int	execute_builtin(char *const argv[])
+{
+	int	wstatus;
+
+	wstatus = 0;
+	/* 第１引数が"echo"だったら"../builtin/builtin_echo.o"を検索する */
+	if (ft_strcmp(argv[0], "echo") == 0)
+	{
+		wstatus = execve("../builtin/builtin_echo.o", &argv[1], NULL);
+	}
+	return (wstatus);
+}
+
+int	execute_command(char *const argv[])
 {
 	pid_t	pid;
 	int 	status;
 
+	/* 外部コマンドを実行する前にビルトインコマンドに一致するか確認する */
+	if (ft_strcmp(argv[0], "echo") == 0)
+		return (builtin_echo((char **)argv));
+//	else if (ft_strcmp(argv[0], "cd") == 0)
+//		return (builtin_cd((char **)argv, NULL));
+	else if (ft_strcmp(argv[0], "pwd") == 0)
+		return (builtin_pwd((char **)argv));
+//	else if (ft_strcmp(argv[0], "export") == 0)
+//		return (builtin_export((char **)argv, NULL));
+//	else if (ft_strcmp(argv[0], "unset") == 0)
+//		return (builtin_unset((char **)argv, NULL));
+//	else if (ft_strcmp(argv[0], "env") == 0)
+//		return (builtin_env((char **)argv, NULL));
+	else if (ft_strcmp(argv[0], "exit") == 0)
+		return (builtin_exit((char **)argv));
 	pid = fork();
 	if (pid < 0)
 	{
 		perror("fork");
 		exit(FAILURE);
 	}
-	else if (pid == 0) /* 子プロセス */
+	else if (pid == 0)
 	{
 		if (execve(argv[0], argv, NULL) == ERROR)
 		{
@@ -42,7 +75,7 @@ void	execute_command(char *const argv[])
 			exit(FAILURE);
 		}
 	}
-	else /* 親プロセス */
+	else
 	{
 		if (wait(&status) != pid)
 		{
@@ -50,6 +83,7 @@ void	execute_command(char *const argv[])
 			exit(FAILURE);
 		}
 	}
+	return (0);
 }
 
 size_t	count_token(t_token *tok)

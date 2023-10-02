@@ -49,12 +49,12 @@ typedef struct s_token
 	size_t			len;
 }	t_token;
 
-typedef struct s_env
-{
-	char			*key;
-	struct s_env	*next;
-	struct s_env	*prev;
-}	t_env;
+//typedef struct s_env
+//{
+//	char			*key;
+//	struct s_env	*next;
+//	struct s_env	*prev;
+//}	t_env;
 
 //typedef struct s_node
 //{
