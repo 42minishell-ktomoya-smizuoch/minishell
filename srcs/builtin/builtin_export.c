@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:22 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/03 15:59:07 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/03 16:22:07 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ static void	new_envnode(t_env *env, char *name)
 static void	ft_setenv(char *name, t_env *env)
 {
 	int			i;
-	t_envnode	*new;
 	t_envnode	*tmp;
 
 	i = 0;
@@ -61,8 +60,19 @@ static void	ft_setenv(char *name, t_env *env)
 
 static bool	env_check_alpha(char *str)
 {
-	if (!ft_isalpha(str[0]))
+	int	i;
+
+	i = 0;
+	if (!ft_isalpha(str[0]) && str[0] != '_')
 		return (false);
+	while (str[i])
+	{
+		if (ft_isalnum(str[i]) == false && str[i] != '_')
+			return (false);
+		if (str[i] == '=')
+			return (true);
+		i++;
+	}
 	return (true);
 }
 
