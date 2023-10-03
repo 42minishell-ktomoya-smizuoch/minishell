@@ -14,15 +14,10 @@
 #include "../../includes/execute.h"
 
 /*
- * 目標: 実行ファイルが存在するか確認する
+ * 目標: 実行ファイルの実行権限について確認する処理を追加する（絶対パス指定）
  * 準目標: access関数について理解する
  */
 
-/*
- * そもそもビルトインコマンドを実行するのにexecve関数を使う必要性を感じない
- * execve関数がいらないなら、fork関数もいらない
- * 違う、コマンドがパス扱いだった場合の挙動を一緒にしなければならない
- */
 int	execute_builtin(char *const argv[])
 {
 	int	wstatus;
@@ -66,16 +61,17 @@ int	execute_command(char *const argv[], t_env *env)
 	}
 	else if (pid == 0)
 	{
-		/*
-		 * PATHからargv[0]を探す
-		 * access関数を使う
-		 *
-		 */
-		if (execve(argv[0], argv, NULL) == ERROR)
+//		実行ファイルの実行権限を確認する
+		if (access(argv[0], X_OK) == 0)
 		{
-			perror("execve");
-			exit(FAILURE);
+			if (execve(argv[0], argv, NULL) == ERROR)
+			{
+				printf("%s: %s\n", argv[0], strerror(errno));
+				exit(FAILURE);
+			}
 		}
+		else
+			printf("%s: %s\n", argv[0], strerror(errno));
 	}
 	else
 	{
