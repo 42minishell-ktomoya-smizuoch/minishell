@@ -51,12 +51,13 @@ int	execute_command(char *const argv[], t_env *env)
 		return (builtin_pwd((char **)argv));
 	else if (ft_strcmp(argv[0], "export") == 0)
 		return (builtin_export((char **)argv, env));
-//	else if (ft_strcmp(argv[0], "unset") == 0)
-//		return (builtin_unset((char **)argv, NULL));
+	else if (ft_strcmp(argv[0], "unset") == 0)
+		return (builtin_unset((char **)argv, NULL));
 	else if (ft_strcmp(argv[0], "env") == 0)
 		return (builtin_env((char **)argv, env));
 	else if (ft_strcmp(argv[0], "exit") == 0)
 		return (builtin_exit((char **)argv));
+//	絶対パスの検索を行う
 	pid = fork();
 	if (pid < 0)
 	{
@@ -68,6 +69,7 @@ int	execute_command(char *const argv[], t_env *env)
 		/*
 		 * PATHからargv[0]を探す
 		 * access関数を使う
+		 *
 		 */
 		if (execve(argv[0], argv, NULL) == ERROR)
 		{
