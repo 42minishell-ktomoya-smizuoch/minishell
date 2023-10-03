@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:40:39 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/09/20 13:02:06 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/03 13:41:16 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ static int	free_and_return(char *str, int ret)
 int	builtin_cd(char **argv, t_env *env)
 {
 	char		*oldpwd;
-	char		*tmp;
 
 	oldpwd = getcwd(NULL, 0);
 	if (!oldpwd)
