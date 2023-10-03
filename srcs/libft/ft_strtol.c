@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 10:16:40 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/09/15 13:51:56 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/03 14:09:56 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ long int	ft_strtol(const char *nptr, char **endptr, int base)
 		nptr++;
 	while (ft_isalnum(*nptr))
 	{
-		printf("%lld\n", result);
 		if (ft_isalpha(*nptr) && base > 10)
 			result = check_errornoa(result, base, *nptr, sign);
 		else if (ft_isdigit(*nptr))
