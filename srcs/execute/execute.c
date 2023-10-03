@@ -12,15 +12,14 @@
 
 #include "../../includes/minishell.h"
 #include "../../includes/execute.h"
-#include "../../includes/builtin.h"
 
 /*
  * 目標: ビルトインコマンドを実行する
  * 準目標: ビルトインechoを実行する
  * 準目標: ビルトインpwdを実行する
  * 準目標: ビルトインexitを実行する
- * 準目標: getenvについて理解する
  * 準目標: ビルトインcdを実行する
+ * 準目標: ビルトインexportを実行する
  */
 
 /*
@@ -41,20 +40,21 @@ int	execute_builtin(char *const argv[])
 	return (wstatus);
 }
 
-int	execute_command(char *const argv[])
+int	execute_command(char *const argv[], t_env *env)
 {
 	pid_t	pid;
 	int 	status;
 
+	(void)env;
 	/* 外部コマンドを実行する前にビルトインコマンドに一致するか確認する */
 	if (ft_strcmp(argv[0], "echo") == 0)
 		return (builtin_echo((char **)argv));
-//	else if (ft_strcmp(argv[0], "cd") == 0)
-//		return (builtin_cd((char **)argv, NULL));
+	else if (ft_strcmp(argv[0], "cd") == 0)
+		return (builtin_cd((char **)argv, env));
 	else if (ft_strcmp(argv[0], "pwd") == 0)
 		return (builtin_pwd((char **)argv));
 //	else if (ft_strcmp(argv[0], "export") == 0)
-//		return (builtin_export((char **)argv, NULL));
+//		return (builtin_export((char **)argv, env));
 //	else if (ft_strcmp(argv[0], "unset") == 0)
 //		return (builtin_unset((char **)argv, NULL));
 //	else if (ft_strcmp(argv[0], "env") == 0)
@@ -69,6 +69,10 @@ int	execute_command(char *const argv[])
 	}
 	else if (pid == 0)
 	{
+		/*
+		 * PATHからargv[0]を探す
+		 * access関数を使う
+		 */
 		if (execve(argv[0], argv, NULL) == ERROR)
 		{
 			perror("execve");
@@ -123,14 +127,18 @@ char	**malloc_token(t_token *tok)
 	return (argv);
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
 	const char	*line;
 	t_token		*token;
 	char 		**args;
+	t_env 		env;
 
 	(void)argv;
 	if (argc != 1)
+		return (FAILURE);
+	env.head = NULL;
+	if (env_init(&env, envp) != 0)
 		return (FAILURE);
 	while (1)
 	{
@@ -139,7 +147,7 @@ int	main(int argc, char **argv)
 			add_history(line);
 		token = lexer(line);
 		args = malloc_token(token);
-		execute_command(args);
+		execute_command(args, &env);
 		free((void *)line);
 	}
 	return (0);
