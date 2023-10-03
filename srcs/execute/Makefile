@@ -1,4 +1,4 @@
-NAME = execute
+NAME = a.out
 
 INC_DIR = ../../includes
 
@@ -20,6 +20,25 @@ LEXER_FILES = lexer.c \
 LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
 LEXER_OBJS = $(LEXER_SRCS:.c=.o)
 OBJS += $(LEXER_OBJS)
+
+BUILTIN_DIR = $(SRCS_DIR)/builtin
+BUILTIN_FILES = builtin_echo.c \
+	builtin_pwd.c \
+	builtin_exit.c \
+	builtin_cd.c \
+#	builtin_export.c \
+	builtin_unset.c \
+	builtin_env.c \
+
+BUILTIN_SRCS = $(addprefix $(BUILTIN_DIR)/, $(BUILTIN_FILES))
+BUILTIN_OBJS = $(BUILTIN_SRCS:.c=.o)
+OBJS += $(BUILTIN_OBJS)
+
+SRCS_FILES = env_init.c \
+
+SRCS_SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
+SRCS_OBJS = $(SRCS_SRCS:.c=.o)
+OBJS += $(SRCS_OBJS)
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR)

@@ -14,9 +14,11 @@
 # define EXECUTE_H
 
 # include "libft.h"
+# include "expansion.h"
+# include "builtin.h"
 # include <sys/types.h>
 # include <sys/wait.h>
 
-void	execute_command(char *const argv[]);
+int	execute_command(char *const argv[], t_env *env);
 
 #endif
