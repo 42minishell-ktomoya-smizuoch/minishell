@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:33:05 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/03 14:57:41 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/03 16:00:03 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ static bool	check_env(char *env)
 int	builtin_env(char **argv, t_env *env)
 {
 	int			i;
-	char		*anderbar;
+	char		*underbar;
 	t_envnode	*tmp;
 
 	(void)argv;
 	i = 0;
 	tmp = env->head;
-	anderbar = getenv("_");
-	if (!anderbar)
+	underbar = getenv("_");
+	if (!underbar)
 		return (FAILURE);
 	while (tmp)
 	{
@@ -47,7 +47,7 @@ int	builtin_env(char **argv, t_env *env)
 		tmp = tmp->next;
 	}
 	ft_putstr_fd("_=", STDOUT_FILENO);
-	ft_putendl_fd(anderbar, STDOUT_FILENO);
+	ft_putendl_fd(underbar, STDOUT_FILENO);
 	return (SUCCESS);
 }
 
