@@ -26,9 +26,9 @@ BUILTIN_FILES = builtin_echo.c \
 	builtin_pwd.c \
 	builtin_exit.c \
 	builtin_cd.c \
-#	builtin_export.c \
-	builtin_unset.c \
+	builtin_export.c \
 	builtin_env.c \
+	# builtin_unset.c \
 
 BUILTIN_SRCS = $(addprefix $(BUILTIN_DIR)/, $(BUILTIN_FILES))
 BUILTIN_OBJS = $(BUILTIN_SRCS:.c=.o)

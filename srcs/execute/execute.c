@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/01 20:16:31 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/10/03 16:09:35 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,8 @@
 #include "../../includes/execute.h"
 
 /*
- * 目標: ビルトインコマンドを実行する
- * 準目標: ビルトインechoを実行する
- * 準目標: ビルトインpwdを実行する
- * 準目標: ビルトインexitを実行する
- * 準目標: ビルトインcdを実行する
- * 準目標: ビルトインexportを実行する
+ * 目標: 実行ファイルが存在するか確認する
+ * 準目標: access関数について理解する
  */
 
 /*
@@ -53,12 +49,12 @@ int	execute_command(char *const argv[], t_env *env)
 		return (builtin_cd((char **)argv, env));
 	else if (ft_strcmp(argv[0], "pwd") == 0)
 		return (builtin_pwd((char **)argv));
-//	else if (ft_strcmp(argv[0], "export") == 0)
-//		return (builtin_export((char **)argv, env));
+	else if (ft_strcmp(argv[0], "export") == 0)
+		return (builtin_export((char **)argv, env));
 //	else if (ft_strcmp(argv[0], "unset") == 0)
 //		return (builtin_unset((char **)argv, NULL));
-//	else if (ft_strcmp(argv[0], "env") == 0)
-//		return (builtin_env((char **)argv, NULL));
+	else if (ft_strcmp(argv[0], "env") == 0)
+		return (builtin_env((char **)argv, env));
 	else if (ft_strcmp(argv[0], "exit") == 0)
 		return (builtin_exit((char **)argv));
 	pid = fork();
