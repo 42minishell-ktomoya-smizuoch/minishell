@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:22 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/04 13:27:25 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/04 15:35:13 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ static bool	env_check_alpha(char *str)
 		return (false);
 	while (str[i])
 	{
-		if (ft_isalnum(str[i]) == false && str[i] != '_')
-			return (false);
 		if (str[i] == '=')
 			return (true);
+		if (ft_isalnum(str[i]) == false && str[i] != '_')
+			return (false);
 		i++;
 	}
 	return (true);
