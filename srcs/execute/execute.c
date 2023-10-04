@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/01 20:16:31 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/10/04 14:43:46 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,11 @@
 #include "../../includes/execute.h"
 
 /*
- * 目標: ビルトインコマンドを実行する
- * 準目標: ビルトインechoを実行する
- * 準目標: ビルトインpwdを実行する
- * 準目標: ビルトインexitを実行する
- * 準目標: ビルトインcdを実行する
- * 準目標: ビルトインexportを実行する
+ * 目標: 相対パスで検索できるようにする
+ * 準目標: getenv関数について理解する
+ * 準目標: /Users/kudoutomoya/.volta/binディレクトリで検索を行う
  */
 
-/*
- * そもそもビルトインコマンドを実行するのにexecve関数を使う必要性を感じない
- * execve関数がいらないなら、fork関数もいらない
- * 違う、コマンドがパス扱いだった場合の挙動を一緒にしなければならない
- */
 int	execute_builtin(char *const argv[])
 {
 	int	wstatus;
@@ -45,7 +37,6 @@ int	execute_command(char *const argv[], t_env *env)
 	pid_t	pid;
 	int 	status;
 
-	(void)env;
 	/* 外部コマンドを実行する前にビルトインコマンドに一致するか確認する */
 	if (ft_strcmp(argv[0], "echo") == 0)
 		return (builtin_echo((char **)argv));
@@ -53,14 +44,15 @@ int	execute_command(char *const argv[], t_env *env)
 		return (builtin_cd((char **)argv, env));
 	else if (ft_strcmp(argv[0], "pwd") == 0)
 		return (builtin_pwd((char **)argv));
-//	else if (ft_strcmp(argv[0], "export") == 0)
-//		return (builtin_export((char **)argv, env));
-//	else if (ft_strcmp(argv[0], "unset") == 0)
-//		return (builtin_unset((char **)argv, NULL));
-//	else if (ft_strcmp(argv[0], "env") == 0)
-//		return (builtin_env((char **)argv, NULL));
+	else if (ft_strcmp(argv[0], "export") == 0)
+		return (builtin_export((char **)argv, env));
+	else if (ft_strcmp(argv[0], "unset") == 0)
+		return (builtin_unset((char **)argv, env));
+	else if (ft_strcmp(argv[0], "env") == 0)
+		return (builtin_env((char **)argv, env));
 	else if (ft_strcmp(argv[0], "exit") == 0)
 		return (builtin_exit((char **)argv));
+//	絶対パスの検索を行う
 	pid = fork();
 	if (pid < 0)
 	{
@@ -69,15 +61,37 @@ int	execute_command(char *const argv[], t_env *env)
 	}
 	else if (pid == 0)
 	{
-		/*
-		 * PATHからargv[0]を探す
-		 * access関数を使う
-		 */
-		if (execve(argv[0], argv, NULL) == ERROR)
+		// PATHのvalueを取得する
+		char *path = getenv("PATH");
+		char *slash;
+
+		path = strtok(path, ":");
+		while (path)
 		{
-			perror("execve");
-			exit(FAILURE);
+			slash = ft_strdup("/");
+			path = ft_strjoin(path, slash);
+			free(slash);
+			path = ft_strjoin(path, argv[0]);
+			printf("current path: %s\n", path);
+			// 実行ファイルの実行権限を確認する
+			if (access(path, X_OK) == 0)
+			{
+				printf("current absolute path: %s\n", path);
+				if (execve(path, argv, NULL) == ERROR)
+				{
+					printf("%s: %s\n", argv[0], strerror(errno));
+					exit(FAILURE);
+				}
+			}
+			else if (errno == ENOENT)
+				;
+			else
+				printf("%s: %s\n", argv[0], strerror(errno));
+			free(path);
+			path = strtok(NULL, ":");
 		}
+		if (errno == ENOENT)
+			printf("%s: command not found\n", argv[0]);
 	}
 	else
 	{
