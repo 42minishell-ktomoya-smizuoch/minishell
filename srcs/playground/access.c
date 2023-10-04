@@ -37,23 +37,23 @@
 //	exit(0);
 //}
 
-int main(int argc, char *argv[])
-{
-	if (argc != 2)
-		exit(1);
-	if (access(argv[1], R_OK) == 0)
-		printf("%s は実行可能です。\n", argv[1]);
-	else
-	{
-		if (errno == EACCES)
-			printf("%s は読み込み権限がありません。\n", argv[1]);
-		else if (errno == ENOENT)
-			printf("%s は存在しません。\n", argv[1]);
-		else
-			perror("access");
-	}
-	return (0);
-}
+//int main(int argc, char *argv[])
+//{
+//	if (argc != 2)
+//		exit(1);
+//	if (access(argv[1], R_OK) == 0)
+//		printf("%s は実行可能です。\n", argv[1]);
+//	else
+//	{
+//		if (errno == EACCES)
+//			printf("%s は読み込み権限がありません。\n", argv[1]);
+//		else if (errno == ENOENT)
+//			printf("%s は存在しません。\n", argv[1]);
+//		else
+//			perror("access");
+//	}
+//	return (0);
+//}
 
 //int main() {
 //	const char *filename = "a.txt";

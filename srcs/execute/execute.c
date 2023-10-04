@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/03 16:09:35 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/10/04 14:43:46 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 #include "../../includes/execute.h"
 
 /*
- * 目標: 実行ファイルの実行権限について確認する処理を追加する（絶対パス指定）
- * 準目標: access関数について理解する
+ * 目標: 相対パスで検索できるようにする
+ * 準目標: getenv関数について理解する
+ * 準目標: /Users/kudoutomoya/.volta/binディレクトリで検索を行う
  */
 
 int	execute_builtin(char *const argv[])
@@ -36,7 +37,6 @@ int	execute_command(char *const argv[], t_env *env)
 	pid_t	pid;
 	int 	status;
 
-	(void)env;
 	/* 外部コマンドを実行する前にビルトインコマンドに一致するか確認する */
 	if (ft_strcmp(argv[0], "echo") == 0)
 		return (builtin_echo((char **)argv));
@@ -47,7 +47,7 @@ int	execute_command(char *const argv[], t_env *env)
 	else if (ft_strcmp(argv[0], "export") == 0)
 		return (builtin_export((char **)argv, env));
 	else if (ft_strcmp(argv[0], "unset") == 0)
-		return (builtin_unset((char **)argv, NULL));
+		return (builtin_unset((char **)argv, env));
 	else if (ft_strcmp(argv[0], "env") == 0)
 		return (builtin_env((char **)argv, env));
 	else if (ft_strcmp(argv[0], "exit") == 0)
@@ -61,17 +61,37 @@ int	execute_command(char *const argv[], t_env *env)
 	}
 	else if (pid == 0)
 	{
-//		実行ファイルの実行権限を確認する
-		if (access(argv[0], X_OK) == 0)
+		// PATHのvalueを取得する
+		char *path = getenv("PATH");
+		char *slash;
+
+		path = strtok(path, ":");
+		while (path)
 		{
-			if (execve(argv[0], argv, NULL) == ERROR)
+			slash = ft_strdup("/");
+			path = ft_strjoin(path, slash);
+			free(slash);
+			path = ft_strjoin(path, argv[0]);
+			printf("current path: %s\n", path);
+			// 実行ファイルの実行権限を確認する
+			if (access(path, X_OK) == 0)
 			{
-				printf("%s: %s\n", argv[0], strerror(errno));
-				exit(FAILURE);
+				printf("current absolute path: %s\n", path);
+				if (execve(path, argv, NULL) == ERROR)
+				{
+					printf("%s: %s\n", argv[0], strerror(errno));
+					exit(FAILURE);
+				}
 			}
+			else if (errno == ENOENT)
+				;
+			else
+				printf("%s: %s\n", argv[0], strerror(errno));
+			free(path);
+			path = strtok(NULL, ":");
 		}
-		else
-			printf("%s: %s\n", argv[0], strerror(errno));
+		if (errno == ENOENT)
+			printf("%s: command not found\n", argv[0]);
 	}
 	else
 	{
