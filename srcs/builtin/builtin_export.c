@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:22 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/03 16:22:07 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/04 13:27:25 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ static void	ft_setenv(char *name, t_env *env)
 		i++;
 	while (tmp)
 	{
+		if (tmp->key == NULL)
+			return ;
 		if (ft_strncmp(tmp->key, name, i) == 0)
 		{
 			free(tmp->key);

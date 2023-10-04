@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:44 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/03 17:08:43 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/04 13:26:18 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ static void	ft_unsetenv(char *name, t_env *env)
 		return ;
 	while (tmp)
 	{
+		if (tmp->key == NULL)
+			break ;
 		if (ft_strncmp(tmp->key, newname, ft_strlen(newname)) == 0
 			|| ft_strcmp(tmp->key, name) == 0)
 		{
@@ -83,6 +85,8 @@ static int	ft_getenv(char *name, t_env *env)
 		return (0);
 	while (tmp)
 	{
+		if (tmp->key == NULL)
+			break ;
 		if (ft_strncmp(tmp->key, newname, ft_strlen(newname)) == 0
 			|| ft_strcmp(tmp->key, name) == 0)
 		{
