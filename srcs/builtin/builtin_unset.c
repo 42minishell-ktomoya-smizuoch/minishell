@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:44 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/04 13:26:18 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/04 15:05:11 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ int	builtin_unset(char **argv, t_env *env)
 	int	i;
 
 	i = 1;
-	if (argv == NULL || argv[1] == NULL)
+	if (argv == NULL || argv[1] == NULL || env == NULL)
 		return (0);
 	while (argv[i])
 	{

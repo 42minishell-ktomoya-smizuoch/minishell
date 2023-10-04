@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:33:05 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/03 16:00:03 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/04 15:06:20 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	builtin_env(char **argv, t_env *env)
 	t_envnode	*tmp;
 
 	(void)argv;
+	if (env == NULL || env->head == NULL)
+		return (SUCCESS);
 	i = 0;
 	tmp = env->head;
 	underbar = getenv("_");

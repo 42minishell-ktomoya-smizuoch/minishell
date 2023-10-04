@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:40:39 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/03 13:41:16 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/04 15:11:32 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static void	setoldpwd(t_env *env, char *oldpwd)
 {
 	t_envnode	*tmp;
 
+	if (!oldpwd || !env || !env->head)
+		return ;
 	tmp = env->head;
 	while (tmp)
 	{
@@ -34,6 +36,8 @@ static void	setpwd(t_env *env, char *pwd)
 {
 	t_envnode	*tmp;
 
+	if (!pwd || !env || !env->head)
+		return ;
 	tmp = env->head;
 	while (tmp)
 	{
