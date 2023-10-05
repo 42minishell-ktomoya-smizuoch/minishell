@@ -14,7 +14,8 @@
 #include "../../includes/execute.h"
 
 /*
- * 目標: PATH変数から検索を行うことができ、絶対パスで検索することもできるようにする
+ * 目標: 入力値がディレクトリだった場合の対処を行う
+ * 準目標: stat関数について理解する
  */
 
 int	execute_builtin(char *const argv[])
@@ -73,6 +74,7 @@ int	execute_command(char *const argv[], t_env *env)
 				slash = "/";
 				copy = ft_strjoin(copy, slash);
 				copy = ft_strjoin(copy, argv[0]);
+				printf("current path: %s\n", copy);
 				// 実行ファイルの実行権限を確認する
 				if (access(copy, X_OK) == 0)
 				{
@@ -94,13 +96,29 @@ int	execute_command(char *const argv[], t_env *env)
 		}
 		else
 		{
-			// 絶対パスで検索する
+			// ファイルにアクセスできるか確認する
 			if (access(argv[0], X_OK) == 0)
 			{
-				if (execve(argv[0], argv, NULL) == ERROR)
+				struct stat buf;
+
+				if (stat(argv[0], &buf) == ERROR)
 				{
-					printf("%s: %s\n", argv[0], strerror(errno));
+					perror("stat");
 					exit(FAILURE);
+				}
+				else
+				{
+					// ディレクトリか確認する
+					if (S_ISDIR(buf.st_mode))
+						printf("%s: is a directory\n", argv[0]);
+					else
+					{
+						if (execve(argv[0], argv, NULL) == ERROR)
+						{
+							printf("%s: %s\n", argv[0], strerror(errno));
+							exit(FAILURE);
+						}
+					}
 				}
 			}
 			else
