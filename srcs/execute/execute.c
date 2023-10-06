@@ -73,7 +73,6 @@ int	execute_command(char *const argv[], t_env *env)
 				slash = "/";
 				copy = ft_strjoin(copy, slash);
 				copy = ft_strjoin(copy, argv[0]);
-				printf("current copy: %s\n", copy);
 				// 実行ファイルの実行権限を確認する
 				if (access(copy, X_OK) == 0)
 				{
@@ -89,7 +88,6 @@ int	execute_command(char *const argv[], t_env *env)
 					printf("%s: %s\n", argv[0], strerror(errno));
 				free(copy);
 				copy = ft_strtok(NULL, ":");
-				printf("errno: %s\n", strerror(errno));
 			}
 			if (errno == ENOENT)
 				printf("%s: command not found\n", argv[0]);
