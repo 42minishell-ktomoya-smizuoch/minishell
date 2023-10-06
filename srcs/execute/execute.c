@@ -14,8 +14,7 @@
 #include "../../includes/execute.h"
 
 /*
- * 目標: 入力値がディレクトリだった場合の対処を行う
- * 準目標: stat関数について理解する
+ * 目標: strtok関数を作る、execveにenvを入れる
  */
 
 int	execute_builtin(char *const argv[])
@@ -68,17 +67,17 @@ int	execute_command(char *const argv[], t_env *env)
 			char *copy = ft_strdup(path);
 			char *slash;
 
-			copy = strtok(copy, ":");
+			copy = ft_strtok(copy, ":");
 			while (copy)
 			{
 				slash = "/";
 				copy = ft_strjoin(copy, slash);
 				copy = ft_strjoin(copy, argv[0]);
-				printf("current path: %s\n", copy);
+				printf("current copy: %s\n", copy);
 				// 実行ファイルの実行権限を確認する
 				if (access(copy, X_OK) == 0)
 				{
-					if (execve(copy, argv, NULL) == ERROR)
+					if (execve(copy, argv, &env->head->key) == ERROR)
 					{
 						printf("%s: %s\n", argv[0], strerror(errno));
 						exit(FAILURE);
@@ -89,7 +88,8 @@ int	execute_command(char *const argv[], t_env *env)
 				else
 					printf("%s: %s\n", argv[0], strerror(errno));
 				free(copy);
-				copy = strtok(NULL, ":");
+				copy = ft_strtok(NULL, ":");
+				printf("errno: %s\n", strerror(errno));
 			}
 			if (errno == ENOENT)
 				printf("%s: command not found\n", argv[0]);
@@ -113,7 +113,7 @@ int	execute_command(char *const argv[], t_env *env)
 						printf("%s: is a directory\n", argv[0]);
 					else
 					{
-						if (execve(argv[0], argv, NULL) == ERROR)
+						if (execve(argv[0], argv, &env->head->key) == ERROR)
 						{
 							printf("%s: %s\n", argv[0], strerror(errno));
 							exit(FAILURE);
