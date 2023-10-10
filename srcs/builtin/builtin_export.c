@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:22 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/04 15:35:13 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/06 10:59:01 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ static void	ft_setenv(char *name, t_env *env)
 			return ;
 		if (ft_strncmp(tmp->key, name, i) == 0)
 		{
+			if (tmp->key[i] != '=')
+				return ;
 			free(tmp->key);
 			tmp->key = NULL;
 			tmp->key = ft_strdup(name);
