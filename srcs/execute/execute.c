@@ -63,11 +63,18 @@ int	execute_command(char *const argv[], t_env *env)
 		if (ft_strchr(argv[0], '/') == NULL)
 		{
 			// PATHのvalueを取得する
-			char *path = getenv("PATH");
-			char *copy = ft_strdup(path);
+			char *path = NULL;
+			char *copy = NULL;
 			char *slash;
 
-			copy = ft_strtok(copy, ":");
+			if (env->head->key == NULL)
+				printf("command not found\n");
+			else
+			{
+				path = ft_strchr(env->head->key, '/');
+				copy = ft_strdup(path);
+			}
+			copy = strtok(copy, ":");
 			while (copy)
 			{
 				slash = "/";
@@ -76,7 +83,7 @@ int	execute_command(char *const argv[], t_env *env)
 				// 実行ファイルの実行権限を確認する
 				if (access(copy, X_OK) == 0)
 				{
-					if (execve(copy, argv, &env->head->key) == ERROR)
+					if (execve(copy, argv, NULL) == ERROR)
 					{
 						printf("%s: %s\n", argv[0], strerror(errno));
 						exit(FAILURE);
@@ -87,7 +94,7 @@ int	execute_command(char *const argv[], t_env *env)
 				else
 					printf("%s: %s\n", argv[0], strerror(errno));
 				free(copy);
-				copy = ft_strtok(NULL, ":");
+				copy = strtok(NULL, ":");
 			}
 			if (errno == ENOENT)
 				printf("%s: command not found\n", argv[0]);
