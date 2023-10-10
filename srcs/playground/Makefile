@@ -5,6 +5,7 @@ INC_DIR = ../../includes
 SRCS = access.c \
 	getenv.c \
 	strtok.c \
+	stat.c \
 
 OBJS = $(SRCS:.c=.o)
 

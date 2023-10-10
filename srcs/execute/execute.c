@@ -14,9 +14,7 @@
 #include "../../includes/execute.h"
 
 /*
- * 目標: 相対パスで検索できるようにする
- * 準目標: getenv関数について理解する
- * 準目標: /Users/kudoutomoya/.volta/binディレクトリで検索を行う
+ * 目標: strtok関数を作る、execveにenvを入れる
  */
 
 int	execute_builtin(char *const argv[])
@@ -61,36 +59,76 @@ int	execute_command(char *const argv[], t_env *env)
 	}
 	else if (pid == 0)
 	{
-		// PATHのvalueを取得する
-		char *path = getenv("PATH");
-		char *copy = ft_strdup(path);
-		char *slash;
-
-		copy = strtok(copy, ":");
-		while (copy)
+		// argv[0]にスラッシュが含まれているか調べる
+		if (ft_strchr(argv[0], '/') == NULL)
 		{
-			slash = ft_strdup("/");
-			copy = ft_strjoin(copy, slash);
-			free(slash);
-			copy = ft_strjoin(copy, argv[0]);
-			// 実行ファイルの実行権限を確認する
-			if (access(copy, X_OK) == 0)
+			// PATHのvalueを取得する
+			char *path = NULL;
+			char *copy = NULL;
+			char *slash;
+
+			if (env->head->key == NULL)
+				printf("command not found\n");
+			else
 			{
-				if (execve(copy, argv, NULL) == ERROR)
+				path = ft_strchr(env->head->key, '/');
+				copy = ft_strdup(path);
+			}
+			copy = strtok(copy, ":");
+			while (copy)
+			{
+				slash = "/";
+				copy = ft_strjoin(copy, slash);
+				copy = ft_strjoin(copy, argv[0]);
+				// 実行ファイルの実行権限を確認する
+				if (access(copy, X_OK) == 0)
 				{
+					if (execve(copy, argv, NULL) == ERROR)
+					{
+						printf("%s: %s\n", argv[0], strerror(errno));
+						exit(FAILURE);
+					}
+				}
+				else if (errno == ENOENT)
+					;
+				else
 					printf("%s: %s\n", argv[0], strerror(errno));
+				free(copy);
+				copy = strtok(NULL, ":");
+			}
+			if (errno == ENOENT)
+				printf("%s: command not found\n", argv[0]);
+		}
+		else
+		{
+			// ファイルにアクセスできるか確認する
+			if (access(argv[0], X_OK) == 0)
+			{
+				struct stat buf;
+
+				if (stat(argv[0], &buf) == ERROR)
+				{
+					perror("stat");
 					exit(FAILURE);
 				}
+				else
+				{
+					// ディレクトリか確認する
+					if (S_ISDIR(buf.st_mode))
+						printf("%s: is a directory\n", argv[0]);
+					else
+					{
+						if (execve(argv[0], argv, &env->head->key) == ERROR)
+						{
+							printf("%s: %s\n", argv[0], strerror(errno));
+							exit(FAILURE);
+						}
+					}
+				}
 			}
-			else if (errno == ENOENT)
-				;
 			else
 				printf("%s: %s\n", argv[0], strerror(errno));
-			free(copy);
-			copy = strtok(NULL, ":");
 		}
-		if (errno == ENOENT)
-			printf("%s: command not found\n", argv[0]);
 	}
 	else
 	{
