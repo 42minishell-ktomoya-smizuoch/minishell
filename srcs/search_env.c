@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   serch_env.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:51:38 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/10 15:00:02 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/10 15:28:55 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/expansion.h"
 
-char	*serch_env(char *name, t_env *env)
+char	*search_env(char *name, t_env *env)
 {
 	int			i;
 	t_envnode	*tmp;
