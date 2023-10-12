@@ -64,7 +64,7 @@ int	execute_command(char *const argv[], t_env *env)
 			{
 				path = ft_strchr(path, '/');
 				copy = ft_strdup(path);
-				copy = strtok(copy, ":");
+				copy = ft_strtok(copy, ":");
 				while (copy)
 				{
 					copy = ft_strjoin(copy, "/");
@@ -72,7 +72,6 @@ int	execute_command(char *const argv[], t_env *env)
 					// 実行ファイルの実行権限を確認する
 					if (access(copy, X_OK) == 0)
 					{
-						printf("copy: %s\n", copy);
 						if (execve(copy, argv, NULL) == ERROR)
 						{
 							printf("%s: %s\n", argv[0], strerror(errno));
@@ -87,7 +86,7 @@ int	execute_command(char *const argv[], t_env *env)
 						exit(FAILURE);
 					}
 					free(copy);
-					copy = strtok(NULL, ":");
+					copy = ft_strtok(NULL, ":");
 				}
 				if (errno == ENOENT)
 				{
