@@ -14,14 +14,5 @@
 
 int	ft_putstr_fd(const char *s, int fd)
 {
-	size_t	count;
-
-	count = 0;
-	while (s[count])
-	{
-		if (ft_putchar_fd(s[count], fd) == ERROR)
-			return (ERROR);
-		count++;
-	}
-	return (count);
+	return ((int)write(fd, s, ft_strlen(s)));
 }

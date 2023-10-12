@@ -14,8 +14,17 @@
 #include "../../includes/execute.h"
 
 /*
- * 目標: ft_strtok関数の修正
+ * 目標: 標準エラーに出力する関数を作る
+ * 準目標: put_str_fd関数を修正する
  */
+
+void	puterr_exit(const char *input, const char *msg)
+{
+	ft_putstr_fd(input, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putendl_fd(msg, STDERR_FILENO);
+	exit(FAILURE);
+}
 
 int	execute_command(char *const argv[], t_env *env)
 {
@@ -56,10 +65,11 @@ int	execute_command(char *const argv[], t_env *env)
 			// PATHを探す
 			path = search_env("PATH", env);
 			if (path == NULL)
-			{
-				printf("%s: command not found\n", argv[0]);
-				exit(FAILURE);
-			}
+//			{
+//				printf("%s: command not found\n", argv[0]);
+//				exit(FAILURE);
+//			}
+				puterr_exit(argv[0], strerror(errno));
 			else
 			{
 				path = ft_strchr(path, '/');
@@ -73,26 +83,21 @@ int	execute_command(char *const argv[], t_env *env)
 					if (access(copy, X_OK) == 0)
 					{
 						if (execve(copy, argv, NULL) == ERROR)
-						{
-							printf("%s: %s\n", argv[0], strerror(errno));
-							exit(FAILURE);
-						}
+//						{
+//							printf("%s: %s\n", argv[0], strerror(errno));
+//							exit(FAILURE);
+//						}
+							puterr_exit(argv[0], strerror(errno));
 					}
 					else if (errno == ENOENT)
 						;
 					else
-					{
-						printf("%s: %s\n", argv[0], strerror(errno));
-						exit(FAILURE);
-					}
+						puterr_exit(argv[0], strerror(errno));
 					free(copy);
 					copy = ft_strtok(NULL, ":");
 				}
 				if (errno == ENOENT)
-				{
-					printf("%s: command not found\n", argv[0]);
-					exit(FAILURE);
-				}
+					puterr_exit(argv[0], "command not found");
 			}
 		}
 		else
@@ -111,25 +116,16 @@ int	execute_command(char *const argv[], t_env *env)
 				{
 					// ディレクトリか確認する
 					if (S_ISDIR(buf.st_mode))
-					{
-						printf("%s: is a directory\n", argv[0]);
-						exit(FAILURE);
-					}
+						puterr_exit(argv[0], "is a directory");
 					else
 					{
 						if (execve(argv[0], argv, NULL) == ERROR)
-						{
-							printf("%s: %s\n", argv[0], strerror(errno));
-							exit(FAILURE);
-						}
+							puterr_exit(argv[0], strerror(errno));
 					}
 				}
 			}
 			else
-			{
-				printf("%s: %s\n", argv[0], strerror(errno));
-				exit(FAILURE);
-			}
+				puterr_exit(argv[0], strerror(errno));
 		}
 	}
 	else
