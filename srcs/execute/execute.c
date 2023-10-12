@@ -65,10 +65,6 @@ int	execute_command(char *const argv[], t_env *env)
 			// PATHを探す
 			path = search_env("PATH", env);
 			if (path == NULL)
-//			{
-//				printf("%s: command not found\n", argv[0]);
-//				exit(FAILURE);
-//			}
 				puterr_exit(argv[0], strerror(errno));
 			else
 			{
@@ -83,10 +79,6 @@ int	execute_command(char *const argv[], t_env *env)
 					if (access(copy, X_OK) == 0)
 					{
 						if (execve(copy, argv, NULL) == ERROR)
-//						{
-//							printf("%s: %s\n", argv[0], strerror(errno));
-//							exit(FAILURE);
-//						}
 							puterr_exit(argv[0], strerror(errno));
 					}
 					else if (errno == ENOENT)
