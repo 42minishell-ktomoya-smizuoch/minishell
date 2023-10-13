@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:22 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/10 10:57:54 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/13 13:30:13 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,20 @@ static int	put_env(t_env *env)
 	while (tmp)
 	{
 		ft_putstr_fd("declare -x ", STDOUT_FILENO);
-		ft_putendl_fd(tmp->key, STDOUT_FILENO);
+		while (tmp->key[i] && tmp->key[i] != '=')
+		{
+			ft_putchar_fd(tmp->key[i], STDOUT_FILENO);
+			i++;
+		}
+		if (tmp->key[i] == '=')
+		{
+			ft_putstr_fd("=\"", STDOUT_FILENO);
+			ft_putstr_fd(&tmp->key[i + 1], STDOUT_FILENO);
+			ft_putchar_fd('"', STDOUT_FILENO);
+		}
+		ft_putchar_fd('\n', STDOUT_FILENO);
 		tmp = tmp->next;
+		i = 0;
 	}
 	return (SUCCESS);
 }
