@@ -25,6 +25,7 @@
 # include <stdarg.h>
 # include <inttypes.h>
 # include <stdbool.h>
+# include <sys/syslimits.h>
 
 # define SUCCESS 0
 # define FAILURE 1
