@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:22 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/13 13:30:13 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/13 14:23:48 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,19 +91,14 @@ static int	put_env(t_env *env)
 		return (FAILURE);
 	while (tmp)
 	{
-		ft_putstr_fd("declare -x ", STDOUT_FILENO);
 		while (tmp->key[i] && tmp->key[i] != '=')
-		{
-			ft_putchar_fd(tmp->key[i], STDOUT_FILENO);
-			i++;
-		}
+			i ++;
+		printf("declare -x %.*s", i, tmp->key);
 		if (tmp->key[i] == '=')
 		{
-			ft_putstr_fd("=\"", STDOUT_FILENO);
-			ft_putstr_fd(&tmp->key[i + 1], STDOUT_FILENO);
-			ft_putchar_fd('"', STDOUT_FILENO);
+			printf("=\"%s\"", &tmp->key[i + 1]);
 		}
-		ft_putchar_fd('\n', STDOUT_FILENO);
+		printf("\n");
 		tmp = tmp->next;
 		i = 0;
 	}
