@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/10 17:40:04 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/10/13 19:40:18 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,21 @@ void	puterr_exit(const char *input, const char *msg)
 	exit(FAILURE);
 }
 
+void	putsyserr_exit(const char *syscall_name)
+{
+	perror(syscall_name);
+	exit(FAILURE);
+}
+
 bool	is_builtin(char *cmd)
 {
-	if (ft_strcmp(cmd, "echo") == 0 ||
-		ft_strcmp(cmd, "cd") == 0 ||
-		ft_strcmp(cmd, "pwd") == 0 ||
-		ft_strcmp(cmd, "export") == 0 ||
-		ft_strcmp(cmd, "unset") == 0 ||
-		ft_strcmp(cmd, "env") == 0 ||
-		ft_strcmp(cmd, "exit") == 0)
+	if (ft_strcmp(cmd, "echo") == 0
+		|| ft_strcmp(cmd, "cd") == 0
+		|| ft_strcmp(cmd, "pwd") == 0
+		|| ft_strcmp(cmd, "export") == 0
+		|| ft_strcmp(cmd, "unset") == 0
+		|| ft_strcmp(cmd, "env") == 0
+		|| ft_strcmp(cmd, "exit") == 0)
 		return (true);
 	return (false);
 }
@@ -45,10 +51,7 @@ bool	is_directory(char *path)
 	struct stat	buf;
 
 	if (stat(path, &buf) == ERROR)
-	{
-		perror("stat");
-		exit(FAILURE);
-	}
+		putsyserr_exit("stat");
 	if (S_ISDIR(buf.st_mode))
 		return (true);
 	return (false);
@@ -77,7 +80,7 @@ void	execute_path(char *const argv[])
 	if (access(argv[0], X_OK) == ERROR)
 		puterr_exit(argv[0], strerror(errno));
 	if (execve(argv[0], argv, NULL) == ERROR)
-		puterr_exit(argv[0], strerror(errno));
+		putsyserr_exit("execve");
 }
 
 void	execute_abspath(char *const argv[])
@@ -87,55 +90,43 @@ void	execute_abspath(char *const argv[])
 	if (is_directory(argv[0]))
 		puterr_exit(argv[0], "is a directory");
 	if (execve(argv[0], argv, NULL) == ERROR)
-		puterr_exit(argv[0], strerror(errno));
+		putsyserr_exit("execve");
 }
 
-//void	search_PATH(char *const argv[], t_env *env)
-//{
-//	char	*path;
-//	char	copy[PATH_MAX];
-//
-//	ft_bzero(copy, PATH_MAX);
-//	path = search_env("PATH", env);
-//	if (path == NULL || ft_strchr(path, '/') == NULL)
-//		puterr_exit(argv[0], "command not found");
-//	path = ft_strchr(path, '/');
-//	copy = ft_memcpy(copy, path, ft_strlen(path));
-//	copy = ft_strtok(copy, ":");
-//	while (copy)
-//	{
-//		copy = ft_strjoin(copy, "/");
-//		copy = ft_strjoin(copy, argv[0]);
-//
-//	}
-//}
-
-void	search_PATH(char *const argv[], t_env *env)
+char	*get_path_value(char *const argv[], t_env *env)
 {
-	char	*path;
-	char	*copy;
+	char	*value;
 
-	path = search_env("PATH", env);
-	if (path == NULL || ft_strchr(path, '/') == NULL)
+	value = search_env("PATH", env);
+	if (value == NULL || ft_strchr(value, '/') == NULL)
 		puterr_exit(argv[0], "command not found");
-	path = ft_strchr(path, '/');
-	copy = ft_strdup(path);
-	copy = ft_strtok(copy, ":");
-	while (copy)
+	value = ft_strchr(value, '/');
+	return (value);
+}
+
+void	search_path(char *const argv[], t_env *env)
+{
+	char	*path_set;
+	char	file_path[PATH_MAX];
+	char	*path;
+
+	path_set = get_path_value(argv, env);
+	path = ft_strtok(path_set, ":");
+	while (path)
 	{
-		copy = ft_strjoin(copy, "/");
-		copy = ft_strjoin(copy, argv[0]);
-		if (access(copy, X_OK) == 0)
+		ft_strlcpy(file_path, path, PATH_MAX);
+		ft_strlcat(file_path, "/", PATH_MAX);
+		ft_strlcat(file_path, argv[0], PATH_MAX);
+		if (access(file_path, X_OK) == 0)
 		{
-			if (execve(copy, argv, NULL) == ERROR)
-				puterr_exit(argv[0], strerror(errno));
+			if (execve(file_path, argv, NULL) == ERROR)
+				putsyserr_exit("execve");
 		}
 		else if (errno == ENOENT)
 			;
 		else
 			puterr_exit(argv[0], strerror(errno));
-		free(copy);
-		copy = ft_strtok(NULL, ":");
+		path = ft_strtok(NULL, ":");
 	}
 	puterr_exit(argv[0], "command not found");
 }
@@ -143,28 +134,22 @@ void	search_PATH(char *const argv[], t_env *env)
 int	execute_executable(char *const argv[], t_env *env)
 {
 	pid_t	pid;
-	int 	status;
+	int		status;
 
 	pid = fork();
 	if (pid < 0)
-	{
-		perror("fork");
-		exit(FAILURE);
-	}
+		putsyserr_exit("fork");
 	else if (pid == 0)
 	{
 		if (ft_strchr(argv[0], '/'))
 			execute_abspath(argv);
 		else
-			search_PATH(argv, env);
+			search_path(argv, env);
 	}
 	else
 	{
 		if (wait(&status) != pid)
-		{
-			perror("wait");
-			exit(FAILURE);
-		}
+			putsyserr_exit("wait");
 	}
 	return (0);
 }
@@ -218,8 +203,8 @@ int	main(int argc, char **argv, char **envp)
 {
 	const char	*line;
 	t_token		*token;
-	char 		**args;
-	t_env 		env;
+	char		**args;
+	t_env		env;
 
 	(void)argv;
 	if (argc != 1)
@@ -232,6 +217,8 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("minishell$ ");
 		if (*line)
 			add_history(line);
+		else
+			continue ;
 		token = lexer(line);
 		args = malloc_token(token);
 		execute_command(args, &env);
@@ -239,24 +226,3 @@ int	main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
-
-//int	main(void)
-//{
-//	int		var; /* スタック上の自動変数 */
-//	pid_t	pid;
-//
-//	var = 88;
-//	if (write(STDOUT_FILENO, buf, sizeof(buf) - 1) != sizeof(buf) - 1)
-//		exit(1);
-//	printf("before fork\n"); /* 標準出力をフラッシュしない */
-//	if ((pid = fork()) < 0)
-//		exit(1);
-//	else if (pid == 0) /* 子側 */
-//	{
-//		globvar++; /* 変数を変更する */
-//		var++;
-//	}
-//	else
-//		sleep(2); /* 親側 */
-//	printf("pid = %ld, glob = %d, var = %d\n", (long)getpid(), globvar, var);
-//}
