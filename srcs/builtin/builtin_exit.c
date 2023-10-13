@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 09:39:54 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/09/19 08:46:37 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/13 14:36:19 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	builtin_exit(char **argv)
 {
 	long	ret;
 	char	*str;
-	char	*arg;
 
 	if (argv[1] == NULL)
 	{
@@ -35,15 +34,13 @@ int	builtin_exit(char **argv)
 		exit(SUCCESS);
 	}
 	errno = 0;
-	arg = argv[1];
-	ret = ft_strtol(arg, &str, 10);
+	ret = ft_strtol(argv[1], &str, 10);
 	if (argv[2] && errno == 0)
 	{
-		write(2, "exit\n", 5);
-		ft_putendl_fd("exit: too many arguments", 2);
+		printf ("exit\nexit: too many arguments\n");
 		return (FAILURE);
 	}
-	if (is_number(arg) == 0)
+	if (is_number(argv[1]) == 0)
 	{
 		if (*str == '\0' || errno == 0)
 		{
@@ -51,10 +48,8 @@ int	builtin_exit(char **argv)
 			exit((int)ret);
 		}
 	}
-	write(2, "exit\n", 5);
-	ft_putstr_fd("exit: ", 2);
-	ft_putstr_fd(arg, 2);
-	ft_putendl_fd(": numeric argument required", 2);
+	printf ("exit\nexit: %s", argv[1]);
+	printf (": numeric argument required\n");
 	exit(255);
 }
 

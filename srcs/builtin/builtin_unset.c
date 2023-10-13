@@ -6,13 +6,13 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:44 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/04 15:05:11 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/13 14:33:51 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/builtin.h"
 
-static void	ft_shift_env(t_envnode *env)
+static void	ft_shift_env(t_envnode *env, t_env *env_list)
 {
 	t_envnode	*tmp;
 
@@ -34,6 +34,7 @@ static void	ft_shift_env(t_envnode *env)
 	}
 	else if (env->next != NULL && env->prev == NULL)
 	{
+		env_list->head = env->next;
 		env->next->prev = NULL;
 		free(env->key);
 		env->key = NULL;
@@ -65,7 +66,7 @@ static void	ft_unsetenv(char *name, t_env *env)
 			|| ft_strcmp(tmp->key, name) == 0)
 		{
 			free(newname);
-			ft_shift_env(tmp);
+			ft_shift_env(tmp, env);
 			return ;
 		}
 		tmp = tmp->next;
