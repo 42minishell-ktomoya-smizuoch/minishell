@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:40:39 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/04 15:11:32 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/13 15:27:22 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,6 @@ int	builtin_cd(char **argv, t_env *env)
 	{
 		perror ("getcwd");
 		return (FAILURE);
-	}
-	if (ft_strcmp(argv[1], "-") == 0)
-	{
-		if (chdir(getenv("OLDPWD")) != 0)
-			return (free_and_return(oldpwd, FAILURE));
-	}
-	else if (!argv[1] || ft_strcmp(argv[1], "~") == 0)
-	{
-		if (chdir(getenv("HOME")) != 0)
-			return (free_and_return(oldpwd, FAILURE));
 	}
 	else if (chdir(argv[1]) != 0)
 		return (free_and_return(oldpwd, FAILURE));

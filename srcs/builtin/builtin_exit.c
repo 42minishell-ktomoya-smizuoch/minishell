@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 09:39:54 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/13 14:36:19 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/13 16:47:45 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,20 @@ int	builtin_exit(char **argv)
 	ret = ft_strtol(argv[1], &str, 10);
 	if (argv[2] && errno == 0)
 	{
-		printf ("exit\nexit: too many arguments\n");
+		ft_putendl_fd("exit\nexit: too many arguments", STDERR_FILENO);
 		return (FAILURE);
 	}
 	if (is_number(argv[1]) == 0)
 	{
 		if (*str == '\0' || errno == 0)
 		{
-			write(2, "exit\n", 5);
+			write(STDERR_FILENO, "exit\n", 5);
 			exit((int)ret);
 		}
 	}
-	printf ("exit\nexit: %s", argv[1]);
-	printf (": numeric argument required\n");
+	ft_putstr_fd("exit\nexit: ", STDERR_FILENO);
+	ft_putstr_fd(argv[1], STDERR_FILENO);
+	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
 	exit(255);
 }
 
