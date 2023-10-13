@@ -35,6 +35,7 @@ BUILTIN_OBJS = $(BUILTIN_SRCS:.c=.o)
 OBJS += $(BUILTIN_OBJS)
 
 SRCS_FILES = env_init.c \
+	search_env.c \
 
 SRCS_SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 SRCS_OBJS = $(SRCS_SRCS:.c=.o)

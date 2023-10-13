@@ -1,18 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_strchrnul.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/23 21:03:57 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/16 17:56:27 by ktomoya          ###   ########.fr       */
+/*   Created: 2023/10/12 15:11:09 by kudoutomoya       #+#    #+#             */
+/*   Updated: 2023/10/12 15:20:21 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/libft.h"
 
-int	ft_putstr_fd(const char *s, int fd)
+char	*ft_strchrnul(const char *s, int c)
 {
-	return ((int)write(fd, s, ft_strlen(s)));
+	while (*s != '\0' && *s != c)
+		s++;
+	return ((char *)s);
 }

@@ -1,18 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   fr_strcspn.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/23 21:03:57 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/08/16 17:56:27 by ktomoya          ###   ########.fr       */
+/*   Created: 2023/10/12 15:19:24 by kudoutomoya       #+#    #+#             */
+/*   Updated: 2023/10/12 15:20:18 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/libft.h"
 
-int	ft_putstr_fd(const char *s, int fd)
+size_t	ft_strcspn(const char *s, const char *reject)
 {
-	return ((int)write(fd, s, ft_strlen(s)));
+	const char *p;
+
+	p = s;
+	if (reject[0] == '\0' || reject[1] == '\0')
+	{
+		s = ft_strchrnul(s, *reject);
+		return (s - p);
+	}
+	while (*s != '\0')
+	{
+		if (ft_strchr(reject, *s))
+			break ;
+		s++;
+	}
+	return (s - p);
 }
