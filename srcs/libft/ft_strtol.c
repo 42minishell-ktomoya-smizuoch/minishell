@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 10:16:40 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/03 14:09:56 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/13 16:46:35 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,13 @@ int	chaeck_base(int base)
 	return (SUCCESS);
 }
 
-bool	check_e(char **endptr, const char *nptr)
+bool	check_e(char **endptr, const char *nptr, long long *result, int sign)
 {
 	if (errno == ERANGE)
 		return (FAILURE);
 	if (endptr)
 		*endptr = (char *)nptr;
+	*result = *result * sign;
 	return (SUCCESS);
 }
 
@@ -94,11 +95,12 @@ long int	ft_strtol(const char *nptr, char **endptr, int base)
 			result = check_errornoa(result, base, *nptr, sign);
 		else if (ft_isdigit(*nptr))
 			result = check_errornod(result, base, *nptr, sign);
+		else
+			errno = EINVAL;
 		nptr++;
 	}
-	if (check_e(endptr, nptr) == FAILURE)
-		return (result);
-	return (result * sign);
+	check_e(endptr, nptr, &result, sign);
+	return (result);
 }
 
 // int	main(void)
