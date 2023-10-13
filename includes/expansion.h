@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:25:53 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/04 17:13:27 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/13 14:09:32 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,8 @@ typedef struct s_env
 
 int		env_init(t_env *env, char **envp);
 void	env_clear(t_env *env);
+
+char	**env_to_envp(t_env *env);
+void	*free_env_to_envp(char **envp);
 
 #endif
