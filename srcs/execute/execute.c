@@ -14,8 +14,9 @@
 #include "../../includes/execute.h"
 
 /*
- * 目標: 標準エラーに出力する関数を作る
- * 準目標: put_str_fd関数を修正する
+ * 目標: リファクタリング
+ * 準目標: ビルトインか確認する処理を追加する
+ * 準目標: copyをmallocしない構造にする
  */
 
 void	puterr_exit(const char *input, const char *msg)
@@ -26,27 +27,124 @@ void	puterr_exit(const char *input, const char *msg)
 	exit(FAILURE);
 }
 
-int	execute_command(char *const argv[], t_env *env)
+bool	is_builtin(char *cmd)
+{
+	if (ft_strcmp(cmd, "echo") == 0 ||
+		ft_strcmp(cmd, "cd") == 0 ||
+		ft_strcmp(cmd, "pwd") == 0 ||
+		ft_strcmp(cmd, "export") == 0 ||
+		ft_strcmp(cmd, "unset") == 0 ||
+		ft_strcmp(cmd, "env") == 0 ||
+		ft_strcmp(cmd, "exit") == 0)
+		return (true);
+	return (false);
+}
+
+bool	is_directory(char *path)
+{
+	struct stat	buf;
+
+	if (stat(path, &buf) == ERROR)
+	{
+		perror("stat");
+		exit(FAILURE);
+	}
+	if (S_ISDIR(buf.st_mode))
+		return (true);
+	return (false);
+}
+
+int	execute_builtin(char *cmds[], t_env *env)
+{
+	if (ft_strcmp(cmds[0], "echo") == 0)
+		return (builtin_echo(cmds));
+	else if (ft_strcmp(cmds[0], "cd") == 0)
+		return (builtin_cd(cmds, env));
+	else if (ft_strcmp(cmds[0], "pwd") == 0)
+		return (builtin_pwd(cmds));
+	else if (ft_strcmp(cmds[0], "export") == 0)
+		return (builtin_export(cmds, env));
+	else if (ft_strcmp(cmds[0], "unset") == 0)
+		return (builtin_unset(cmds, env));
+	else if (ft_strcmp(cmds[0], "env") == 0)
+		return (builtin_env(cmds, env));
+	else
+		return (builtin_exit(cmds));
+}
+
+void	execute_path(char *const argv[])
+{
+	if (access(argv[0], X_OK) == ERROR)
+		puterr_exit(argv[0], strerror(errno));
+	if (execve(argv[0], argv, NULL) == ERROR)
+		puterr_exit(argv[0], strerror(errno));
+}
+
+void	execute_abspath(char *const argv[])
+{
+	if (access(argv[0], X_OK) == ERROR)
+		puterr_exit(argv[0], strerror(errno));
+	if (is_directory(argv[0]))
+		puterr_exit(argv[0], "is a directory");
+	if (execve(argv[0], argv, NULL) == ERROR)
+		puterr_exit(argv[0], strerror(errno));
+}
+
+//void	search_PATH(char *const argv[], t_env *env)
+//{
+//	char	*path;
+//	char	copy[PATH_MAX];
+//
+//	ft_bzero(copy, PATH_MAX);
+//	path = search_env("PATH", env);
+//	if (path == NULL || ft_strchr(path, '/') == NULL)
+//		puterr_exit(argv[0], "command not found");
+//	path = ft_strchr(path, '/');
+//	copy = ft_memcpy(copy, path, ft_strlen(path));
+//	copy = ft_strtok(copy, ":");
+//	while (copy)
+//	{
+//		copy = ft_strjoin(copy, "/");
+//		copy = ft_strjoin(copy, argv[0]);
+//
+//	}
+//}
+
+void	search_PATH(char *const argv[], t_env *env)
+{
+	char	*path;
+	char	*copy;
+
+	path = search_env("PATH", env);
+	if (path == NULL || ft_strchr(path, '/') == NULL)
+		puterr_exit(argv[0], "command not found");
+	path = ft_strchr(path, '/');
+	copy = ft_strdup(path);
+	copy = ft_strtok(copy, ":");
+	while (copy)
+	{
+		copy = ft_strjoin(copy, "/");
+		copy = ft_strjoin(copy, argv[0]);
+		if (access(copy, X_OK) == 0)
+		{
+			if (execve(copy, argv, NULL) == ERROR)
+				puterr_exit(argv[0], strerror(errno));
+		}
+		else if (errno == ENOENT)
+			;
+		else
+			puterr_exit(argv[0], strerror(errno));
+		free(copy);
+		copy = ft_strtok(NULL, ":");
+	}
+	puterr_exit(argv[0], "command not found");
+}
+
+int	execute_executable(char *const argv[], t_env *env)
 {
 	pid_t	pid;
-	int		status;
+	int 	status;
 
-	/* 外部コマンドを実行する前にビルトインコマンドに一致するか確認する */
-	if (ft_strcmp(argv[0], "echo") == 0)
-		return (builtin_echo((char **)argv));
-	else if (ft_strcmp(argv[0], "cd") == 0)
-		return (builtin_cd((char **)argv, env));
-	else if (ft_strcmp(argv[0], "pwd") == 0)
-		return (builtin_pwd((char **)argv));
-	else if (ft_strcmp(argv[0], "export") == 0)
-		return (builtin_export((char **)argv, env));
-	else if (ft_strcmp(argv[0], "unset") == 0)
-		return (builtin_unset((char **)argv, env));
-	else if (ft_strcmp(argv[0], "env") == 0)
-		return (builtin_env((char **)argv, env));
-	else if (ft_strcmp(argv[0], "exit") == 0)
-		return (builtin_exit((char **)argv));
-//	絶対パスの検索を行う
 	pid = fork();
 	if (pid < 0)
 	{
@@ -55,70 +153,10 @@ int	execute_command(char *const argv[], t_env *env)
 	}
 	else if (pid == 0)
 	{
-		// argv[0]にスラッシュが含まれているか調べる
-		if (ft_strchr(argv[0], '/') == NULL)
-		{
-			// PATHのvalueを取得する
-			char 		*path = NULL;
-			char 		*copy = NULL;
-
-			// PATHを探す
-			path = search_env("PATH", env);
-			if (path == NULL)
-				puterr_exit(argv[0], strerror(errno));
-			else
-			{
-				path = ft_strchr(path, '/');
-				copy = ft_strdup(path);
-				copy = ft_strtok(copy, ":");
-				while (copy)
-				{
-					copy = ft_strjoin(copy, "/");
-					copy = ft_strjoin(copy, argv[0]);
-					// 実行ファイルの実行権限を確認する
-					if (access(copy, X_OK) == 0)
-					{
-						if (execve(copy, argv, NULL) == ERROR)
-							puterr_exit(argv[0], strerror(errno));
-					}
-					else if (errno == ENOENT)
-						;
-					else
-						puterr_exit(argv[0], strerror(errno));
-					free(copy);
-					copy = ft_strtok(NULL, ":");
-				}
-				if (errno == ENOENT)
-					puterr_exit(argv[0], "command not found");
-			}
-		}
+		if (ft_strchr(argv[0], '/'))
+			execute_abspath(argv);
 		else
-		{
-			// ファイルにアクセスできるか確認する
-			if (access(argv[0], X_OK) == 0)
-			{
-				struct stat buf;
-
-				if (stat(argv[0], &buf) == ERROR)
-				{
-					perror("stat");
-					exit(FAILURE);
-				}
-				else
-				{
-					// ディレクトリか確認する
-					if (S_ISDIR(buf.st_mode))
-						puterr_exit(argv[0], "is a directory");
-					else
-					{
-						if (execve(argv[0], argv, NULL) == ERROR)
-							puterr_exit(argv[0], strerror(errno));
-					}
-				}
-			}
-			else
-				puterr_exit(argv[0], strerror(errno));
-		}
+			search_PATH(argv, env);
 	}
 	else
 	{
@@ -129,6 +167,14 @@ int	execute_command(char *const argv[], t_env *env)
 		}
 	}
 	return (0);
+}
+
+int	execute_command(char *const argv[], t_env *env)
+{
+	if (is_builtin(argv[0]))
+		return (execute_builtin((char **)argv, env));
+	else
+		return (execute_executable(argv, env));
 }
 
 size_t	count_token(t_token *tok)
