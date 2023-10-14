@@ -23,9 +23,15 @@ typedef struct s_envnode
 	struct s_envnode	*prev;
 }	t_envnode;
 
+//typedef struct s_env
+//{
+//	struct s_envnode	*head;
+//}	t_env;
+
 typedef struct s_env
 {
 	struct s_envnode	*head;
+	char				**envp;
 }	t_env;
 
 int		env_init(t_env *env, char **envp);
