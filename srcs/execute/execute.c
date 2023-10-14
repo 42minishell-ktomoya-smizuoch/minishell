@@ -13,10 +13,6 @@
 #include "../../includes/minishell.h"
 #include "../../includes/execute.h"
 
-/*
- * 目標: 関数をファイルに分ける
- */
-
 static int	execute_builtin(char *cmds[], t_env *env)
 {
 	if (ft_strcmp(cmds[0], "echo") == 0)
@@ -40,6 +36,7 @@ static int	execute_executable(char *const argv[], t_env *env)
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	pid = fork();
 	if (pid < 0)
 		putsyserr_exit("fork");
@@ -55,7 +52,7 @@ static int	execute_executable(char *const argv[], t_env *env)
 		if (wait(&status) != pid)
 			putsyserr_exit("wait");
 	}
-	return (0);
+	return (status);
 }
 
 int	execute(char *const argv[], t_env *env)
