@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:56:33 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/18 12:02:12 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/10/14 14:22:16 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ typedef enum e_state
 
 t_token			*create_token(const char *str);
 t_token			*new_token(t_type type, const char *str, size_t len);
+size_t			count_token(t_token *tok);
+char			**malloc_token(t_token *tok);
 size_t			get_token_len(const char *s);
 t_type			get_token_type(const char c);
 void			lstadd_back_token(t_token **lst, t_token *new);

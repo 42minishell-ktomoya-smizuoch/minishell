@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:17:52 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/18 19:20:40 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/10/14 14:21:00 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,41 @@ t_token	*create_token(const char *str)
 	if (!token)
 		return (NULL);
 	return (token);
+}
+
+size_t	count_token(t_token *tok)
+{
+	t_token	*cur;
+	size_t	count;
+
+	cur = tok;
+	count = 0;
+	while (cur->type != TYPE_EOF)
+	{
+		count++;
+		cur = cur->next;
+	}
+	return (count);
+}
+
+char	**malloc_token(t_token *tok)
+{
+	t_token	*cur;
+	char	**argv;
+	size_t	count;
+	size_t	i;
+
+	cur = tok;
+	count = count_token(tok);
+	argv = ft_calloc(count + 1, sizeof(char *));
+	i = 0;
+	while (i < count)
+	{
+		argv[i] = ft_substr(cur->str, 0, cur->len);
+		if (argv[i] == NULL)
+			return (NULL);
+		cur = cur->next;
+		i++;
+	}
+	return (argv);
 }

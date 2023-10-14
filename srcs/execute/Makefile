@@ -3,6 +3,9 @@ NAME = a.out
 INC_DIR = ../../includes
 
 SRCS = execute.c \
+	execute_error.c \
+	execute_bool.c \
+	execute_path.c \
 
 OBJS = $(SRCS:.c=.o)
 
