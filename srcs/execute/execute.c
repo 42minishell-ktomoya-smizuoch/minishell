@@ -14,9 +14,7 @@
 #include "../../includes/execute.h"
 
 /*
- * 目標: リファクタリング
- * 準目標: ビルトインか確認する処理を追加する
- * 準目標: copyをmallocしない構造にする
+ * 目標: envpをexecveに渡す
  */
 
 void	puterr_exit(const char *input, const char *msg)
@@ -75,21 +73,21 @@ int	execute_builtin(char *cmds[], t_env *env)
 		return (builtin_exit(cmds));
 }
 
-void	execute_path(char *const argv[])
+void	execute_path(char *const argv[], t_env *env)
 {
 	if (access(argv[0], X_OK) == ERROR)
 		puterr_exit(argv[0], strerror(errno));
-	if (execve(argv[0], argv, NULL) == ERROR)
+	if (execve(argv[0], argv, env->envp) == ERROR)
 		putsyserr_exit("execve");
 }
 
-void	execute_abspath(char *const argv[])
+void	execute_abspath(char *const argv[], t_env *env)
 {
 	if (access(argv[0], X_OK) == ERROR)
 		puterr_exit(argv[0], strerror(errno));
 	if (is_directory(argv[0]))
 		puterr_exit(argv[0], "is a directory");
-	if (execve(argv[0], argv, NULL) == ERROR)
+	if (execve(argv[0], argv, env->envp) == ERROR)
 		putsyserr_exit("execve");
 }
 
@@ -98,35 +96,32 @@ char	*get_path_value(char *const argv[], t_env *env)
 	char	*value;
 
 	value = search_env("PATH", env);
-	if (value == NULL || ft_strchr(value, '/') == NULL)
+	if (value == NULL)
 		puterr_exit(argv[0], "command not found");
-	value = ft_strchr(value, '/');
 	return (value);
 }
 
 void	search_path(char *const argv[], t_env *env)
 {
-	char	*path_set;
+	char	*dir_set;
 	char	file_path[PATH_MAX];
-	char	*path;
+	char	*dir;
 
-	path_set = get_path_value(argv, env);
-	path = ft_strtok(path_set, ":");
-	while (path)
+	dir_set = get_path_value(argv, env);
+	dir = ft_strtok(dir_set, ":");
+	while (dir)
 	{
-		ft_strlcpy(file_path, path, PATH_MAX);
+		ft_strlcpy(file_path, dir, PATH_MAX);
 		ft_strlcat(file_path, "/", PATH_MAX);
 		ft_strlcat(file_path, argv[0], PATH_MAX);
 		if (access(file_path, X_OK) == 0)
 		{
-			if (execve(file_path, argv, NULL) == ERROR)
-				putsyserr_exit("execve");
+			if (execve(file_path, argv, env->envp) == ERROR)
+				puterr_exit(file_path, strerror(errno));
 		}
-		else if (errno == ENOENT)
-			;
-		else
+		else if (errno != ENOENT)
 			puterr_exit(argv[0], strerror(errno));
-		path = ft_strtok(NULL, ":");
+		dir = ft_strtok(NULL, ":");
 	}
 	puterr_exit(argv[0], "command not found");
 }
@@ -142,7 +137,7 @@ int	execute_executable(char *const argv[], t_env *env)
 	else if (pid == 0)
 	{
 		if (ft_strchr(argv[0], '/'))
-			execute_abspath(argv);
+			execute_abspath(argv, env);
 		else
 			search_path(argv, env);
 	}
@@ -219,9 +214,11 @@ int	main(int argc, char **argv, char **envp)
 			add_history(line);
 		else
 			continue ;
+		env.envp = env_to_envp(&env);
 		token = lexer(line);
 		args = malloc_token(token);
 		execute_command(args, &env);
+		free_env_to_envp(env.envp);
 		free((void *)line);
 	}
 	return (0);
