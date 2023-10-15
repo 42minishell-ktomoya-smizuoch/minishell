@@ -12,11 +12,9 @@
 
 #include "../../includes/parser.h"
 
-/* 次の目標: パイプの文法を追加する
- * EBNF
- * pipe = command ('|' command | "||" command)*
- * command = (argument)*
- * argument = word
+/*
+ * 目標: 木構造から単純なコマンドを実行できるようにする
+ * 準目標: commandの構造体を作って、nodeに追加する
  */
 
 /*

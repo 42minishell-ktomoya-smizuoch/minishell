@@ -15,6 +15,26 @@
 
 # include "minishell.h"
 
+typedef enum e_type
+{
+	TYPE_GENERAL,
+	TYPE_PIPE,
+	TYPE_AMPERSAND,
+	TYPE_REDIRECT,
+	TYPE_EOF,
+	TYPE_NEWLINE,
+}	t_type;
+
+typedef struct s_token
+{
+	t_type			type;
+	struct s_token	*head;
+	struct s_token	*cur;
+	struct s_token	*next;
+	const char		*str;
+	size_t			len;
+}	t_token;
+
 typedef enum e_state
 {
 	STATE_GENERAL,
