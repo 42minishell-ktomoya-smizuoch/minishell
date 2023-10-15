@@ -20,7 +20,13 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-int		execute(char *const argv[], t_env *env);
+typedef struct s_command
+{
+	int		argc;
+	char	*argv[];
+}	t_command;
+
+int		execute_simple_command(char *const argv[], t_env *env);
 void	puterr_exit(const char *input, const char *msg);
 void	putsyserr_exit(const char *syscall_name);
 bool	is_builtin(char *cmd);
