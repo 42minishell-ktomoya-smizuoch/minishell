@@ -3,6 +3,9 @@ NAME = a.out
 INC_DIR = ../../includes
 
 SRCS = execute.c \
+	execute_error.c \
+	execute_bool.c \
+	execute_path.c \
 
 OBJS = $(SRCS:.c=.o)
 
@@ -36,6 +39,7 @@ OBJS += $(BUILTIN_OBJS)
 
 SRCS_FILES = env_init.c \
 	search_env.c \
+	env_to_envp.c \
 
 SRCS_SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 SRCS_OBJS = $(SRCS_SRCS:.c=.o)

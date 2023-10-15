@@ -3,177 +3,72 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/10 17:40:04 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/10/14 14:20:52 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include "../../includes/execute.h"
 
-/*
- * 目標: 標準エラーに出力する関数を作る
- * 準目標: put_str_fd関数を修正する
- */
-
-void	puterr_exit(const char *input, const char *msg)
+static int	execute_builtin(char *cmds[], t_env *env)
 {
-	ft_putstr_fd(input, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putendl_fd(msg, STDERR_FILENO);
-	exit(FAILURE);
+	if (ft_strcmp(cmds[0], "echo") == 0)
+		return (builtin_echo(cmds));
+	else if (ft_strcmp(cmds[0], "cd") == 0)
+		return (builtin_cd(cmds, env));
+	else if (ft_strcmp(cmds[0], "pwd") == 0)
+		return (builtin_pwd(cmds));
+	else if (ft_strcmp(cmds[0], "export") == 0)
+		return (builtin_export(cmds, env));
+	else if (ft_strcmp(cmds[0], "unset") == 0)
+		return (builtin_unset(cmds, env));
+	else if (ft_strcmp(cmds[0], "env") == 0)
+		return (builtin_env(cmds, env));
+	else
+		return (builtin_exit(cmds));
 }
 
-int	execute_command(char *const argv[], t_env *env)
+static int	execute_executable(char *const argv[], t_env *env)
 {
 	pid_t	pid;
 	int		status;
 
-	/* 外部コマンドを実行する前にビルトインコマンドに一致するか確認する */
-	if (ft_strcmp(argv[0], "echo") == 0)
-		return (builtin_echo((char **)argv));
-	else if (ft_strcmp(argv[0], "cd") == 0)
-		return (builtin_cd((char **)argv, env));
-	else if (ft_strcmp(argv[0], "pwd") == 0)
-		return (builtin_pwd((char **)argv));
-	else if (ft_strcmp(argv[0], "export") == 0)
-		return (builtin_export((char **)argv, env));
-	else if (ft_strcmp(argv[0], "unset") == 0)
-		return (builtin_unset((char **)argv, env));
-	else if (ft_strcmp(argv[0], "env") == 0)
-		return (builtin_env((char **)argv, env));
-	else if (ft_strcmp(argv[0], "exit") == 0)
-		return (builtin_exit((char **)argv));
-//	絶対パスの検索を行う
+	status = 0;
 	pid = fork();
 	if (pid < 0)
-	{
-		perror("fork");
-		exit(FAILURE);
-	}
+		putsyserr_exit("fork");
 	else if (pid == 0)
 	{
-		// argv[0]にスラッシュが含まれているか調べる
-		if (ft_strchr(argv[0], '/') == NULL)
-		{
-			// PATHのvalueを取得する
-			char 		*path = NULL;
-			char 		*copy = NULL;
-
-			// PATHを探す
-			path = search_env("PATH", env);
-			if (path == NULL)
-				puterr_exit(argv[0], strerror(errno));
-			else
-			{
-				path = ft_strchr(path, '/');
-				copy = ft_strdup(path);
-				copy = ft_strtok(copy, ":");
-				while (copy)
-				{
-					copy = ft_strjoin(copy, "/");
-					copy = ft_strjoin(copy, argv[0]);
-					// 実行ファイルの実行権限を確認する
-					if (access(copy, X_OK) == 0)
-					{
-						if (execve(copy, argv, NULL) == ERROR)
-							puterr_exit(argv[0], strerror(errno));
-					}
-					else if (errno == ENOENT)
-						;
-					else
-						puterr_exit(argv[0], strerror(errno));
-					free(copy);
-					copy = ft_strtok(NULL, ":");
-				}
-				if (errno == ENOENT)
-					puterr_exit(argv[0], "command not found");
-			}
-		}
+		if (ft_strchr(argv[0], '/'))
+			execute_abspath(argv, env);
 		else
-		{
-			// ファイルにアクセスできるか確認する
-			if (access(argv[0], X_OK) == 0)
-			{
-				struct stat buf;
-
-				if (stat(argv[0], &buf) == ERROR)
-				{
-					perror("stat");
-					exit(FAILURE);
-				}
-				else
-				{
-					// ディレクトリか確認する
-					if (S_ISDIR(buf.st_mode))
-						puterr_exit(argv[0], "is a directory");
-					else
-					{
-						if (execve(argv[0], argv, NULL) == ERROR)
-							puterr_exit(argv[0], strerror(errno));
-					}
-				}
-			}
-			else
-				puterr_exit(argv[0], strerror(errno));
-		}
+			search_path(argv, env);
 	}
 	else
 	{
 		if (wait(&status) != pid)
-		{
-			perror("wait");
-			exit(FAILURE);
-		}
+			putsyserr_exit("wait");
 	}
-	return (0);
+	return (status);
 }
 
-size_t	count_token(t_token *tok)
+int	execute(char *const argv[], t_env *env)
 {
-	t_token	*cur;
-	size_t	count;
-
-	cur = tok;
-	count = 0;
-	while (cur->type != TYPE_EOF)
-	{
-		count++;
-		cur = cur->next;
-	}
-	return (count);
-}
-
-char	**malloc_token(t_token *tok)
-{
-	t_token	*cur;
-	char	**argv;
-	size_t	count;
-	size_t	i;
-
-	cur = tok;
-	count = count_token(tok);
-	argv = ft_calloc(count + 1, sizeof(char *));
-	i = 0;
-	while (i < count)
-	{
-		argv[i] = ft_substr(cur->str, 0, cur->len);
-		if (argv[i] == NULL)
-			return (NULL);
-		cur = cur->next;
-		i++;
-	}
-	return (argv);
+	if (is_builtin(argv[0]))
+		return (execute_builtin((char **)argv, env));
+	else
+		return (execute_executable(argv, env));
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	const char	*line;
 	t_token		*token;
-	char 		**args;
-	t_env 		env;
+	char		**args;
+	t_env		env;
 
 	(void)argv;
 	if (argc != 1)
@@ -186,31 +81,14 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("minishell$ ");
 		if (*line)
 			add_history(line);
+		else
+			continue ;
+		env.envp = env_to_envp(&env);
 		token = lexer(line);
 		args = malloc_token(token);
-		execute_command(args, &env);
+		execute(args, &env);
+		free_env_to_envp(env.envp);
 		free((void *)line);
 	}
 	return (0);
 }
-
-//int	main(void)
-//{
-//	int		var; /* スタック上の自動変数 */
-//	pid_t	pid;
-//
-//	var = 88;
-//	if (write(STDOUT_FILENO, buf, sizeof(buf) - 1) != sizeof(buf) - 1)
-//		exit(1);
-//	printf("before fork\n"); /* 標準出力をフラッシュしない */
-//	if ((pid = fork()) < 0)
-//		exit(1);
-//	else if (pid == 0) /* 子側 */
-//	{
-//		globvar++; /* 変数を変更する */
-//		var++;
-//	}
-//	else
-//		sleep(2); /* 親側 */
-//	printf("pid = %ld, glob = %d, var = %d\n", (long)getpid(), globvar, var);
-//}

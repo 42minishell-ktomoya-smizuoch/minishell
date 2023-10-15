@@ -9,6 +9,7 @@ SRCS_FILES = minishell.c \
 	launch_executable.c \
 	print.c \
 	set_errno_and_exit.c \
+	env_to_envp.c \
 
 SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 OBJS = $(SRCS:.c=.o)

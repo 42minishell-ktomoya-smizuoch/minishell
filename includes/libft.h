@@ -6,7 +6,7 @@
 /*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 11:25:31 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/10/12 15:25:55 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/10/14 14:04:07 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # include <stdarg.h>
 # include <inttypes.h>
 # include <stdbool.h>
+# include <sys/syslimits.h>
+# include <sys/stat.h>
 
 # define SUCCESS 0
 # define FAILURE 1
