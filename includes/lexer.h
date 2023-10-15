@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:56:33 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/14 14:22:16 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/10/15 15:35:43 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LEXER_H
 # define LEXER_H
 
-# include "minishell.h"
+# include "libft.h"
 
 typedef enum e_type
 {
