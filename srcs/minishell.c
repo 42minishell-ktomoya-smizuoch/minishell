@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/18 12:46:17 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/10/14 19:02:41 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// parser test
+// execute test
 int	main(int argc, char **argv, char **envp)
 {
 	t_token		*tokens;
@@ -28,15 +28,41 @@ int	main(int argc, char **argv, char **envp)
 		line = readline("minishell$ ");
 		if (*line)
 			add_history(line);
-		tokens = lexer(line);
-		if (!tokens)
+		else
 			continue ;
+		tokens = lexer(line);
 		ast = parser(tokens);
 		print_ast(ast);
 		free((void *)line);
 	}
 	return (0);
 }
+
+// parser test
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	t_token		*tokens;
+// 	t_node		*ast;
+// 	const char	*line;
+
+// 	(void)argv;
+// 	(void)envp;
+// 	if (argc != 1)
+// 		return (FAILURE);
+// 	while (1)
+// 	{
+// 		line = readline("minishell$ ");
+// 		if (*line)
+// 			add_history(line);
+// 		tokens = lexer(line);
+// 		if (!tokens)
+// 			continue ;
+// 		ast = parser(tokens);
+// 		print_ast(ast);
+// 		free((void *)line);
+// 	}
+// 	return (0);
+// }
 
 // lexer test
 //int	main(int argc, char **argv)

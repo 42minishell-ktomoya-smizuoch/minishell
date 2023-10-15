@@ -13,7 +13,24 @@
 #ifndef PARSER_H
 # define PARSER_H
 
-# include "minishell.h"
+# include "libft.h"
+# include "lexer.h"
+
+typedef enum e_node_kind
+{
+	NODE_ARGUMENT,
+	NODE_PIPE,
+	NODE_AMPERSAND,
+	NODE_REDIRECT,
+}	t_node_kind;
+
+typedef struct s_node
+{
+	t_node_kind		kind;
+	struct s_node	*left;
+	struct s_node	*right;
+	const char		*word;
+}	t_node;
 
 t_node	*pipeline(t_token *tokens);
 t_node	*command(t_token *tok);

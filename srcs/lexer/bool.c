@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_bool.c                                       :+:      :+:    :+:   */
+/*   bool.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 15:48:20 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/15 15:10:42 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/10/14 18:11:27 by kudoutomoya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ bool	startwith(const char *s1, const char *s2)
 
 bool	is_metachar(const char c)
 {
-	return (c == '|' || c == '&' || c == '<' || c == '>' || c == ' ' || c == '\t');
+	// return (c == '|' || c == '&' || c == '<' || c == '>' || c == ' ' || c == '\t');
+	return (ft_strchr("|&<> \t", c));
 }
 
 bool	is_blank(const char c)
