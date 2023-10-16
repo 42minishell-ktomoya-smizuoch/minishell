@@ -13,8 +13,13 @@
 #include "../../includes/parser.h"
 
 /*
- * 目標: 木構造から単純なコマンドを実行できるようにする
- * 準目標: commandの構造体を作って、nodeに追加する
+ * 目標: リダイレクトの文法を実装する
+ * 準目標: bnf記法を理解する
+ */
+
+/*
+ * リダイレクトの文法
+ * コマンド名　引数1 引数2 ... 引数n <リダイレクト1> <リダイレクト2> ... <リダイレクトn>
  */
 
 /*
@@ -37,8 +42,8 @@ t_node	*pipeline(t_token *tok)
 }
 
 /*
- * command = argument (argument)*
- * argument = word
+ * simple_command ::= cmd_name word_list?
+ * word_list ::= word+
  */
 t_node	*command(t_token *tok)
 {
