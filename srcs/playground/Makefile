@@ -8,6 +8,7 @@ SRCS = access.c \
 	stat.c \
 	test_strtok.c \
 	strjoin.c \
+	play_dup.c \
 
 OBJS = $(SRCS:.c=.o)
 

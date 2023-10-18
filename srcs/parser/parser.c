@@ -67,11 +67,11 @@
 
 t_node	*parser(t_token *token)
 {
-	t_node	*pipe_line;
+	t_node	*io_file;
 
 	if (token == NULL)
 		return (NULL);
-	pipe_line = pipeline(token);
+	io_file = pipeline(token);
 //	free(token);
 	return (pipe_line);
 }

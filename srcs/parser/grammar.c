@@ -15,12 +15,21 @@
 /*
  * 目標: リダイレクトの文法を実装する
  * 準目標: bnf記法を理解する
+ * 準目標: リダイレクトを実行する際に引数を理解する
+ *  準々目標: man dup
+ *  準々目標: man dup2
  */
 
 /*
  * リダイレクトの文法
  * コマンド名　引数1 引数2 ... 引数n <リダイレクト1> <リダイレクト2> ... <リダイレクトn>
  */
+
+void	syntax_error(void)
+{
+	ft_putendl_fd("syntax error");
+	exit(1);
+}
 
 /*
  * pipeline = command ('|' command | "||" command)*
@@ -72,4 +81,15 @@ t_node	*command(t_token *tok)
 	}
 	tok->cur = cur;
 	return (cmd);
+}
+
+/*
+ * io_file ::= ('<' | '>' | '<<' | '>>') filename
+ */
+t_node	*io_file(t_token *tok)
+{
+	if (tok->type == TYPE_REDIRECT)
+		new_node(NODE_REDIRECT);
+	else
+		syntax_error();
 }
