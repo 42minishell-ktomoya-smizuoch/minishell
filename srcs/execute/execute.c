@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
 #include "../../includes/parser.h"
 #include "../../includes/execute.h"
+#include "../../includes/minishell.h"
 
 /*
  * 目標: 単純なコマンドを出力できるようにする
@@ -69,51 +69,56 @@ int	execute_simple_command(char *const argv[], t_env *env)
 		return (execute_executable(argv, env));
 }
 
-//int	execute(t_node *ast, t_env *env)
-//{
-//	if (ast->kind == NODE_ARGUMENT)
-//		return (execute_simple_command(ast->))
-//}
+size_t	count_args(t_node *ast)
+{
+	size_t	count;
 
-//int	main(int argc, char **argv, char **envp)
-//{
-//	const char	*line;
-//	t_token		*token;
-//	char		**args;
-//	t_env		env;
-//	t_node		*ast;
-//
-//	(void)argv;
-//	if (argc != 1)
-//		return (FAILURE);
-//	env.head = NULL;
-//	if (env_init(&env, envp) != 0)
-//		return (FAILURE);
-//	while (1)
-//	{
-//		line = readline("minishell$ ");
-//		if (*line)
-//			add_history(line);
-//		else
-//			continue ;
-//		env.envp = env_to_envp(&env);
-//		token = lexer(line);
-//		ast = parser(token);
-//		print_ast(ast);
-//		args =
-//		execute_simple_command(args, &env);
-//		free_env_to_envp(env.envp);
-//		free((void *)line);
-//	}
-//	return (0);
-//}
+	count = 0;
+	while (ast)
+	{
+		count++;
+		ast = ast->right;
+	}
+	return (count);
+}
+
+char	**make_argument_list(t_node *ast)
+{
+	char	**args;
+	size_t	count;
+	size_t	i;
+
+	count = count_args(ast);
+	args = (char **)ft_calloc(count + 1, sizeof(char *));
+	i = 0;
+	while (i < count)
+	{
+		args[i] = (char *)ast->word;
+		ast = ast->right;
+		i++;
+	}
+	return (args);
+}
+
+int	execute(t_node *ast, t_env *env)
+{
+	char	**args;
+
+	args = NULL;
+	if (ast->kind == NODE_ARGUMENT)
+	{
+		args = make_argument_list(ast); // Todo: 構文木をfreeする
+		return (execute_simple_command(args, env));
+	}
+	return (0);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
 	const char	*line;
 	t_token		*token;
-	char		**args;
 	t_env		env;
+	t_node		*ast;
 
 	(void)argv;
 	if (argc != 1)
@@ -130,8 +135,8 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		env.envp = env_to_envp(&env);
 		token = lexer(line);
-		args = malloc_token(token);
-		execute_simple_command(args, &env);
+		ast = parser(token);
+		execute(ast, &env);
 		free_env_to_envp(env.envp);
 		free((void *)line);
 	}
