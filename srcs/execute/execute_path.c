@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_path.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 14:14:21 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/14 14:16:50 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/10/15 16:22:54 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*get_path_value(char *const argv[], t_env *env)
 
 	value = search_env("PATH", env);
 	if (value == NULL)
-		puterr_exit(argv[0], "command not found");
+		puterr_exit(argv[0], "No such file or directory");
 	return (value);
 }
 

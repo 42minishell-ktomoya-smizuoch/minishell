@@ -24,6 +24,17 @@ LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
 LEXER_OBJS = $(LEXER_SRCS:.c=.o)
 OBJS += $(LEXER_OBJS)
 
+PARSER_DIR = $(SRCS_DIR)/parser
+PARSER_FILES = parser.c \
+	grammar.c \
+	consume.c \
+	free.c \
+	node.c \
+
+PARSER_SRCS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
+PARSER_OBJS = $(PARSER_SRCS:.c=.o)
+OBJS += $(PARSER_OBJS)
+
 BUILTIN_DIR = $(SRCS_DIR)/builtin
 BUILTIN_FILES = builtin_echo.c \
 	builtin_pwd.c \
