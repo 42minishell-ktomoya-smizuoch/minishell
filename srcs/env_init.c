@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 15:38:20 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/13 14:15:00 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/20 14:20:32 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int	env_init(t_env *env, char **envp)
 
 	i = 0;
 	j = 0;
+	env->exit_status = 0;
 	while (envp[i] != NULL)
 	{
 		if (envp[i][0] == '\0')
