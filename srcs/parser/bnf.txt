@@ -20,9 +20,6 @@ cmd_suffix       :            io_redirect
                  |            WORD
                  | cmd_suffix WORD
                  ;
-redirect_list    :               io_redirect
-                 | redirect_list io_redirect
-                 ;
 io_redirect      :           io_file
                  | IO_NUMBER io_file
                  |           io_here
@@ -49,3 +46,49 @@ here_end         : WORD                      /* Apply rule 3 */
            | '<' word
            | '>>' word
            | '<<' word
+
+BNF記法 /* linebreakなし、リダイレクトは<&、>&、<>、>|なし*/
+
+pipe_sequence ::= command
+                | pipe_sequence '|' command
+
+command ::= cmd_prefix cmd_word cmd_suffix
+          | cmd_prefix cmd_word
+          | cmd_prefix
+          | cmd_name cmd_suffix
+          | cmd_name
+
+cmd_prefix ::= io_redirect
+             | cmd_prefix io_redirect
+
+cmd_suffix ::= io_redirect
+             | cmd_suffix io_redirect
+             | WORD
+             | cmd_suffix WORD
+
+io_redirect ::= io_file
+              | IO_NUMBER io_file
+              | io_here
+              | IO_NUMBER io_here
+
+io_file ::= '<' filename
+          | '>' filename
+          | '<<' filename
+          | '>>' filename
+
+io_here ::= '<<' here_end
+
+EBNF記法:
+
+pipe_sequence ::= command ('|' command)*
+
+command ::= io_redirect+ (cmd_word cmd_suffix?)?
+          | cmd_name cmd_suffix?
+
+cmd_suffix ::= (io_redirect | WORD)+
+
+io_redirect ::= IO_NUMBER? (io_file | io_here)
+
+io_file ::= ('<' | '>' | '<<' | '>>') filename
+
+io_here ::= '<<' here_end

@@ -13,23 +13,35 @@
 #include "../../includes/parser.h"
 
 /*
- * 目標: 木構造から単純なコマンドを実行できるようにする
- * 準目標: commandの構造体を作って、nodeに追加する
+ * 目標: リダイレクトの文法を実装する
+ * 準目標: bnf記法を理解する
+ * 準目標: リダイレクトを実行する際に引数を理解する
+ *  準々目標: man dup
+ *  準々目標: man dup2
  */
+
+/*
+ * リダイレクトの文法
+ * コマンド名　引数1 引数2 ... 引数n <リダイレクト1> <リダイレクト2> ... <リダイレクトn>
+ */
+
+void	syntax_error(void)
+{
+	ft_putendl_fd("syntax error", STDERR_FILENO);
+	exit(1);
+}
 
 /*
  * pipeline = command ('|' command | "||" command)*
  */
-t_node	*pipeline(t_token *tok)
+t_node	*pipe_sequence(t_token *tok)
 {
 	t_node	*node;
 
 	node = command(tok);
 	while (1)
 	{
-		if (consume("||", tok))
-			node = new_branch(NODE_PIPE, node, command(tok));
-		else if (consume("|", tok))
+		if (consume("|", tok))
 			node = new_branch(NODE_PIPE, node, command(tok));
 		else
 			return (node);
@@ -37,8 +49,8 @@ t_node	*pipeline(t_token *tok)
 }
 
 /*
- * command = argument (argument)*
- * argument = word
+ * simple_command ::= cmd_name word_list?
+ * word_list ::= word+
  */
 t_node	*command(t_token *tok)
 {
@@ -67,4 +79,19 @@ t_node	*command(t_token *tok)
 	}
 	tok->cur = cur;
 	return (cmd);
+}
+
+/*
+ * io_file ::= ('<' | '>' | '<<' | '>>') filename
+ */
+t_node	*io_file(t_token *tok)
+{
+	t_node	*node;
+
+	node = NULL;
+	if (tok->type == TYPE_REDIRECT)
+		node = new_node(NODE_REDIRECT);
+	else
+		syntax_error();
+	return (node);
 }

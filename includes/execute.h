@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:00:33 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/14 14:19:35 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/10/15 16:44:03 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,6 @@
 # include "lexer.h"
 # include <sys/types.h>
 # include <sys/wait.h>
-
-typedef struct s_command
-{
-	int		argc;
-	char	*argv[];
-}	t_command;
 
 int		execute_simple_command(char *const argv[], t_env *env);
 void	puterr_exit(const char *input, const char *msg);
