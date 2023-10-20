@@ -27,23 +27,21 @@
 
 void	syntax_error(void)
 {
-	ft_putendl_fd("syntax error");
+	ft_putendl_fd("syntax error", STDERR_FILENO);
 	exit(1);
 }
 
 /*
  * pipeline = command ('|' command | "||" command)*
  */
-t_node	*pipeline(t_token *tok)
+t_node	*pipe_sequence(t_token *tok)
 {
 	t_node	*node;
 
 	node = command(tok);
 	while (1)
 	{
-		if (consume("||", tok))
-			node = new_branch(NODE_PIPE, node, command(tok));
-		else if (consume("|", tok))
+		if (consume("|", tok))
 			node = new_branch(NODE_PIPE, node, command(tok));
 		else
 			return (node);
@@ -88,8 +86,12 @@ t_node	*command(t_token *tok)
  */
 t_node	*io_file(t_token *tok)
 {
+	t_node	*node;
+
+	node = NULL;
 	if (tok->type == TYPE_REDIRECT)
-		new_node(NODE_REDIRECT);
+		node = new_node(NODE_REDIRECT);
 	else
 		syntax_error();
+	return (node);
 }

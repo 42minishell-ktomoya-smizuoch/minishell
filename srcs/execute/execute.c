@@ -110,6 +110,38 @@ int	execute(t_node *ast, t_env *env)
 		args = make_argument_list(ast); // Todo: 構文木をfreeする
 		return (execute_simple_command(args, env));
 	}
+	else if (ast->kind == NODE_PIPE)
+	{
+		int		pipefd[2];
+		pid_t	pid1, pid2;
+
+		if (pipe(pipefd) < 0)
+			putsyserr_exit("pipe");
+		char	**cmd1 = make_argument_list(ast->left);
+		pid1 = fork();
+		if (pid1 == 0)
+		{
+			dup2(pipefd[1], STDOUT_FILENO);
+			close(pipefd[0]);
+			execute_simple_command(cmd1, env);
+		}
+
+		char	**cmd2 = make_argument_list(ast->right);
+		pid2 = fork();
+		if (pid2 == 0)
+		{
+			dup2(pipefd[0], STDIN_FILENO);
+			close(pipefd[1]);
+			execute_simple_command(cmd2, env);
+		}
+
+		int	status;
+		waitpid(pid1, &status, WNOHANG);
+		waitpid(pid2, &status, WNOHANG);
+
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
 	return (0);
 }
 

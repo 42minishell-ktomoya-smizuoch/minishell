@@ -32,7 +32,7 @@ typedef struct s_node
 	const char		*word;
 }	t_node;
 
-t_node	*pipeline(t_token *tokens);
+t_node	*pipe_sequence(t_token *tokens);
 t_node	*command(t_token *tok);
 t_node	*new_node(t_node_kind kind);
 t_node	*new_branch(t_node_kind kind, t_node *left, t_node *right);
