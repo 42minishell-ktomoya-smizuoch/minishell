@@ -89,6 +89,17 @@ cmd_suffix ::= (io_redirect | WORD)+
 
 io_redirect ::= IO_NUMBER? (io_file | io_here)
 
-io_file ::= ('<' | '>' | '<<' | '>>') filename
+io_file ::= ('<' | '>' | '>>') filename
 
+io_here ::= '<<' here_end
+
+IO_NUMBERを実装しないEBNF記法:
+
+pipe_sequence ::= command ('|' command)*
+command ::= cmd_prefix (cmd_word cmd_suffix?)?
+          | cmd_name cmd_suffix?
+cmd_prefix ::= io_redirect+
+cmd_suffix ::= (io_redirect | WORD)+
+io_redirect ::= io_file | io_here
+io_file ::= ('<' | '>' | '>>') filename
 io_here ::= '<<' here_end

@@ -18,10 +18,14 @@
 
 typedef enum e_node_kind
 {
+	NODE_COMMAND,
 	NODE_ARGUMENT,
 	NODE_PIPE,
 	NODE_AMPERSAND,
-	NODE_REDIRECT,
+	NODE_LESS,
+	NODE_GREAT,
+	NODE_DLESS,
+	NODE_DGREAT,
 }	t_node_kind;
 
 typedef struct s_node
@@ -32,7 +36,15 @@ typedef struct s_node
 	const char		*word;
 }	t_node;
 
+// nodeの構造体にcomanndの構造体を追加する
+// comanndの構造体にはargumentとリダイレクトの構造体を追加する
+// argumentとリダイレクト
+
 t_node	*pipe_sequence(t_token *tokens);
+t_node	*cmd_suffix(t_token *tok);
+t_node	*io_file(t_token *tok);
+t_node	*io_here(t_token *tok);
+t_node	*io_redirect(t_token *tok);
 t_node	*command(t_token *tok);
 t_node	*new_node(t_node_kind kind);
 t_node	*new_branch(t_node_kind kind, t_node *left, t_node *right);

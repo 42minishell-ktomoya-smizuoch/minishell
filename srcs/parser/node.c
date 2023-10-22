@@ -33,6 +33,17 @@ t_node	*new_branch(t_node_kind kind, t_node *left, t_node *right)
 	return (node);
 }
 
+t_node	*new_branch_word(t_node_kind kind, t_token *tok, t_node *left, t_node *right)
+{
+	t_node	*node;
+
+	node = new_node(kind);
+	node->word = ft_substr(tok->str, 0, tok->len);
+	node->left = left;
+	node->right = right;
+	return (node);
+}
+
 //void	add_child_node(t_node *parent, t_node *child)
 //{
 //	t_node	*sibling;

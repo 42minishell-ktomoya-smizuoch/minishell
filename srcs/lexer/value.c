@@ -68,15 +68,21 @@ size_t	get_token_len(const char *s)
 	return (len);
 }
 
-t_type	get_token_type(const char c)
+t_type	get_token_type(const char *s)
 {
-	if (c == '|')
+	if (*s == '|')
 		return (TYPE_PIPE);
-	else if (c == '&')
+	else if (*s == '&')
 		return (TYPE_AMPERSAND);
-	else if (c == '>' || c == '<')
-		return (TYPE_REDIRECT);
-	else if (c == '\0')
+	else if (ft_strncmp(s, ">>", 2) == 0)
+		return (TYPE_DGREAT);
+	else if (ft_strncmp(s, "<<", 2) == 0)
+		return (TYPE_DLESS);
+	if (*s == '>')
+		return (TYPE_GREAT);
+	else if (*s == '<')
+		return (TYPE_LESS);
+	else if (*s == '\0')
 		return (TYPE_EOF);
 	else
 		return (TYPE_GENERAL);

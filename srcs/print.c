@@ -38,6 +38,15 @@ void	print_node_tree(t_node *node, int depth)
 		print_node_tree(node->left, depth + 1);
 		print_node_tree(node->right, depth + 1);
 	}
+	else if (node->kind == NODE_LESS)
+		printf("[%d]<, filename: %s\n", depth, node->word);
+	else if (node->kind == NODE_GREAT)
+		printf("[%d]>, filename: %s\n", depth, node->word);
+	else if (node->kind == NODE_DGREAT)
+		printf("[%d]>>, filename: %s\n", depth, node->word);
+	else if (node->kind == NODE_DLESS)
+		printf("[%d]<<, here_end: %s\n", depth, node->word);
+
 }
 
 void	print_argument_list(t_node *node, int depth)
