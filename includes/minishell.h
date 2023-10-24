@@ -58,5 +58,7 @@ t_node	*parser(t_token *tokens);
 void	print_ast(t_node *root);
 void	print_argument_list(t_node *node, int depth);
 void	print_node_tree(t_node *node, int depth);
+void	print_redirect_list(t_node *node, int depth);
+void 	print_node(t_node *node, int depth);
 
 #endif

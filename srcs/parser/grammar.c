@@ -11,13 +11,11 @@
 /* ************************************************************************** */
 
 #include "../../includes/parser.h"
+#include "../../includes/minishell.h"
 
 /*
- * 目標: リダイレクトの文法を実装する
- * 準目標: bnf記法を理解する
- * 準目標: リダイレクトを実行する際に引数を理解する
- *  準々目標: man dup
- *  準々目標: man dup2
+ * 目標: cmd_suffixの文法を実装する
+ * 準目標:
  */
 
 /*
@@ -32,9 +30,9 @@ void	syntax_error(void)
 }
 
 /*
- * pipeline = command ('|' command | "||" command)*
+ * pipeline = command ('|' command)*
  */
-t_node	*pipe_sequence(t_token *tok)
+t_node	*command_line(t_token *tok)
 {
 	t_node	*node;
 
@@ -52,46 +50,205 @@ t_node	*pipe_sequence(t_token *tok)
  * simple_command ::= cmd_name word_list?
  * word_list ::= word+
  */
+//t_node	*command(t_token *tok)
+//{
+//	t_node	*cmd;
+//	t_token	*cur;
+//	t_node	*node;
+//
+//	cmd = NULL;
+//	cur = tok->cur;
+//	while (cur->type != TYPE_EOF && cur->type != TYPE_PIPE)
+//	{
+//		node = new_node(NODE_ARGUMENT);
+//		if (!node)
+//		{
+//			// Todo: 構文木をfreeする関数を作る
+//			return (NULL);
+//		}
+//		node->word = ft_substr(cur->str, 0, cur->len);
+//		if (node->word == NULL)
+//		{
+//			// Todo: freeする
+//			return (NULL);
+//		}
+//		lstadd_back_node(&cmd, node);
+//		cur = cur->next;
+//	}
+//	tok->cur = cur;
+//	return (cmd);
+//}
+
+/* command ::= cmd_name cmd_suffix? */
+/* cmd_name ::= WORD */
+//t_node	*command(t_token *tok)
+//{
+//	t_token	*cur;
+//	t_node	*cmd;
+//	t_node	*node;
+//
+//	cur = tok->cur;
+//	cmd = new_node(NODE_COMMAND);
+//	node->word = ft_substr(cur->str, 0, cur->len);
+//	while (1)
+//	{
+//		if (cur->type == TYPE_PIPE
+//			|| cur->type == TYPE_EOF)
+//			break ;
+//		else
+//			node = cmd_suffix
+//	}
+//	return (node);
+//}
+
+/* cmd_suffix ::= (io_redirect | WORD)+ */
+//t_node	*cmd_suffix(t_token *tok)
+//{
+//	t_token	*cur;
+//	t_node	*node;
+//	t_node	*suffix;
+//
+//	node = NULL;
+//	suffix = NULL;
+//	while (1)
+//	{
+//		cur = tok->cur;
+//		if (cur->type == TYPE_LESS
+//			|| cur->type == TYPE_GREAT
+//			|| cur->type == TYPE_DLESS
+//			|| cur->type == TYPE_DGREAT)
+//			node = io_redirect(tok);
+//		else if (cur->type == TYPE_GENERAL)
+//		{
+//			node = new_node(NODE_ARGUMENT);
+//			node->word = ft_substr(cur->str, 0, cur->len);
+//			tok->cur = cur->next;
+//		}
+//		else
+//			break ;
+//		lstadd_back_node(&suffix, node);
+//	}
+//	tok->cur = cur->next;
+//	return (suffix);
+//}
+
+/* command ::= cmd_args io_redirects */
 t_node	*command(t_token *tok)
 {
 	t_node	*cmd;
-	t_token	*cur;
-	t_node	*node;
+	t_node	*redirects;
 
-	cmd = NULL;
-	cur = tok->cur;
-	while (cur->type != TYPE_EOF && cur->type != TYPE_PIPE)
-	{
-		node = new_node(NODE_ARGUMENT);
-		if (!node)
-		{
-			// Todo: 構文木をfreeする関数を作る
-			return (NULL);
-		}
-		node->word = ft_substr(cur->str, 0, cur->len);
-		if (node->word == NULL)
-		{
-			// Todo: freeする
-			return (NULL);
-		}
-		lstadd_back_node(&cmd, node);
-		cur = cur->next;
-	}
-	tok->cur = cur;
+	cmd = cmd_args(tok);
+	redirects = io_redirects(tok);
+	lstadd_back_node(&cmd, redirects);
 	return (cmd);
 }
 
+/* cmd_args ::= cmd_arg cmd_args* */
+t_node	*cmd_args(t_token *tok)
+{
+	t_node	*args;
+	t_node	*arg;
+	t_token	*cur;
+
+	cur = tok->cur;
+	args = cmd_arg(cur);
+	cur = cur->next;
+	while (cur->type == TYPE_GENERAL)
+	{
+		arg = cmd_arg(cur);
+		lstadd_back_node(&args, arg);
+		cur = cur->next;
+	}
+	tok->cur = cur;
+	return (args);
+}
+
+/* cmd_arg ::= WORD */
+t_node	*cmd_arg(t_token *tok)
+{
+	t_node	*arg;
+
+	if (!tok || tok->type == TYPE_EOF)
+		return (NULL);
+	arg = new_node(NODE_ARGUMENT);
+	arg->word = ft_substr(tok->str, 0, tok->len);
+	return (arg);
+}
+
+/* io_redirects ::= io_redirect* */
+t_node	*io_redirects(t_token *tok)
+{
+	t_node	*list;
+	t_node	*node;
+	t_token	*cur;
+
+	if (tok->cur == NULL || tok->cur->type == TYPE_EOF)
+		return (NULL);
+	list = NULL;
+	cur = tok->cur;
+	while (cur->type == TYPE_LESS
+		   || cur->type == TYPE_GREAT
+		   || cur->type == TYPE_DLESS
+		   || cur->type == TYPE_DGREAT)
+	{
+		node = io_redirect(cur);
+		lstadd_back_node(&list, node);
+		cur = cur->next->next;
+	}
+	tok->cur = cur;
+	return (list);
+}
+
+/* io_redirect ::= io_file | io_here */
+t_node	*io_redirect(t_token *tok)
+{
+	t_node	*node;
+
+	if (!tok || tok->type == TYPE_EOF)
+		return (NULL);
+	node = NULL;
+	if (tok->type == TYPE_LESS
+		|| tok->type == TYPE_GREAT
+		|| tok->type == TYPE_DGREAT)
+		node = io_file(tok);
+	else if (tok->type == TYPE_DLESS)
+		node = io_here(tok);
+	else
+		syntax_error();
+	return (node);
+}
+
 /*
- * io_file ::= ('<' | '>' | '<<' | '>>') filename
+ * io_file ::= ('<' | '>' | '>>') filename
  */
 t_node	*io_file(t_token *tok)
 {
 	t_node	*node;
 
 	node = NULL;
-	if (tok->type == TYPE_REDIRECT)
-		node = new_node(NODE_REDIRECT);
+	if (tok->type == TYPE_LESS)
+		node = new_node(NODE_LESS);
+	else if (tok->type == TYPE_GREAT)
+		node = new_node(NODE_GREAT);
+	else if (tok->type == TYPE_DGREAT)
+		node = new_node(NODE_DGREAT);
 	else
 		syntax_error();
+	node->word = ft_substr(tok->next->str, 0, tok->next->len);
+	return (node);
+}
+
+/* '<<' here_end */
+t_node	*io_here(t_token *tok)
+{
+	t_node	*node;
+
+	node = NULL;
+	if (tok->type == TYPE_DLESS)
+		node = new_node(NODE_DLESS);
+	else
+		syntax_error();
+	node->word = ft_substr(tok->next->str, 0, tok->next->len);
 	return (node);
 }

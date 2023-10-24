@@ -20,7 +20,10 @@ typedef enum e_type
 	TYPE_GENERAL,
 	TYPE_PIPE,
 	TYPE_AMPERSAND,
-	TYPE_REDIRECT,
+	TYPE_LESS,
+	TYPE_GREAT,
+	TYPE_DLESS,
+	TYPE_DGREAT,
 	TYPE_EOF,
 	TYPE_NEWLINE,
 }	t_type;
@@ -47,7 +50,7 @@ t_token			*new_token(t_type type, const char *str, size_t len);
 size_t			count_token(t_token *tok);
 char			**malloc_token(t_token *tok);
 size_t			get_token_len(const char *s);
-t_type			get_token_type(const char c);
+t_type			get_token_type(const char *str);
 void			lstadd_back_token(t_token **lst, t_token *new);
 bool			is_blank(char c);
 bool			is_metachar(const char c);

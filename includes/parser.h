@@ -18,10 +18,14 @@
 
 typedef enum e_node_kind
 {
+	NODE_COMMAND,
 	NODE_ARGUMENT,
 	NODE_PIPE,
 	NODE_AMPERSAND,
-	NODE_REDIRECT,
+	NODE_LESS,
+	NODE_GREAT,
+	NODE_DLESS,
+	NODE_DGREAT,
 }	t_node_kind;
 
 typedef struct s_node
@@ -32,13 +36,25 @@ typedef struct s_node
 	const char		*word;
 }	t_node;
 
-t_node	*pipe_sequence(t_token *tokens);
+// nodeの構造体にcomanndの構造体を追加する
+// comanndの構造体にはargumentとリダイレクトの構造体を追加する
+// argumentとリダイレクト
+
+t_node	*command_line(t_token *tokens);
+t_node	*cmd_suffix(t_token *tok);
+t_node	*io_file(t_token *tok);
+t_node	*io_here(t_token *tok);
+t_node	*io_redirects(t_token *tok);
+t_node	*io_redirect(t_token *tok);
 t_node	*command(t_token *tok);
+t_node	*cmd_args(t_token *tok);
+t_node	*cmd_arg(t_token *tok);
 t_node	*new_node(t_node_kind kind);
 t_node	*new_branch(t_node_kind kind, t_node *left, t_node *right);
 void	add_child_node(t_node *parent, t_node *child);
 void	lstadd_back_node(t_node **lst, t_node *new);
 bool	consume(const char *op, t_token *tok);
+bool	consume_type(t_type type, t_token *tok);
 void	free_token(t_token *tok);
 void	free_token_list(t_token *head);
 void	free_node_tree(t_node *node);

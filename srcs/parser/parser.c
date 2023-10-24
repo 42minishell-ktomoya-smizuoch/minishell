@@ -65,13 +65,24 @@
 // 	return (ast);
 // }
 
+//t_node	*parser(t_token *token)
+//{
+//	t_node	*pipeline;
+//
+//	if (token == NULL)
+//		return (NULL);
+//	pipeline = command_line(token);
+////	free(token);
+//	return (pipeline);
+//}
+
 t_node	*parser(t_token *token)
 {
-	t_node	*pipeline;
+	t_node	*ast;
 
 	if (token == NULL)
 		return (NULL);
-	pipeline = pipe_sequence(token);
+	ast = command_line(token);
 //	free(token);
-	return (pipeline);
+	return (ast);
 }

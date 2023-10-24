@@ -51,7 +51,7 @@ t_token	*create_token(const char *str)
 
 	if (!str)
 		return (NULL);
-	type = get_token_type(*str);
+	type = get_token_type(str);
 	len = get_token_len(str);
 	token = new_token(type, str, len);
 	if (!token)
