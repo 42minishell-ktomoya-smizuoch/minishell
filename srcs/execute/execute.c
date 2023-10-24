@@ -74,7 +74,7 @@ size_t	count_args(t_node *ast)
 	size_t	count;
 
 	count = 0;
-	while (ast)
+	while (ast && ast->kind == NODE_ARGUMENT)
 	{
 		count++;
 		ast = ast->right;

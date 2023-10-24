@@ -71,7 +71,7 @@
 //
 //	if (token == NULL)
 //		return (NULL);
-//	pipeline = pipe_sequence(token);
+//	pipeline = command_line(token);
 ////	free(token);
 //	return (pipeline);
 //}
@@ -82,7 +82,7 @@ t_node	*parser(t_token *token)
 
 	if (token == NULL)
 		return (NULL);
-	ast = io_redirect(token);
+	ast = command_line(token);
 //	free(token);
 	return (ast);
 }
