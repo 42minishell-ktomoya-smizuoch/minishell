@@ -48,6 +48,13 @@ BUILTIN_SRCS = $(addprefix $(BUILTIN_DIR)/, $(BUILTIN_FILES))
 BUILTIN_OBJS = $(BUILTIN_SRCS:.c=.o)
 OBJS += $(BUILTIN_OBJS)
 
+REDIRECT_DIR = $(SRCS_DIR)/redirect
+REDIRECT_FILES = redirect.c \
+
+REDIRECT_SRCS = $(addprefix $(REDIRECT_DIR)/, $(REDIRECT_FILES))
+REDIRECT_OBJS = $(REDIRECT_SRCS:.c=.o)
+OBJS += $(REDIRECT_OBJS)
+
 SRCS_FILES = env_init.c \
 	search_env.c \
 	env_to_envp.c \

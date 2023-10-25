@@ -12,6 +12,7 @@
 
 #include "../../includes/parser.h"
 #include "../../includes/execute.h"
+#include "../../includes/redirect.h"
 #include "../../includes/minishell.h"
 
 /*
@@ -108,7 +109,32 @@ int	execute(t_node *ast, t_env *env)
 	if (ast->kind == NODE_ARGUMENT)
 	{
 		args = make_argument_list(ast); // Todo: 構文木をfreeする
-		return (execute_simple_command(args, env));
+
+		// 引数群を抜けてリダイレクト群に移動する
+		t_node	*redir = ast;
+		int 	status;
+		int 	*fd = ft_calloc(2, sizeof(int));
+		bool	flag = false;
+
+		while (redir && redir->kind == NODE_ARGUMENT)
+			redir = redir->right;
+		while (redir && (redir->kind == NODE_LESS || redir->kind == NODE_GREAT || redir->kind == NODE_DGREAT))
+		{
+			if (flag == true)
+				restore_fd(fd[0], fd[1]);
+			flag = true;
+			if (redir->kind == NODE_LESS)
+				fd = redirect_input(redir->word, fd);
+			else if (redir->kind == NODE_GREAT)
+				fd = redirect_output(redir->word, fd);
+			else if (redir->kind == NODE_DGREAT)
+				fd = redirect_append(redir->word, fd);
+			redir = redir->right;
+		}
+		status = execute_simple_command(args, env);
+		if (flag == true)
+			restore_fd(fd[0], fd[1]);
+		return (status);
 	}
 	else if (ast->kind == NODE_PIPE)
 	{
