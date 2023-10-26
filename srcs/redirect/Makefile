@@ -3,6 +3,7 @@ NAME = a.out
 INC_DIR = ../../includes
 
 SRCS = redirect.c \
+	here_document.c \
 
 OBJS = $(SRCS:.c=.o)
 

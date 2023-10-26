@@ -114,11 +114,12 @@ int	execute(t_node *ast, t_env *env)
 		t_node	*redir = ast;
 		int 	status;
 		int 	*fd = ft_calloc(2, sizeof(int));
+		char	*file = NULL;
 		bool	flag = false;
 
 		while (redir && redir->kind == NODE_ARGUMENT)
 			redir = redir->right;
-		while (redir && (redir->kind == NODE_LESS || redir->kind == NODE_GREAT || redir->kind == NODE_DGREAT))
+		while (redir && (redir->kind == NODE_LESS || redir->kind == NODE_GREAT || redir->kind == NODE_DGREAT || redir->kind == NODE_DLESS))
 		{
 			if (flag == true)
 				restore_fd(fd[0], fd[1]);
@@ -129,6 +130,8 @@ int	execute(t_node *ast, t_env *env)
 				fd = redirect_output(redir->word, fd);
 			else if (redir->kind == NODE_DGREAT)
 				fd = redirect_append(redir->word, fd);
+			else if (redir->kind == NODE_DLESS)
+				file = here_document((char *)redir->word);
 			redir = redir->right;
 		}
 		status = execute_simple_command(args, env);

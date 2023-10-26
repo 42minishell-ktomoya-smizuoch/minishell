@@ -50,6 +50,7 @@ OBJS += $(BUILTIN_OBJS)
 
 REDIRECT_DIR = $(SRCS_DIR)/redirect
 REDIRECT_FILES = redirect.c \
+	here_document.c \
 
 REDIRECT_SRCS = $(addprefix $(REDIRECT_DIR)/, $(REDIRECT_FILES))
 REDIRECT_OBJS = $(REDIRECT_SRCS:.c=.o)
