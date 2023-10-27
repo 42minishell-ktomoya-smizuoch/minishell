@@ -124,7 +124,7 @@ void	print_redirect_list(t_node *node, int depth)
 	}
 	else if (node->kind == NODE_DGREAT)
 	{
-		printf("redirect: <, filename: %s", node->word);
+		printf("redirect: >>, filename: %s", node->word);
 	}
 	else if (node->kind == NODE_DLESS)
 	{

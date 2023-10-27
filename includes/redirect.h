@@ -19,5 +19,9 @@
 # include <readline/history.h>
 
 char	*here_document(char *limiter);
+int		*redirect_input(const char *file, int *fd);
+int		*redirect_output(const char *file, int *fd);
+int		*redirect_append(const char *file, int *fd);
+void	restore_fd(int save_fd, int stdfd);
 
 #endif
