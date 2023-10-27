@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/14 19:03:52 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/10/27 18:25:04 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,21 +109,21 @@ int	execute(t_node *ast, t_env *env)
 	if (ast->kind == NODE_ARGUMENT)
 	{
 		args = make_argument_list(ast); // Todo: 構文木をfreeする
-
+	
 		// 引数群を抜けてリダイレクト群に移動する
 		t_node	*redir = ast;
-		int 	status;
+		int 	status = 0;
 		int 	*fd = ft_calloc(2, sizeof(int));
 		char	*file = NULL;
-		bool	flag = false;
+		int		flag = 0;
 
 		while (redir && redir->kind == NODE_ARGUMENT)
 			redir = redir->right;
 		while (redir && (redir->kind == NODE_LESS || redir->kind == NODE_GREAT || redir->kind == NODE_DGREAT || redir->kind == NODE_DLESS))
 		{
-			if (flag == true)
+			if (flag == 1)
 				restore_fd(fd[0], fd[1]);
-			flag = true;
+			flag = 1;
 			if (redir->kind == NODE_LESS)
 				fd = redirect_input(redir->word, fd);
 			else if (redir->kind == NODE_GREAT)
@@ -131,12 +131,29 @@ int	execute(t_node *ast, t_env *env)
 			else if (redir->kind == NODE_DGREAT)
 				fd = redirect_append(redir->word, fd);
 			else if (redir->kind == NODE_DLESS)
+			{
 				file = here_document((char *)redir->word);
+				flag = 2;
+			}
 			redir = redir->right;
 		}
-		status = execute_simple_command(args, env);
-		if (flag == true)
+		if (flag == 0)
+			status = execute_simple_command(args, env);
+		else if (flag == 1)
+		{
+			status = execute_simple_command(args, env);
 			restore_fd(fd[0], fd[1]);
+		}
+		else if (flag == 2)
+		{
+			// argsの最後にfileをつける
+			size_t	i = 0;
+
+			while (args[i])
+				i++;
+			args[i] = file;
+			status = execute_simple_command(args, env);
+		}
 		return (status);
 	}
 	else if (ast->kind == NODE_PIPE)
