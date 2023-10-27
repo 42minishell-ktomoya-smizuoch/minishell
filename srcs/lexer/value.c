@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   value.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 19:38:37 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/17 19:38:39 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/10/27 19:21:04 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,27 @@ size_t	get_token_len(const char *s)
 	if (*s == '\0')
 		len = 0;
 	else if (startwith(s, ">>") || startwith(s, "<<")
-			 || startwith(s, "||"))
+			|| startwith(s, "||"))
 		len = 2;
 	else if (ft_strchr("><|&", *s) != NULL)
 		len = 1;
+	else if (*s == '$')
+	{
+		// 英数字が続く間、lenを増やす
+		len++;
+		while (1)
+		{
+			if (s[len] == '?')
+			{
+				len++;
+				break ;
+			}
+			else if (ft_isalnum(s[len]))
+				len++;
+			else
+				break ;
+		}
+	}
 	else
 	{
 		while (s[len])
@@ -82,6 +99,8 @@ t_type	get_token_type(const char *s)
 		return (TYPE_GREAT);
 	else if (*s == '<')
 		return (TYPE_LESS);
+	else if (*s == '$')
+		return (TYPE_DOLLAR);
 	else if (*s == '\0')
 		return (TYPE_EOF);
 	else
