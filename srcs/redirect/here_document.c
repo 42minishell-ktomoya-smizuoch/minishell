@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_document.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 15:35:49 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/22 14:23:28 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/27 19:32:44 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	*here_document(char *limiter)
 		free((void *)line);
 	}
 	free((void *)line);
-	ft_putendl_fd("\0", fd);
+	ft_putstr_fd("\0", fd);
 	close(fd);
 	return (ft_strdup(hear_doc));
 }
