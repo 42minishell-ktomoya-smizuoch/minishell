@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/27 18:25:04 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/10/27 18:58:18 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ int	execute(t_node *ast, t_env *env)
 				i++;
 			args[i] = file;
 			status = execute_simple_command(args, env);
+			unlink(file);
 		}
 		return (status);
 	}
