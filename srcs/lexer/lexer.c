@@ -46,7 +46,7 @@ t_token	*lexer(const char *str)
 	t_token	*token;
 
 	if (!str)
-		ft_putendl_fd("lexer: str is NULL", STDERR_FILENO);
+		return (NULL);
 	token = tokenize(str);
 	if (!token)
 		return (NULL);

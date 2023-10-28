@@ -49,8 +49,6 @@ t_token	*create_token(const char *str)
 	t_type	type;
 	size_t	len;
 
-	if (!str)
-		return (NULL);
 	type = get_token_type(str);
 	len = get_token_len(str);
 	token = new_token(type, str, len);

@@ -50,10 +50,9 @@ size_t	get_token_len(const char *s)
 	state = STATE_GENERAL;
 	if (*s == '\0')
 		len = 0;
-	else if (startwith(s, ">>") || startwith(s, "<<")
-			|| startwith(s, "||"))
+	else if (startwith(s, ">>") || startwith(s, "<<"))
 		len = 2;
-	else if (ft_strchr("><|&", *s) != NULL)
+	else if (ft_strchr("><|&", *s))
 		len = 1;
 	else if (*s == '$')
 	{
