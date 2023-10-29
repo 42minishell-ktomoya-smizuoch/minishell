@@ -41,9 +41,15 @@ static enum e_state	update_state(const char c, enum e_state prev)
 	return (new);
 }
 
-size_t	get_token_len(const char *s)
+int	puterr_retint(const char *msg)
 {
-	size_t	len;
+	ft_putendl_fd(msg, STDERR_FILENO);
+	return (ERROR);
+}
+
+ssize_t	get_token_len(const char *s)
+{
+	ssize_t	len;
 	t_state	state;
 
 	len = 0;
@@ -56,7 +62,6 @@ size_t	get_token_len(const char *s)
 		len = 1;
 	else if (*s == '$')
 	{
-		// 英数字が続く間、lenを増やす
 		len++;
 		while (1)
 		{
@@ -80,6 +85,10 @@ size_t	get_token_len(const char *s)
 				break ;
 			len++;
 		}
+		if (state == STATE_IN_QUOTE)
+			return (puterr_retint("syntax error: in single quote"));
+		else if (state == STATE_IN_DOUBLE_QUOTE)
+			return (puterr_retint("syntax error: in double quote"));
 	}
 	return (len);
 }

@@ -35,7 +35,7 @@ t_token	*new_token(t_type type, const char *p, size_t len)
 
 	token = ft_calloc(1, sizeof(t_token));
 	if (!token)
-		return (NULL);
+		return (perror_null("malloc"));
 	token->type = type;
 	token->str = p;
 	token->len = len;
@@ -47,10 +47,12 @@ t_token	*create_token(const char *str)
 {
 	t_token	*token;
 	t_type	type;
-	size_t	len;
+	ssize_t	len;
 
 	type = get_token_type(str);
 	len = get_token_len(str);
+	if (len == ERROR)
+		return (NULL);
 	token = new_token(type, str, len);
 	if (!token)
 		return (NULL);
