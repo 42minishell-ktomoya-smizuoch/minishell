@@ -94,7 +94,7 @@ char	**make_argument_list(t_node *ast)
 	i = 0;
 	while (i < count)
 	{
-		args[i] = (char *)ast->word;
+		args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
 		ast = ast->right;
 		i++;
 	}
@@ -114,6 +114,7 @@ int	execute(t_node *ast, t_env *env)
 		t_node	*redir = ast;
 		int 	status = 0;
 		int 	*fd = ft_calloc(2, sizeof(int));
+		char	*redir_file = NULL;
 		char	*file = NULL;
 		int		flag = 0;
 
@@ -125,14 +126,24 @@ int	execute(t_node *ast, t_env *env)
 				restore_fd(fd[0], fd[1]);
 			flag = 1;
 			if (redir->kind == NODE_LESS)
-				fd = redirect_input(redir->word, fd);
+			{
+				redir_file = ft_substr(redir->str, 0, redir->len);
+				fd = redirect_input(redir_file, fd);
+			}
 			else if (redir->kind == NODE_GREAT)
-				fd = redirect_output(redir->word, fd);
+			{
+				redir_file = ft_substr(redir->str, 0, redir->len);
+				fd = redirect_output(redir_file, fd);
+			}
 			else if (redir->kind == NODE_DGREAT)
-				fd = redirect_append(redir->word, fd);
+			{
+				redir_file = ft_substr(redir->str, 0, redir->len);
+				fd = redirect_append(redir_file, fd);
+			}
 			else if (redir->kind == NODE_DLESS)
 			{
-				file = here_document((char *)redir->word);
+				redir_file = ft_substr(redir->str, 0, redir->len);
+				file = here_document(redir_file);
 				flag = 2;
 			}
 			redir = redir->right;
