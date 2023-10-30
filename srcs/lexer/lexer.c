@@ -67,7 +67,5 @@ t_token	*lexer(const char *str)
 	if (!str)
 		return (NULL);
 	token = tokenize(str);
-	if (!token)
-		return (NULL);
 	return (token);
 }

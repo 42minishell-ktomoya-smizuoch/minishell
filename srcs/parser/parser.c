@@ -79,10 +79,17 @@
 t_node	*parser(t_token *token)
 {
 	t_node	*ast;
+	int 	flag;
 
-	if (token == NULL)
+	flag = 0;
+	if (!token)
 		return (NULL);
-	ast = command_line(token);
-//	free(token);
+	ast = command_line(token, &flag);
+	if (flag == ERROR)
+	{
+		free_node_tree(ast);
+		ast = NULL;
+	}
+	free_token(token);
 	return (ast);
 }
