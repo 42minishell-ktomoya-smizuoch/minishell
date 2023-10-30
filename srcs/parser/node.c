@@ -34,6 +34,12 @@ t_node	*new_branch(t_node_kind kind, t_node *left, t_node *right)
 	t_node	*node;
 
 	node = new_node(kind);
+	if (!node)
+	{
+		free_node_tree(left);
+		free_node_tree(right);
+		return (NULL);
+	}
 	node->left = left;
 	node->right = right;
 	return (node);

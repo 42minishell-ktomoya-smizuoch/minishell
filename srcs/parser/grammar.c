@@ -31,27 +31,13 @@
 //	return (NULL);
 //}
 
-void	*syntax_error_null(t_token *tok)
-{
-	ft_putstr_fd("syntax error near unexpected token `", STDERR_FILENO);
-	if (tok && tok->type == TYPE_PIPE)
-		ft_putstr_fd("|", STDERR_FILENO);
-	else if (tok && tok->type == TYPE_GREAT)
-		ft_putstr_fd(">", STDERR_FILENO);
-	else if (tok && tok->type == TYPE_LESS)
-		ft_putstr_fd("<", STDERR_FILENO);
-	else if (tok && tok->type == TYPE_DGREAT)
-		ft_putstr_fd(">>", STDERR_FILENO);
-	else if (tok && tok->type == TYPE_DLESS)
-		ft_putstr_fd("<<", STDERR_FILENO);
-	else if (tok && tok->type == TYPE_GENERAL)
-		ft_putstr_fd("string", STDERR_FILENO);
-	ft_putendl_fd("'", STDERR_FILENO);
-	return (NULL);
-}
-
 void	put_syntax_error(t_token *tok)
 {
+	char	input[100000];
+
+	ft_memset(input, 0, 100000);
+	if (tok && (tok->type == TYPE_GENERAL || tok->type == TYPE_DOLLAR))
+		ft_memcpy(input, tok->str, tok->len);
 	ft_putstr_fd("syntax error near unexpected token `", STDERR_FILENO);
 	if (tok && tok->type == TYPE_PIPE)
 		ft_putstr_fd("|", STDERR_FILENO);
@@ -63,9 +49,17 @@ void	put_syntax_error(t_token *tok)
 		ft_putstr_fd(">>", STDERR_FILENO);
 	else if (tok && tok->type == TYPE_DLESS)
 		ft_putstr_fd("<<", STDERR_FILENO);
-	else if (tok && tok->type == TYPE_GENERAL)
-		ft_putstr_fd("string", STDERR_FILENO);
+	else if (tok && (tok->type == TYPE_GENERAL || tok->type == TYPE_DOLLAR))
+		ft_putstr_fd(input, STDERR_FILENO);
+	else if (tok && tok->type == TYPE_EOF)
+		ft_putstr_fd("newline", STDERR_FILENO);
 	ft_putendl_fd("'", STDERR_FILENO);
+}
+
+void	*syntax_error_null(t_token *tok)
+{
+	put_syntax_error(tok);
+	return (NULL);
 }
 
 /*
@@ -76,7 +70,7 @@ t_node	*command_line(t_token *tok, int *flag)
 	t_node	*node;
 
 	if (!expect(TYPE_GENERAL, tok) && !expect(TYPE_DOLLAR, tok))
-		return (syntax_error_null(tok->cur));
+		return (syntax_error_null(tok->cur->next));
 	node = command(tok, flag);
 	if (!node)
 		return (NULL);
@@ -85,7 +79,14 @@ t_node	*command_line(t_token *tok, int *flag)
 		if (consume(TYPE_PIPE, tok))
 		{
 			if (expect(TYPE_GENERAL, tok) || expect(TYPE_DOLLAR, tok))
+			{
 				node = new_branch(NODE_PIPE, node, command(tok, flag));
+				if (!node)
+				{
+					*flag = ERROR;
+					return (NULL);
+				}
+			}
 			else
 			{
 				*flag = ERROR;
@@ -291,6 +292,11 @@ t_node	*io_file(t_token *tok, int *flag)
 		node = new_node(NODE_GREAT);
 	else if (consume(TYPE_DGREAT, tok))
 		node = new_node(NODE_DGREAT);
+	if (!node)
+	{
+		*flag = ERROR;
+		return (NULL);
+	}
 	if (expect(TYPE_GENERAL, tok) || expect(TYPE_DOLLAR, tok))
 	{
 		if (expect_next(TYPE_GENERAL, tok) || expect_next(TYPE_DOLLAR, tok))
@@ -326,6 +332,11 @@ t_node	*io_here(t_token *tok, int *flag)
 			return (syntax_error_null(tok->cur->next));
 		}
 		node = new_node(NODE_DLESS);
+		if (!node)
+		{
+			*flag = ERROR;
+			return (NULL);
+		}
 		set_node_value(node, tok->cur->str, tok->cur->len);
 		if (consume(TYPE_GENERAL, tok) || consume(TYPE_DOLLAR, tok))
 			return (node);
