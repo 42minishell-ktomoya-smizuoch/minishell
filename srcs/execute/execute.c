@@ -226,6 +226,11 @@ int	main(int argc, char **argv, char **envp)
 		env.envp = env_to_envp(&env);
 		token = lexer(line);
 		ast = parser(token);
+		if (!ast)
+		{
+			free((void *)line);
+			continue ;
+		}
 		execute(ast, &env);
 		free_env_to_envp(env.envp);
 		free((void *)line);
