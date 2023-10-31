@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:40:39 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/25 14:10:40 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/31 09:39:57 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ static void	setpwd(t_env *env, char *pwd)
 
 static int	free_and_return(char *str, int ret)
 {
-	perror ("chdir");
+	if (ret == 1)
+		perror ("cd");
 	if (str)
 		free(str);
 	return (ret);
@@ -66,6 +67,8 @@ int	builtin_cd(char **argv, t_env *env)
 	char		*oldpwd;
 
 	oldpwd = getcwd(NULL, 0);
+	if (argv == NULL || argv[1] == '\0')
+		return (free_and_return(oldpwd, SUCCESS));
 	if (chdir(argv[1]) != 0)
 		return (free_and_return(oldpwd, FAILURE));
 	setoldpwd(env, oldpwd);
