@@ -80,6 +80,15 @@ size_t	count_args(t_node *ast)
 		count++;
 		ast = ast->right;
 	}
+	while (ast && (ast->kind == NODE_LESS || ast->kind == NODE_GREAT || ast->kind == NODE_DLESS || ast->kind == NODE_DGREAT))
+	{
+		if (ast->kind == NODE_DLESS)
+		{
+			count++;
+			break ;
+		}
+		ast = ast->right;
+	}
 	return (count);
 }
 
@@ -92,7 +101,7 @@ char	**make_argument_list(t_node *ast)
 	count = count_args(ast);
 	args = (char **)ft_calloc(count + 1, sizeof(char *));
 	i = 0;
-	while (i < count)
+	while (i < count && ast->kind == NODE_ARGUMENT)
 	{
 		args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
 		ast = ast->right;
@@ -117,6 +126,7 @@ int	execute(t_node *ast, t_env *env)
 		char	*redir_file = NULL;
 		char	*file = NULL;
 		int		flag = 0;
+		size_t	i = 0;
 
 		while (redir && redir->kind == NODE_ARGUMENT)
 			redir = redir->right;
@@ -144,6 +154,7 @@ int	execute(t_node *ast, t_env *env)
 			{
 				redir_file = ft_substr(redir->str, 0, redir->len);
 				file = here_document(redir_file);
+				free(redir_file);
 				flag = 2;
 			}
 			redir = redir->right;
@@ -157,9 +168,6 @@ int	execute(t_node *ast, t_env *env)
 		}
 		else if (flag == 2)
 		{
-			// argsの最後にfileをつける
-			size_t	i = 0;
-
 			while (args[i])
 				i++;
 			args[i] = file;
