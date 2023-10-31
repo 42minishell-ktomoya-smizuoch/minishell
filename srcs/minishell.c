@@ -39,58 +39,67 @@
 //}
 
 // parser test
-//  int	main(int argc, char **argv, char **envp)
-//  {
-//  	t_token		*tokens;
-//  	t_node		*ast;
-//  	const char	*line;
+  int	main(int argc, char **argv, char **envp)
+  {
+  	t_token		*tokens;
+  	t_node		*ast;
+  	const char	*line;
 
-//  	(void)argv;
-//  	(void)envp;
-//  	if (argc != 1)
-//  		return (FAILURE);
-//  	while (1)
-//  	{
-//  		line = readline("minishell$ ");
-//  		if (*line)
-//  			add_history(line);
-//  		tokens = lexer(line);
-//  		if (!tokens)
-//  			continue ;
-//  		ast = parser(tokens);
-//  		print_ast(ast);
-//  		free((void *)line);
-//  	}
-//  	return (0);
-//  }
+  	(void)argv;
+  	(void)envp;
+  	if (argc != 1)
+  		return (FAILURE);
+  	while (1)
+  	{
+  		line = readline("minishell$ ");
+  		if (*line)
+  			add_history(line);
+  		tokens = lexer(line);
+  		if (!tokens)
+		{
+			free((void *)line);
+			continue ;
+		}
+  		ast = parser(tokens);
+		if (!ast)
+		{
+			free((void *)line);
+			continue ;
+		}
+  		print_ast(ast);
+		free_node_tree(ast);
+  		free((void *)line);
+  	}
+  	return (0);
+  }
 
 // lexer test
-int	main(int argc, char **argv)
-{
-	t_token		*token;
-	t_token		*head;
-	const char	*line;
-	char 		*word;
-
-	(void)argv;
-	if (argc != 1)
-		return (FAILURE);
-	while (1)
-	{
-		line = readline("minishell$ ");
-		if (*line)
-			add_history(line);
-		token = lexer(line);
-		head = token;
-		while (token)
-		{
-			word = ft_substr(token->str, 0, token->len);
-			printf("type: %d, word: %s\n", token->type, word);
-			free(word);
-			token = token->next;
-		}
-		free((void *)line);
-		free_token(head);
-	}
-	return (0);
-}
+//int	main(int argc, char **argv)
+//{
+//	t_token		*token;
+//	t_token		*head;
+//	const char	*line;
+//	char 		*word;
+//
+//	(void)argv;
+//	if (argc != 1)
+//		return (FAILURE);
+//	while (1)
+//	{
+//		line = readline("minishell$ ");
+//		if (*line)
+//			add_history(line);
+//		token = lexer(line);
+//		head = token;
+//		while (token)
+//		{
+//			word = ft_substr(token->str, 0, token->len);
+//			printf("type: %d, word: %s\n", token->type, word);
+//			free(word);
+//			token = token->next;
+//		}
+//		free((void *)line);
+//		free_token(head);
+//	}
+//	return (0);
+//}

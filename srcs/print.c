@@ -16,10 +16,13 @@
 void	print_node_tree(t_node *node, int depth)
 {
 	int		i;
+	char	word[100];
 
 	if (node == NULL)
 		return ;
 	i = 0;
+	ft_memset(word, 0, 100);
+	ft_memcpy(word, node->str, node->len);
 	while (i < depth)
 	{
 		printf("  ");
@@ -27,8 +30,7 @@ void	print_node_tree(t_node *node, int depth)
 	}
 	if (node->kind == NODE_ARGUMENT)
 	{
-		printf("[%d]command: %s, args: ", depth, node->word);
-		free((char *)node->word);
+		printf("[%d]command: %s, args: ", depth, word);
 		print_argument_list(node->right, depth + 1);
 		printf("\n");
 	}
@@ -40,27 +42,26 @@ void	print_node_tree(t_node *node, int depth)
 	}
 	else if (node->kind == NODE_LESS)
 	{
-		printf("[%d]<, filename: %s\n", depth, node->word);
+		printf("[%d]<, filename: %s\n", depth, word);
 		print_node_tree(node->left, depth + 1);
 		print_node_tree(node->right, depth + 1);
 	}
 	else if (node->kind == NODE_GREAT)
 	{
-		printf("[%d]>, filename: %s\n", depth, node->word);
+		printf("[%d]>, filename: %s\n", depth, word);
 		print_node_tree(node->left, depth + 1);
 		print_node_tree(node->right, depth + 1);
 	}
 	else if (node->kind == NODE_DGREAT)
 	{
-		printf("[%d]<, filename: %s\n", depth, node->word);
+		printf("[%d]>>, filename: %s\n", depth, word);
 		print_node_tree(node->left, depth + 1);
 		print_node_tree(node->right, depth + 1);
 	}
 	else if (node->kind == NODE_DLESS)
 	{
-		printf("[%d]<<, here_end: %s\n", depth, node->word);
-		print_node_tree(node->left, depth + 1);
-		print_node_tree(node->right, depth + 1);
+		print_redirect_list(node, depth);
+		printf("\n");
 	}
 }
 
@@ -97,9 +98,13 @@ void	print_node_tree(t_node *node, int depth)
 
 void	print_argument_list(t_node *node, int depth)
 {
+	char	word[100];
 	if (node == NULL || node->kind == TYPE_EOF)
 		return ;
-	printf("%s", node->word);
+
+	ft_memset(word, 0, 100);
+	ft_memcpy(word, node->str, node->len);
+	printf("%s", word);
 	if (node->right)
 		printf(", ");
 	if (node->right && (node->right->kind == NODE_LESS || node->right->kind == NODE_GREAT || node->right->kind == NODE_DLESS || node->right->kind == NODE_DGREAT))
@@ -112,23 +117,27 @@ void	print_argument_list(t_node *node, int depth)
 
 void	print_redirect_list(t_node *node, int depth)
 {
+	char	word[100];
+
 	if (node == NULL)
 		return ;
+	ft_memset(word, 0, 100);
+	ft_memcpy(word, node->str, node->len);
 	if (node->kind == NODE_LESS)
 	{
-		printf("redirect: <, filename: %s", node->word);
+		printf("redirect: <, filename: %s", word);
 	}
 	else if (node->kind == NODE_GREAT)
 	{
-		printf("redirect: >, filename: %s", node->word);
+		printf("redirect: >, filename: %s", word);
 	}
 	else if (node->kind == NODE_DGREAT)
 	{
-		printf("redirect: >>, filename: %s", node->word);
+		printf("redirect: >>, filename: %s", word);
 	}
 	else if (node->kind == NODE_DLESS)
 	{
-		printf("redirect: <<, here_end: %s", node->word);
+		printf("redirect: <<, here_end: %s", word);
 	}
 	if (node->right)
 		printf(", ");

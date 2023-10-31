@@ -28,6 +28,18 @@
 //	}
 //}
 
+void	free_node_tree(t_node *node)
+{
+	if (!node)
+		return ;
+	if (node->left)
+		free_node_tree(node->left);
+	if (node->right)
+		free_node_tree(node->right);
+	free(node);
+	node = NULL;
+}
+
 void	free_node_list(t_node *head)
 {
 	t_node	*current;
