@@ -18,6 +18,26 @@ static void	skip_spaces(const char **str)
 		(*str)++;
 }
 
+void	*perror_null(const char *syscall)
+{
+	perror(syscall);
+	return (NULL);
+}
+
+void	free_token(t_token *token)
+{
+	if (!token)
+		return ;
+	free_token(token->next);
+	free(token);
+}
+
+t_token *free_token_null(t_token *head)
+{
+	free_token(head);
+	return (NULL);
+}
+
 static t_token	*tokenize(const char *str)
 {
 	t_token	*head;
@@ -31,8 +51,7 @@ static t_token	*tokenize(const char *str)
 			break ;
 		token = create_token(str);
 		if (!token)
-			return (NULL);
-		token->head = head;
+			return (free_token_null(head));
 		lstadd_back_token(&head, token);
 		if (token->type == TYPE_EOF)
 			break ;
