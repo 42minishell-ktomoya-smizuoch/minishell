@@ -68,6 +68,7 @@
 int	main(int argc, char **argv)
 {
 	t_token		*token;
+	t_token		*head;
 	const char	*line;
 	char 		*word;
 
@@ -80,6 +81,7 @@ int	main(int argc, char **argv)
 		if (*line)
 			add_history(line);
 		token = lexer(line);
+		head = token;
 		while (token)
 		{
 			word = ft_substr(token->str, 0, token->len);
@@ -88,6 +90,7 @@ int	main(int argc, char **argv)
 			token = token->next;
 		}
 		free((void *)line);
+		free_token(head);
 	}
 	return (0);
 }

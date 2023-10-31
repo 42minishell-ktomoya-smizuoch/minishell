@@ -50,11 +50,13 @@ t_token			*create_token(const char *str);
 t_token			*new_token(t_type type, const char *str, size_t len);
 size_t			count_token(t_token *tok);
 char			**malloc_token(t_token *tok);
-size_t			get_token_len(const char *s);
+ssize_t			get_token_len(const char *s);
 t_type			get_token_type(const char *str);
 void			lstadd_back_token(t_token **lst, t_token *new);
 bool			is_blank(char c);
 bool			is_metachar(const char c);
 bool			startwith(const char *s1, const char *s2);
+
+void			*perror_null(const char *syscall);
 
 #endif
