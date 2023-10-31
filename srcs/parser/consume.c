@@ -12,13 +12,44 @@
 
 #include "../../includes/parser.h"
 
-bool	consume(const char *op, t_token *tok)
+//bool	consume(const char *op, t_token *tok)
+//{
+//	t_token	*cur;
+//
+//	cur = tok->cur;
+//	if (ft_strlen(op) != cur->len || ft_memcmp(cur->str, op, cur->len))
+//		return (false);
+//	tok->cur = cur->next;
+//	return (true);
+//}
+
+bool	consume(t_type type, t_token *tok)
 {
-	t_token	*cur;
+	t_token *cur;
 
 	cur = tok->cur;
-	if (ft_strlen(op) != cur->len || ft_memcmp(cur->str, op, cur->len))
+	if (cur && cur->type != type)
 		return (false);
-	tok->cur = cur->next;
+	tok->cur =cur->next;
+	return (true);
+}
+
+bool	expect(t_type type, t_token *tok)
+{
+	t_token *cur;
+
+	cur = tok->cur;
+	if (cur && cur->type != type)
+		return (false);
+	return (true);
+}
+
+bool	expect_next(t_type type, t_token *tok)
+{
+	t_token	*next;
+
+	next = tok->cur->next;
+	if (next && next->type != type)
+		return (false);
 	return (true);
 }

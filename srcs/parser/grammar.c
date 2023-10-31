@@ -23,24 +23,82 @@
  * コマンド名　引数1 引数2 ... 引数n <リダイレクト1> <リダイレクト2> ... <リダイレクトn>
  */
 
-void	syntax_error(void)
+//void	*syntax_error_null(const char *token)
+//{
+//	ft_putstr_fd("syntax error near unexpected token `", STDERR_FILENO);
+//	ft_putstr_fd(token, STDERR_FILENO);
+//	ft_putendl_fd("'", STDERR_FILENO);
+//	return (NULL);
+//}
+
+void	put_syntax_error(t_token *tok)
 {
-	ft_putendl_fd("syntax error", STDERR_FILENO);
-	exit(1);
+	char	input[100000];
+
+	ft_memset(input, 0, 100000);
+	if (tok && (tok->type == TYPE_GENERAL || tok->type == TYPE_DOLLAR))
+		ft_memcpy(input, tok->str, tok->len);
+	ft_putstr_fd("syntax error near unexpected token `", STDERR_FILENO);
+	if (tok && tok->type == TYPE_PIPE)
+		ft_putstr_fd("|", STDERR_FILENO);
+	else if (tok && tok->type == TYPE_GREAT)
+		ft_putstr_fd(">", STDERR_FILENO);
+	else if (tok && tok->type == TYPE_LESS)
+		ft_putstr_fd("<", STDERR_FILENO);
+	else if (tok && tok->type == TYPE_DGREAT)
+		ft_putstr_fd(">>", STDERR_FILENO);
+	else if (tok && tok->type == TYPE_DLESS)
+		ft_putstr_fd("<<", STDERR_FILENO);
+	else if (tok && (tok->type == TYPE_GENERAL || tok->type == TYPE_DOLLAR))
+		ft_putstr_fd(input, STDERR_FILENO);
+	else if (tok && tok->type == TYPE_EOF)
+		ft_putstr_fd("newline", STDERR_FILENO);
+	ft_putendl_fd("'", STDERR_FILENO);
+}
+
+void	*syntax_error_null(t_token *tok)
+{
+	put_syntax_error(tok);
+	return (NULL);
 }
 
 /*
  * pipeline = command ('|' command)*
  */
-t_node	*command_line(t_token *tok)
+t_node	*command_line(t_token *tok, int *flag)
 {
 	t_node	*node;
 
-	node = command(tok);
+	if (!expect(TYPE_GENERAL, tok) && !expect(TYPE_DOLLAR, tok))
+	{
+		if (expect_next(TYPE_GENERAL, tok) && expect_next(TYPE_GENERAL, tok))
+			return (syntax_error_null(tok->cur));
+		else
+			return (syntax_error_null(tok->cur->next));
+	}
+	node = command(tok, flag);
+	if (!node)
+		return (NULL);
 	while (1)
 	{
-		if (consume("|", tok))
-			node = new_branch(NODE_PIPE, node, command(tok));
+		if (consume(TYPE_PIPE, tok))
+		{
+			if (expect(TYPE_GENERAL, tok) || expect(TYPE_DOLLAR, tok))
+			{
+				node = new_branch(NODE_PIPE, node, command(tok, flag));
+				if (!node)
+				{
+					*flag = ERROR;
+					return (NULL);
+				}
+			}
+			else
+			{
+				*flag = ERROR;
+				put_syntax_error(tok->cur);
+				return (node);
+			}
+		}
 		else
 			return (node);
 	}
@@ -133,122 +191,165 @@ t_node	*command_line(t_token *tok)
 //}
 
 /* command ::= cmd_args io_redirects */
-t_node	*command(t_token *tok)
+t_node	*command(t_token *tok, int *flag)
 {
 	t_node	*cmd;
 	t_node	*redirects;
 
-	cmd = cmd_args(tok);
-	redirects = io_redirects(tok);
+	if (*flag == ERROR)
+		return (NULL);
+	cmd = cmd_args(tok, flag);
+	if (!cmd)
+		return (NULL);
+	redirects = io_redirects(tok, flag);
 	lstadd_back_node(&cmd, redirects);
 	return (cmd);
 }
 
 /* cmd_args ::= cmd_arg cmd_args* */
-t_node	*cmd_args(t_token *tok)
+t_node	*cmd_args(t_token *tok, int *flag)
 {
 	t_node	*args;
 	t_node	*arg;
-	t_token	*cur;
 
-	cur = tok->cur;
-	args = cmd_arg(cur);
-	cur = cur->next;
-	while (cur->type == TYPE_GENERAL)
+	args = cmd_arg(tok, flag);
+	if (!args)
+		return (NULL);
+	while (expect(TYPE_GENERAL, tok) || expect(TYPE_DOLLAR, tok))
 	{
-		arg = cmd_arg(cur);
+		arg = cmd_arg(tok, flag);
+		if (!arg)
+			break ;
 		lstadd_back_node(&args, arg);
-		cur = cur->next;
 	}
-	tok->cur = cur;
 	return (args);
 }
 
 /* cmd_arg ::= WORD */
-t_node	*cmd_arg(t_token *tok)
+t_node	*cmd_arg(t_token *tok, int *flag)
 {
 	t_node	*arg;
 
-	if (!tok || tok->type == TYPE_EOF)
+	if (expect(TYPE_EOF, tok) || *flag == ERROR)
 		return (NULL);
 	arg = new_node(NODE_ARGUMENT);
-	arg->word = ft_substr(tok->str, 0, tok->len);
+	if (!arg)
+	{
+		*flag = ERROR;
+		return (NULL);
+	}
+	set_node_value(arg, tok->cur->str, tok->cur->len);
+	if (consume(TYPE_GENERAL, tok) || consume(TYPE_DOLLAR, tok))
+		;
 	return (arg);
 }
 
 /* io_redirects ::= io_redirect* */
-t_node	*io_redirects(t_token *tok)
+t_node	*io_redirects(t_token *tok, int *flag)
 {
 	t_node	*list;
 	t_node	*node;
-	t_token	*cur;
 
-	if (tok->cur == NULL || tok->cur->type == TYPE_EOF)
+	if (expect(TYPE_EOF, tok) || *flag == ERROR)
 		return (NULL);
 	list = NULL;
-	cur = tok->cur;
-	while (cur->type == TYPE_LESS
-		   || cur->type == TYPE_GREAT
-		   || cur->type == TYPE_DLESS
-		   || cur->type == TYPE_DGREAT)
+	while (expect(TYPE_LESS, tok)
+		   || expect(TYPE_GREAT, tok)
+		   || expect(TYPE_DLESS, tok)
+		   || expect(TYPE_DGREAT, tok))
 	{
-		node = io_redirect(cur);
+		node = io_redirect(tok, flag);
+		if (!node)
+			break ;
 		lstadd_back_node(&list, node);
-		cur = cur->next->next;
 	}
-	tok->cur = cur;
 	return (list);
 }
 
 /* io_redirect ::= io_file | io_here */
-t_node	*io_redirect(t_token *tok)
+t_node	*io_redirect(t_token *tok, int *flag)
 {
 	t_node	*node;
 
-	if (!tok || tok->type == TYPE_EOF)
+	if (expect(TYPE_EOF, tok) || *flag == ERROR)
 		return (NULL);
 	node = NULL;
-	if (tok->type == TYPE_LESS
-		|| tok->type == TYPE_GREAT
-		|| tok->type == TYPE_DGREAT)
-		node = io_file(tok);
-	else if (tok->type == TYPE_DLESS)
-		node = io_here(tok);
-	else
-		syntax_error();
+	if (expect(TYPE_LESS, tok)
+		|| expect(TYPE_GREAT, tok)
+		|| expect(TYPE_DGREAT, tok))
+		node = io_file(tok, flag);
+	else if (consume(TYPE_DLESS, tok))
+		node = io_here(tok, flag);
 	return (node);
 }
 
 /*
  * io_file ::= ('<' | '>' | '>>') filename
  */
-t_node	*io_file(t_token *tok)
+t_node	*io_file(t_token *tok, int *flag)
 {
 	t_node	*node;
 
 	node = NULL;
-	if (tok->type == TYPE_LESS)
+	if (consume(TYPE_LESS, tok))
 		node = new_node(NODE_LESS);
-	else if (tok->type == TYPE_GREAT)
+	else if (consume(TYPE_GREAT, tok))
 		node = new_node(NODE_GREAT);
-	else if (tok->type == TYPE_DGREAT)
+	else if (consume(TYPE_DGREAT, tok))
 		node = new_node(NODE_DGREAT);
+	if (!node)
+	{
+		*flag = ERROR;
+		return (NULL);
+	}
+	if (expect(TYPE_GENERAL, tok) || expect(TYPE_DOLLAR, tok))
+	{
+		if (expect_next(TYPE_GENERAL, tok) || expect_next(TYPE_DOLLAR, tok))
+		{
+			*flag = ERROR;
+			free(node);
+			return (syntax_error_null(tok->cur->next));
+		}
+		set_node_value(node, tok->cur->str, tok->cur->len);
+		if (consume(TYPE_GENERAL, tok) || consume(TYPE_DOLLAR, tok))
+			return (node);
+	}
 	else
-		syntax_error();
-	node->word = ft_substr(tok->next->str, 0, tok->next->len);
+	{
+		*flag = ERROR;
+		free(node);
+		return (syntax_error_null(tok->cur));
+	}
 	return (node);
 }
 
 /* '<<' here_end */
-t_node	*io_here(t_token *tok)
+t_node	*io_here(t_token *tok, int *flag)
 {
 	t_node	*node;
 
 	node = NULL;
-	if (tok->type == TYPE_DLESS)
+	if (expect(TYPE_GENERAL, tok) || expect(TYPE_DOLLAR, tok))
+	{
+		if (expect_next(TYPE_GENERAL, tok) || expect_next(TYPE_DOLLAR, tok))
+		{
+			*flag = ERROR;
+			return (syntax_error_null(tok->cur->next));
+		}
 		node = new_node(NODE_DLESS);
+		if (!node)
+		{
+			*flag = ERROR;
+			return (NULL);
+		}
+		set_node_value(node, tok->cur->str, tok->cur->len);
+		if (consume(TYPE_GENERAL, tok) || consume(TYPE_DOLLAR, tok))
+			return (node);
+	}
 	else
-		syntax_error();
-	node->word = ft_substr(tok->next->str, 0, tok->next->len);
+	{
+		*flag = ERROR;
+		return (syntax_error_null(tok->cur));
+	}
 	return (node);
 }
