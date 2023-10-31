@@ -110,70 +110,70 @@ char	**make_argument_list(t_node *ast)
 	return (args);
 }
 
-int	execute(t_node *ast, t_env *env)
+int execute_command(t_node *ast, t_env *env)
 {
 	char	**args;
+	t_node	*redir;
+	char	*file_here;
+	int 	*fd;
+	int 	flag;
+	char 	*tmp_file;
+	int 	status;
+	size_t	i;
 
-	args = NULL;
+	args = make_argument_list(ast);
+	redir = ast;
+	fd = ft_calloc(2, sizeof(int));
+	status = 0;
+	flag = 0;
+	while (redir && redir->kind == NODE_ARGUMENT)
+		redir = redir->right;
+	while (redir && (redir->kind == NODE_LESS || redir->kind == NODE_GREAT || redir->kind == NODE_DGREAT || redir->kind == NODE_DLESS))
+	{
+		file_here = ft_substr(redir->str, 0, redir->len);
+		if (flag == 1)
+			restore_fd(fd[0], fd[1]);
+		flag = 1;
+		if (redir->kind == NODE_LESS)
+			fd = redirect_input(file_here, fd);
+		else if (redir->kind == NODE_GREAT)
+			fd = redirect_output(file_here, fd);
+		else if (redir->kind == NODE_DGREAT)
+			fd = redirect_append(file_here, fd);
+		else if (redir->kind == NODE_DLESS)
+		{
+			tmp_file = here_document(file_here);
+			flag = 2;
+		}
+		free(file_here);
+		redir = redir->right;
+	}
+	if (flag == 0)
+		status = execute_simple_command(args, env);
+	else if (flag == 1)
+	{
+		status = execute_simple_command(args, env);
+		restore_fd(fd[0], fd[1]);
+	}
+	else if (flag == 2)
+	{
+		i = 0;
+		while (args[i])
+			i++;
+		args[i] = tmp_file;
+		status = execute_simple_command(args, env);
+		unlink(tmp_file);
+	}
+	return (status);
+}
+
+int	execute(t_node *ast, t_env *env)
+{
+	int	status;
+
 	if (ast->kind == NODE_ARGUMENT)
 	{
-		args = make_argument_list(ast); // Todo: 構文木をfreeする
-	
-		// 引数群を抜けてリダイレクト群に移動する
-		t_node	*redir = ast;
-		int 	status = 0;
-		int 	*fd = ft_calloc(2, sizeof(int));
-		char	*redir_file = NULL;
-		char	*file = NULL;
-		int		flag = 0;
-		size_t	i = 0;
-
-		while (redir && redir->kind == NODE_ARGUMENT)
-			redir = redir->right;
-		while (redir && (redir->kind == NODE_LESS || redir->kind == NODE_GREAT || redir->kind == NODE_DGREAT || redir->kind == NODE_DLESS))
-		{
-			if (flag == 1)
-				restore_fd(fd[0], fd[1]);
-			flag = 1;
-			if (redir->kind == NODE_LESS)
-			{
-				redir_file = ft_substr(redir->str, 0, redir->len);
-				fd = redirect_input(redir_file, fd);
-			}
-			else if (redir->kind == NODE_GREAT)
-			{
-				redir_file = ft_substr(redir->str, 0, redir->len);
-				fd = redirect_output(redir_file, fd);
-			}
-			else if (redir->kind == NODE_DGREAT)
-			{
-				redir_file = ft_substr(redir->str, 0, redir->len);
-				fd = redirect_append(redir_file, fd);
-			}
-			else if (redir->kind == NODE_DLESS)
-			{
-				redir_file = ft_substr(redir->str, 0, redir->len);
-				file = here_document(redir_file);
-				free(redir_file);
-				flag = 2;
-			}
-			redir = redir->right;
-		}
-		if (flag == 0)
-			status = execute_simple_command(args, env);
-		else if (flag == 1)
-		{
-			status = execute_simple_command(args, env);
-			restore_fd(fd[0], fd[1]);
-		}
-		else if (flag == 2)
-		{
-			while (args[i])
-				i++;
-			args[i] = file;
-			status = execute_simple_command(args, env);
-			unlink(file);
-		}
+		status = execute_command(ast, env);
 		return (status);
 	}
 	else if (ast->kind == NODE_PIPE)
