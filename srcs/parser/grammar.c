@@ -70,7 +70,12 @@ t_node	*command_line(t_token *tok, int *flag)
 	t_node	*node;
 
 	if (!expect(TYPE_GENERAL, tok) && !expect(TYPE_DOLLAR, tok))
-		return (syntax_error_null(tok->cur->next));
+	{
+		if (expect_next(TYPE_GENERAL, tok) && expect_next(TYPE_GENERAL, tok))
+			return (syntax_error_null(tok->cur));
+		else
+			return (syntax_error_null(tok->cur->next));
+	}
 	node = command(tok, flag);
 	if (!node)
 		return (NULL);
