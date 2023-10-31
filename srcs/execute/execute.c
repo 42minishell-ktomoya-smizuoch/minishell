@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/27 18:58:18 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/10/31 16:16:18 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,9 @@ int	execute(t_node *ast, t_env *env)
 		{
 			dup2(pipefd[1], STDOUT_FILENO);
 			close(pipefd[0]);
+			close(pipefd[1]);
 			execute_simple_command(cmd1, env);
+			exit(0);
 		}
 
 		char	**cmd2 = make_argument_list(ast->right);
@@ -198,12 +200,13 @@ int	execute(t_node *ast, t_env *env)
 		{
 			dup2(pipefd[0], STDIN_FILENO);
 			close(pipefd[1]);
+			close(pipefd[0]);
 			execute_simple_command(cmd2, env);
+			exit(0);
 		}
-
 		int	status;
-		waitpid(pid1, &status, WNOHANG);
-		waitpid(pid2, &status, WNOHANG);
+		waitpid(pid1, &status, 0);
+		waitpid(pid2, &status, 0);
 
 		close(pipefd[0]);
 		close(pipefd[1]);
