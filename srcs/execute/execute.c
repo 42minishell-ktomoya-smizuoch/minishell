@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/31 16:16:18 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/10/31 19:53:21 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,8 @@ int execute_command(t_node *ast, t_env *env)
 			flag = 2;
 		}
 		free(file_here);
+		if (!fd)
+			return (ERROR);
 		redir = redir->right;
 	}
 	if (flag == 0)
