@@ -1,5 +1,6 @@
 #include "../../includes/expansion.h"
 #include "../../includes/lexer.h"
+#include "../../includes/minishell.h"
 
 void	remove_single_quote(char *str)
 {
@@ -34,77 +35,100 @@ t_state	update_state(const char c, t_state prev)
 	return (new);
 }
 
-int	main(int argc, char *argv[])
+size_t	count_unquoted_len(const char *quoted)
 {
-	char	*str;
+	size_t	i;
+	size_t	len;
+	t_state	state;
 
-	if (argc != 2)
-		return (1);
-	str = argv[1];
-	size_t	len = 0;
-	size_t	i = 0;
-	t_state	state = STATE_GENERAL;
-
-	// lenを数える
-	while (str[i])
-	{
-		state = update_state(str[i], state);
-		if (state == STATE_IN_QUOTE)
-		{
-			if (str[i] != '\'')
-			{
-				len++;
-			}
-		}
-		else if (state == STATE_IN_DOUBLE_QUOTE)
-		{
-			if (str[i] != '\"')
-			{
-				len++;
-			}
-		}
-		else
-		{
-			if (str[i] != '\'' && str[i] != '\"')
-			{
-				len++;
-			}
-		}
-		i++;
-	}
-	char	*trim = ft_calloc(len, sizeof(char));
 	i = 0;
-	size_t	j = 0;
+	len = 0;
 	state = STATE_GENERAL;
-	while (str[i])
+	while (quoted[i])
 	{
-		state = update_state(str[i], state);
-		if (state == STATE_IN_QUOTE)
+		state = update_state(quoted[i], state);
+		if (state == STATE_IN_QUOTE && quoted[i] != '\'')
 		{
-			if (str[i] != '\'')
-			{
-				trim[j] = str[i];
-				j++;
-			}
+			len++;
 		}
-		else if (state == STATE_IN_DOUBLE_QUOTE)
+		else if (state == STATE_IN_DOUBLE_QUOTE && quoted[i] != '\"')
 		{
-			if (str[i] != '\"')
-			{
-				trim[j] = str[i];
-				j++;
-			}
+			len++;
 		}
-		else
+		else if (state == STATE_GENERAL && (quoted[i] != '\'' && quoted[i] != '\"'))
 		{
-			if (str[i] != '\'' && str[i] != '\"')
-			{
-				trim[j] = str[i];
-				j++;
-			}
+			len++;
 		}
 		i++;
 	}
-	printf("trim: %s\n", trim);
+	return (len);
+}
+
+void	copy_unquoted(char *unquoted, const char *quoted)
+{
+	size_t	i;
+	size_t	j;
+	t_state	state;
+
+	i = 0;
+	j = 0;
+	state = STATE_GENERAL;
+	while (quoted[i])
+	{
+		state = update_state(quoted[i], state);
+		if (state == STATE_IN_QUOTE && quoted[i] != '\'')
+		{
+			unquoted[j] = quoted[i];
+			j++;
+		}
+		else if (state == STATE_IN_DOUBLE_QUOTE && quoted[i] != '\"')
+		{
+			unquoted[j] = quoted[i];
+			j++;
+		}
+		else if (state == STATE_GENERAL && quoted[i] != '\'' && quoted[i] != '\"')
+		{
+			unquoted[j] = quoted[i];
+			j++;
+		}
+		i++;
+	}
+}	
+
+char	*trim_quoted(const char *quoted)
+{
+	char	*trimed;
+	size_t	len = count_unquoted_len(quoted);
+
+	trimed = ft_calloc(len + 1, sizeof(char));
+	copy_unquoted(trimed, quoted);
+	return (trimed);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	const char	*line;
+	char		*trimed;
+	t_env		env;
+
+	(void)argv;
+	if (argc != 1)
+		return (FAILURE);
+	env.head = NULL;
+	if (env_init(&env, envp) != 0)
+		return (FAILURE);
+	while (1)
+	{
+		line = readline("minishell$ ");
+		if (*line)
+			add_history(line);
+		else
+			continue ;
+		env.envp = env_to_envp(&env);
+		trimed = trim_quoted(line);
+		printf("trimed: %s\n", trimed);
+		free_env_to_envp(env.envp);
+		free((void *)line);
+	}
 	return (0);
 }
