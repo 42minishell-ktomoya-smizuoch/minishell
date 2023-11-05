@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../includes/redirect.h"
+#include "../../includes/execute.h"
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -107,6 +108,8 @@ int	*redirect_append(const char *file, int *fd)
 //}
 int	*redirect_input(const char *file, int *fd)
 {
+	if (access(file, F_OK) == ERROR)
+		puterr_exit(file, strerror(errno));
 	fd[0] = dup(STDIN_FILENO);
 	close(STDIN_FILENO);
 	fd[1] = open(file, O_RDONLY);
