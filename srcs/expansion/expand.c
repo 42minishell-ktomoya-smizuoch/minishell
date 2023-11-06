@@ -308,7 +308,6 @@ char	*expand(const char *line, t_env *env)
 {
 	char	*expanded;
 	size_t	len = count_len(line, env);
-	printf("len: %zu\n", len);
 	expanded = ft_calloc(len + 1, sizeof(char));
 	copy_expand(expanded, line, env);
 	printf("expanded: %s\n", expanded);
