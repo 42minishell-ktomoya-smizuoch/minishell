@@ -105,6 +105,55 @@ char	*trim_quoted(const char *quoted)
 	return (trimed);
 }
 
+char	**malloc_free(char **str, size_t end)
+{
+	size_t	start;
+
+	start = 0;
+	while (start < end)
+	{
+		free(str[start]);
+		start++;
+	}
+	free(str);
+	return (NULL);
+}
+
+char	*expand(const char *line, t_env *env)
+{
+	char	*unquoted;
+	char	*dollptr;
+	char	*undollar;
+	char	*value;
+	char	**envs;
+	size_t	i;
+
+	(void)env;
+	unquoted = trim_quoted(line);
+	// 1.$を探す
+	dollptr = ft_strchr(unquoted, '$');
+	if (!dollptr || !dollptr[1])
+		return (unquoted);
+	envs = ft_split(&dollptr[1], '$');
+	// 2.$から先を消去する
+	undollar = ft_substr(unquoted, 0, dollptr - unquoted);
+	free(unquoted);
+	i = 0;
+	while (envs[i])
+	{
+		// 3.環境変数のvalueを探す
+		value = search_env(envs[i], env);
+		if (value)
+		{
+			value = ft_substr(value, 0, ft_strlen(value));
+			undollar = ft_strjoin(undollar, value);
+		}
+		i++;
+	}
+	malloc_free(envs, i);
+	return (undollar);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	const char	*line;
@@ -125,7 +174,7 @@ int	main(int argc, char **argv, char **envp)
 		else
 			continue ;
 		env.envp = env_to_envp(&env);
-		trimed = trim_quoted(line);
+		trimed = expand(line, &env);
 		printf("trimed: %s\n", trimed);
 		free_env_to_envp(env.envp);
 		free((void *)line);
