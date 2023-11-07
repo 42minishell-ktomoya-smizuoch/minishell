@@ -65,11 +65,11 @@ SRCS_OBJS = $(SRCS_SRCS:.c=.o)
 OBJS += $(SRCS_OBJS)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR)
+CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -I$(shell brew --prefix readline)/include
 DEBUGFLAGS = -g3 -O0
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline -L $(shell brew --prefix readline)/lib
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
