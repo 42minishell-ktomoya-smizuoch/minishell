@@ -59,6 +59,7 @@ OBJS += $(REDIRECT_OBJS)
 SRCS_FILES = env_init.c \
 	search_env.c \
 	env_to_envp.c \
+	signal.c \
 
 SRCS_SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 SRCS_OBJS = $(SRCS_SRCS:.c=.o)
