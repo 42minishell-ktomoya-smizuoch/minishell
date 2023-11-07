@@ -1,5 +1,6 @@
 #include "../../includes/expansion.h"
 #include "../../includes/lexer.h"
+#include "../../includes/minishell.h"
 
 void	remove_single_quote(char *str)
 {
@@ -34,77 +35,190 @@ t_state	update_state(const char c, t_state prev)
 	return (new);
 }
 
-int	main(int argc, char *argv[])
+size_t	count_env_len(const char **key_head, t_env *env)
 {
-	char	*str;
+	char		*key;
+	const char	*key_end = *key_head;
+	char		*value;
+	size_t		len;
 
-	if (argc != 2)
-		return (1);
-	str = argv[1];
+	while (ft_isalnum(*key_end) || *key_end == '_')
+		key_end++;
+	key = ft_substr(*key_head, 0, key_end - *key_head);
+	value = search_env(key, env);
+	free(key);
+	if (value)
+		len = ft_strlen(value);
+	else
+		len = 0;
+	*key_head = key_end;
+	return (len);
+}
+
+size_t	count_len(const char *line, t_env *env)
+{
+	// 1文字ずつ走査する
 	size_t	len = 0;
-	size_t	i = 0;
+	t_state	state = STATE_GENERAL;
+	while (*line)
+	{
+		state = update_state(*line, state);
+		if (state == STATE_IN_QUOTE)
+		{
+			if (*line != '\'')
+				len++;
+		}
+		else if (state == STATE_IN_DOUBLE_QUOTE)
+		{
+			if (*line == '$')
+			{
+				if (ft_isalnum(line[1]) || line[1] == '_')
+				{
+					line++;
+					len += count_env_len(&line, env);
+					continue ;
+				}
+				else
+					len++;
+			}
+			else if (*line != '\"')
+				len++;
+		}
+		else if (state == STATE_GENERAL)
+		{
+			if (*line == '$')
+			{
+				if (ft_isalnum(line[1]) || line[1] == '_')
+				{
+					line++;
+					len += count_env_len(&line, env);
+					continue ;
+				}
+			}
+			else if (*line != '\'' && *line != '\"')
+				len++;
+		}
+		line++;
+	}
+	return (len);
+}
+
+void	copy_env(char **dst, const char **src, t_env *env)
+{
+	const char	*src_nptr = *src;
+	char		*dst_nptr = *dst;
+	char		*key;
+	const char	*value;
+
+	while (ft_isalnum(*src_nptr) || *src_nptr == '_')
+		src_nptr++;
+	key = ft_substr(*src, 0, src_nptr - *src);
+	*src = src_nptr;
+	value = search_env(key, env);
+	if (!value)
+		return ;
+	while (*value)
+	{
+		*dst_nptr = *value;
+		dst_nptr++;
+		value++;
+	}
+	*dst = dst_nptr;
+}
+
+void	copy_expand(char *dst, const char *src, t_env *env)
+{
 	t_state	state = STATE_GENERAL;
 
-	// lenを数える
-	while (str[i])
+	while (*src)
 	{
-		state = update_state(str[i], state);
+		state = update_state(*src, state);
 		if (state == STATE_IN_QUOTE)
 		{
-			if (str[i] != '\'')
+			if (*src != '\'')
 			{
-				len++;
+				*dst = *src;
+				dst++;
 			}
 		}
 		else if (state == STATE_IN_DOUBLE_QUOTE)
 		{
-			if (str[i] != '\"')
+			if (*src == '$')
 			{
-				len++;
+				if (ft_isalnum(src[1]) || src[1] == '_')
+				{
+					src++;
+					copy_env(&dst, &src, env);
+					continue ;
+				}
+				else
+				{
+					*dst = *src;
+					dst++;
+				}
+			}
+			else if (*src != '\"')
+			{
+				*dst = *src;
+				dst++;
 			}
 		}
 		else
 		{
-			if (str[i] != '\'' && str[i] != '\"')
+			if (*src == '$')
 			{
-				len++;
+				if (ft_isalnum(src[1]) || src[1] == '_')
+				{
+					src++;
+					copy_env(&dst, &src, env);
+					continue ;
+				}
+			}
+			else if (*src != '\'' && *src != '\"')
+			{
+				*dst = *src;
+				dst++;
 			}
 		}
-		i++;
+		src++;
 	}
-	char	*trim = ft_calloc(len, sizeof(char));
-	i = 0;
-	size_t	j = 0;
-	state = STATE_GENERAL;
-	while (str[i])
+}
+
+char	*expand(const char *line, t_env *env)
+{
+	char	*expanded;
+	size_t	len = count_len(line, env);
+	expanded = ft_calloc(len + 1, sizeof(char));
+	copy_expand(expanded, line, env);
+	printf("expanded: %s\n", expanded);
+	return (NULL);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	const char	*line;
+	char		*trimed;
+	t_env		env;
+
+	(void)argv;
+	if (argc != 1)
+		return (FAILURE);
+	env.head = NULL;
+	if (env_init(&env, envp) != 0)
+		return (FAILURE);
+	while (1)
 	{
-		state = update_state(str[i], state);
-		if (state == STATE_IN_QUOTE)
-		{
-			if (str[i] != '\'')
-			{
-				trim[j] = str[i];
-				j++;
-			}
-		}
-		else if (state == STATE_IN_DOUBLE_QUOTE)
-		{
-			if (str[i] != '\"')
-			{
-				trim[j] = str[i];
-				j++;
-			}
-		}
+		line = readline("minishell$ ");
+		if (*line)
+			add_history(line);
 		else
-		{
-			if (str[i] != '\'' && str[i] != '\"')
-			{
-				trim[j] = str[i];
-				j++;
-			}
-		}
-		i++;
+			continue ;
+		env.envp = env_to_envp(&env);
+		trimed = expand(line, &env);
+		if (trimed)
+			printf("trimed: %s\n", trimed);
+		free_env_to_envp(env.envp);
+		free((void *)line);
 	}
-	printf("trim: %s\n", trim);
 	return (0);
 }

@@ -11,6 +11,24 @@ LIBFT_DIR = $(SRCS_DIR)/libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
+LEXER_DIR = $(SRCS_DIR)/lexer
+LEXER_FILES = lexer.c \
+	bool.c \
+	token.c \
+	value.c \
+
+LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
+LEXER_OBJS = $(LEXER_SRCS:.c=.o)
+OBJS += $(LEXER_OBJS)
+
+SRCS_FILES = env_init.c \
+    search_env.c \
+    env_to_envp.c \
+
+SRCS_SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
+SRCS_OBJS = $(SRCS_SRCS:.c=.o)
+OBJS += $(SRCS_OBJS)
+
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR)
 DEBUGFLAGS = -g3 -O0
