@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 22:16:56 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/18 19:17:25 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/07 12:00:08 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	put_syntax_error(t_token *tok)
 	char	input[100000];
 
 	ft_memset(input, 0, 100000);
-	if (tok && (tok->type == TYPE_GENERAL || tok->type == TYPE_DOLLAR))
+	if (tok && tok->type == TYPE_GENERAL)
 		ft_memcpy(input, tok->str, tok->len);
 	ft_putstr_fd("syntax error near unexpected token `", STDERR_FILENO);
 	if (tok && tok->type == TYPE_PIPE)
@@ -49,7 +49,7 @@ void	put_syntax_error(t_token *tok)
 		ft_putstr_fd(">>", STDERR_FILENO);
 	else if (tok && tok->type == TYPE_DLESS)
 		ft_putstr_fd("<<", STDERR_FILENO);
-	else if (tok && (tok->type == TYPE_GENERAL || tok->type == TYPE_DOLLAR))
+	else if (tok && tok->type == TYPE_GENERAL)
 		ft_putstr_fd(input, STDERR_FILENO);
 	else if (tok && tok->type == TYPE_EOF)
 		ft_putstr_fd("newline", STDERR_FILENO);
@@ -69,9 +69,9 @@ t_node	*command_line(t_token *tok, int *flag)
 {
 	t_node	*node;
 
-	if (!expect(TYPE_GENERAL, tok) && !expect(TYPE_DOLLAR, tok))
+	if (!expect(TYPE_GENERAL, tok))
 	{
-		if (expect_next(TYPE_GENERAL, tok) && expect_next(TYPE_GENERAL, tok))
+		if (expect_next(TYPE_GENERAL, tok))
 			return (syntax_error_null(tok->cur));
 		else
 			return (syntax_error_null(tok->cur->next));
@@ -83,7 +83,7 @@ t_node	*command_line(t_token *tok, int *flag)
 	{
 		if (consume(TYPE_PIPE, tok))
 		{
-			if (expect(TYPE_GENERAL, tok) || expect(TYPE_DOLLAR, tok))
+			if (expect(TYPE_GENERAL, tok))
 			{
 				node = new_branch(NODE_PIPE, node, command(tok, flag));
 				if (!node)
@@ -215,7 +215,7 @@ t_node	*cmd_args(t_token *tok, int *flag)
 	args = cmd_arg(tok, flag);
 	if (!args)
 		return (NULL);
-	while (expect(TYPE_GENERAL, tok) || expect(TYPE_DOLLAR, tok))
+	while (expect(TYPE_GENERAL, tok))
 	{
 		arg = cmd_arg(tok, flag);
 		if (!arg)
@@ -239,7 +239,7 @@ t_node	*cmd_arg(t_token *tok, int *flag)
 		return (NULL);
 	}
 	set_node_value(arg, tok->cur->str, tok->cur->len);
-	if (consume(TYPE_GENERAL, tok) || consume(TYPE_DOLLAR, tok))
+	if (consume(TYPE_GENERAL, tok))
 		;
 	return (arg);
 }
@@ -302,16 +302,16 @@ t_node	*io_file(t_token *tok, int *flag)
 		*flag = ERROR;
 		return (NULL);
 	}
-	if (expect(TYPE_GENERAL, tok) || expect(TYPE_DOLLAR, tok))
+	if (expect(TYPE_GENERAL, tok))
 	{
-		if (expect_next(TYPE_GENERAL, tok) || expect_next(TYPE_DOLLAR, tok))
+		if (expect_next(TYPE_GENERAL, tok))
 		{
 			*flag = ERROR;
 			free(node);
 			return (syntax_error_null(tok->cur->next));
 		}
 		set_node_value(node, tok->cur->str, tok->cur->len);
-		if (consume(TYPE_GENERAL, tok) || consume(TYPE_DOLLAR, tok))
+		if (consume(TYPE_GENERAL, tok))
 			return (node);
 	}
 	else
@@ -329,9 +329,9 @@ t_node	*io_here(t_token *tok, int *flag)
 	t_node	*node;
 
 	node = NULL;
-	if (expect(TYPE_GENERAL, tok) || expect(TYPE_DOLLAR, tok))
+	if (expect(TYPE_GENERAL, tok))
 	{
-		if (expect_next(TYPE_GENERAL, tok) || expect_next(TYPE_DOLLAR, tok))
+		if (expect_next(TYPE_GENERAL, tok))
 		{
 			*flag = ERROR;
 			return (syntax_error_null(tok->cur->next));
@@ -343,7 +343,7 @@ t_node	*io_here(t_token *tok, int *flag)
 			return (NULL);
 		}
 		set_node_value(node, tok->cur->str, tok->cur->len);
-		if (consume(TYPE_GENERAL, tok) || consume(TYPE_DOLLAR, tok))
+		if (consume(TYPE_GENERAL, tok))
 			return (node);
 	}
 	else

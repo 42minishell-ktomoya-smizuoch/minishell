@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/07 10:36:40 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/07 12:37:49 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,10 @@ char	**make_argument_list(t_node *ast)
 	i = 0;
 	while (i < count && ast->kind == NODE_ARGUMENT)
 	{
-		args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
+		if (ast->expand)
+			args[i] = ft_substr(ast->expand, 0, ft_strlen(ast->expand));
+		else
+			args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
 		ast = ast->right;
 		i++;
 	}
@@ -245,12 +248,18 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		env.envp = env_to_envp(&env);
 		token = lexer(line);
+		if (!token)
+		{
+			free((void *)line);
+			continue ;
+		}
 		ast = parser(token);
 		if (!ast)
 		{
 			free((void *)line);
 			continue ;
 		}
+		ast = expand(ast, &env);
 		execute(ast, &env);
 		free_env_to_envp(env.envp);
 		free((void *)line);

@@ -21,20 +21,32 @@ LEXER_SRCS = $(addprefix $(LEXER_DIR)/, $(LEXER_FILES))
 LEXER_OBJS = $(LEXER_SRCS:.c=.o)
 OBJS += $(LEXER_OBJS)
 
+PARSER_DIR = $(SRCS_DIR)/parser
+PARSER_FILES = parser.c \
+	grammar.c \
+	consume.c \
+	free.c \
+	node.c \
+
+PARSER_SRCS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
+PARSER_OBJS = $(PARSER_SRCS:.c=.o)
+OBJS += $(PARSER_OBJS)
+
 SRCS_FILES = env_init.c \
     search_env.c \
     env_to_envp.c \
+	print.c \
 
 SRCS_SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 SRCS_OBJS = $(SRCS_SRCS:.c=.o)
 OBJS += $(SRCS_OBJS)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR)
+CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -I$(shell brew --prefix readline)/include
 DEBUGFLAGS = -g3 -O0
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline -L $(shell brew --prefix readline)/lib
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)

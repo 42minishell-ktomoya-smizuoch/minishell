@@ -64,6 +64,13 @@ SRCS_SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 SRCS_OBJS = $(SRCS_SRCS:.c=.o)
 OBJS += $(SRCS_OBJS)
 
+EXPAND_DIR = $(SRCS_DIR)/expansion
+EXPAND_FILES = expand.c \
+
+EXPAND_SRCS = $(addprefix $(EXPAND_DIR)/, $(EXPAND_FILES))
+EXPAND_OBJS = $(EXPAND_SRCS:.c=.o)
+OBJS += $(EXPAND_OBJS)
+
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -I$(shell brew --prefix readline)/include
 DEBUGFLAGS = -g3 -O0

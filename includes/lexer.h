@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:56:33 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/27 19:04:58 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/07 11:51:22 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ typedef enum e_type
 	TYPE_GREAT,
 	TYPE_DLESS,
 	TYPE_DGREAT,
-	TYPE_DOLLAR,
 	TYPE_EOF,
 	TYPE_NEWLINE,
 }	t_type;
