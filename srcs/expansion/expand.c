@@ -184,41 +184,79 @@ void	copy_expand(char *dst, const char *src, t_env *env)
 	}
 }
 
-char	*expand(const char *line, t_env *env)
+char	*expand_node(const char *line, t_env *env)
 {
 	char	*expanded;
 	size_t	len = count_len(line, env);
+	
 	expanded = ft_calloc(len + 1, sizeof(char));
 	copy_expand(expanded, line, env);
-	printf("expanded: %s\n", expanded);
-	return (NULL);
+	return (expanded);
 }
 
-int	main(int argc, char **argv, char **envp)
+t_node	*expand(t_node *ast, t_env *env)
 {
-	const char	*line;
-	char		*trimed;
-	t_env		env;
-
-	(void)argv;
-	if (argc != 1)
-		return (FAILURE);
-	env.head = NULL;
-	if (env_init(&env, envp) != 0)
-		return (FAILURE);
-	while (1)
+	char	*unexpanded;
+	if (!ast)
+		return (NULL);
+	if (ast && ast->kind == NODE_PIPE)
 	{
-		line = readline("minishell$ ");
-		if (*line)
-			add_history(line);
-		else
-			continue ;
-		env.envp = env_to_envp(&env);
-		trimed = expand(line, &env);
-		if (trimed)
-			printf("trimed: %s\n", trimed);
-		free_env_to_envp(env.envp);
-		free((void *)line);
+		expand(ast->left, env);
+		expand(ast->right, env);
 	}
-	return (0);
+	else if (ast && ast->kind == NODE_ARGUMENT)
+	{
+		unexpanded = ft_substr(ast->str, 0, ast->len);
+		ast->expand = expand_node(unexpanded, env);
+		// printf("ast->expand: %s\n", ast->expand);
+		free(unexpanded);
+		expand(ast->right, env);
+	}
+	return (ast);
 }
+
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	const char	*line;
+// 	t_token		*token;
+// 	t_node		*ast;
+// 	t_env		env;
+
+// 	(void)argv;
+// 	if (argc != 1)
+// 		return (FAILURE);
+// 	env.head = NULL;
+// 	if (env_init(&env, envp) != 0)
+// 		return (FAILURE);
+// 	while (1)
+// 	{
+// 		line = readline("minishell$ ");
+// 		if (!line)
+// 		{
+// 			write(1, "exit\n", 5);
+// 			exit(0);
+// 		}
+// 		else if (*line)
+// 			add_history(line);
+// 		else
+// 			continue ;
+// 		env.envp = env_to_envp(&env);
+// 		token = lexer(line);
+// 		if (!token)
+// 		{
+// 			free((void *)line);
+// 			continue ;
+// 		}
+// 		ast = parser(token);
+// 		if (!ast)
+// 		{
+// 			free((void *)line);
+// 			continue ;
+// 		}
+// 		ast = expand(ast, &env);
+// 		print_ast(ast);
+// 		free_env_to_envp(env.envp);
+// 		free((void *)line);
+// 	}
+// 	return (0);
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:25:53 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/20 14:16:58 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/07 12:36:05 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define EXPANSION_H
 
 # include "libft.h"
+# include "lexer.h"
+# include "parser.h"
 # include <stdio.h>
 
 typedef struct s_envnode
@@ -41,5 +43,7 @@ char	*search_env(char *name, t_env *env);
 
 char	**env_to_envp(t_env *env);
 void	*free_env_to_envp(char **envp);
+
+t_node	*expand(t_node *ast, t_env *env);
 
 #endif
