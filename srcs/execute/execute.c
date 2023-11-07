@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/31 19:53:21 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/07 09:49:23 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,7 +232,12 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		line = readline("minishell$ ");
-		if (*line)
+		if (!line)
+		{
+			write(1, "exit\n", 5);
+			exit(0);
+		}
+		else if (*line)
 			add_history(line);
 		else
 			continue ;
