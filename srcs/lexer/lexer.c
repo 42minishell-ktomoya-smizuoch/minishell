@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/07 11:39:49 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/07 11:55:30 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,32 +71,32 @@ t_token	*lexer(const char *str)
 	return (token);
 }
 
-int	main(int argc, char **argv)
-{
-	t_token		*token;
-	t_token		*head;
-	const char	*line;
-	char 		*word;
+// int	main(int argc, char **argv)
+// {
+// 	t_token		*token;
+// 	t_token		*head;
+// 	const char	*line;
+// 	char 		*word;
 
-	(void)argv;
-	if (argc != 1)
-		return (FAILURE);
-	while (1)
-	{
-		line = readline("minishell$ ");
-		if (*line)
-			add_history(line);
-		token = lexer(line);
-		head = token;
-		while (token)
-		{
-			word = ft_substr(token->str, 0, token->len);
-			printf("type: %d, word: %s\n", token->type, word);
-			free(word);
-			token = token->next;
-		}
-		free((void *)line);
-		free_token(head);
-	}
-	return (0);
-}
+// 	(void)argv;
+// 	if (argc != 1)
+// 		return (FAILURE);
+// 	while (1)
+// 	{
+// 		line = readline("minishell$ ");
+// 		if (*line)
+// 			add_history(line);
+// 		token = lexer(line);
+// 		head = token;
+// 		while (token)
+// 		{
+// 			word = ft_substr(token->str, 0, token->len);
+// 			printf("type: %d, word: %s\n", token->type, word);
+// 			free(word);
+// 			token = token->next;
+// 		}
+// 		free((void *)line);
+// 		free_token(head);
+// 	}
+// 	return (0);
+// }
