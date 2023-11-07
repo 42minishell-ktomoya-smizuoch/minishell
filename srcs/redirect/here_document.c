@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_document.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 15:35:49 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/27 19:32:44 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/07 11:07:26 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ char	*here_document(char *limiter)
 	while (1)
 	{
 		line = readline("> ");
+		if (!line)
+			break ;
 		if (ft_strcmp(line, limiter) == 0)
 			break ;
 		ft_putendl_fd(line, fd);
