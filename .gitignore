@@ -57,3 +57,4 @@ launch.json
 
 minishell
 *.xml
+*.json

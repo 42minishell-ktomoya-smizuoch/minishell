@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/07 09:49:23 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/07 10:36:40 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ int execute_command(t_node *ast, t_env *env)
 	int 	flag;
 	char 	*tmp_file;
 	int 	status;
-	size_t	i;
 
 	args = make_argument_list(ast);
 	redir = ast;
@@ -133,6 +132,11 @@ int execute_command(t_node *ast, t_env *env)
 		file_here = ft_substr(redir->str, 0, redir->len);
 		if (flag == 1)
 			restore_fd(fd[0], fd[1]);
+		else if (flag == 2)
+		{
+			restore_fd(fd[0], fd[1]);
+			unlink(tmp_file);
+		}
 		flag = 1;
 		if (redir->kind == NODE_LESS)
 			fd = redirect_input(file_here, fd);
@@ -143,6 +147,7 @@ int execute_command(t_node *ast, t_env *env)
 		else if (redir->kind == NODE_DLESS)
 		{
 			tmp_file = here_document(file_here);
+			fd = redirect_input(tmp_file, fd);
 			flag = 2;
 		}
 		free(file_here);
@@ -159,11 +164,8 @@ int execute_command(t_node *ast, t_env *env)
 	}
 	else if (flag == 2)
 	{
-		i = 0;
-		while (args[i])
-			i++;
-		args[i] = tmp_file;
 		status = execute_simple_command(args, env);
+		restore_fd(fd[0], fd[1]);
 		unlink(tmp_file);
 	}
 	return (status);
