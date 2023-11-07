@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:14:23 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/18 12:06:04 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/07 11:26:41 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,8 @@
 
 typedef enum e_node_kind
 {
-	NODE_COMMAND,
 	NODE_ARGUMENT,
 	NODE_PIPE,
-	NODE_AMPERSAND,
 	NODE_LESS,
 	NODE_GREAT,
 	NODE_DLESS,
@@ -35,6 +33,7 @@ typedef struct s_node
 	struct s_node	*right;
 	const char		*str;
 	size_t 			len;
+	char			*expand;
 }	t_node;
 
 // nodeの構造体にcomanndの構造体を追加する
