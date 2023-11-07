@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 11:30:42 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/18 19:23:19 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/07 12:17:55 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ void	print_node_tree(t_node *node, int depth)
 		return ;
 	i = 0;
 	ft_memset(word, 0, 100);
-	ft_memcpy(word, node->str, node->len);
+	if (node->expand)
+		ft_memcpy(word, node->expand, ft_strlen(node->expand));
+	else
+		ft_memcpy(word, node->str, node->len);
 	while (i < depth)
 	{
 		printf("  ");
@@ -30,7 +33,10 @@ void	print_node_tree(t_node *node, int depth)
 	}
 	if (node->kind == NODE_ARGUMENT)
 	{
-		printf("[%d]command: %s, args: ", depth, word);
+		if (node->expand)
+			printf("[%d]command: %s, args: ", depth, word);
+		else
+			printf("[%d]command: %s, args: ", depth, word);
 		print_argument_list(node->right, depth + 1);
 		printf("\n");
 	}
@@ -103,7 +109,10 @@ void	print_argument_list(t_node *node, int depth)
 		return ;
 
 	ft_memset(word, 0, 100);
-	ft_memcpy(word, node->str, node->len);
+	if (node->expand)
+		ft_memcpy(word, node->expand, ft_strlen(node->expand));
+	else
+		ft_memcpy(word, node->str, node->len);
 	printf("%s", word);
 	if (node->right)
 		printf(", ");
