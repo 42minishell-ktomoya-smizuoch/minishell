@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/07 12:37:49 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/07 13:14:19 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char	**make_argument_list(t_node *ast)
 	while (i < count && ast->kind == NODE_ARGUMENT)
 	{
 		if (ast->expand)
-			args[i] = ft_substr(ast->expand, 0, ft_strlen(ast->expand));
+			args[i] = ast->expand;
 		else
 			args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
 		ast = ast->right;
