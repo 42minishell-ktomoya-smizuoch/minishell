@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 17:57:32 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/07 14:54:30 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/08 13:07:38 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <termios.h>
 
 # define SUCCESS 0
 
@@ -63,5 +64,7 @@ void	print_redirect_list(t_node *node, int depth);
 void 	print_node(t_node *node, int depth);
 
 int		set_signal(int mode);
+
+extern int g_signal;
 
 #endif

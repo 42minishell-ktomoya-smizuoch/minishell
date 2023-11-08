@@ -6,11 +6,14 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 15:35:49 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/07 11:07:26 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/08 10:30:21 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/redirect.h"
+#include "../../includes/minishell.h"
+
+int	g_signal;
 
 static int	search_file(char *here_doc)
 {
@@ -48,6 +51,7 @@ char	*here_document(char *limiter)
 	}
 	while (1)
 	{
+		set_signal(2);
 		line = readline("> ");
 		if (!line)
 			break ;
