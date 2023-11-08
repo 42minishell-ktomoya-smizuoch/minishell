@@ -119,6 +119,10 @@ size_t	count_len(const char *line, t_env *env)
 					len += count_digits(env->exit_status);
 					continue ;
 				}
+				else if (line[1] == '$')
+					len += 2;
+				else if (line[1] == '\0')
+					len++;
 			}
 			else if (*line != '\'' && *line != '\"')
 				len++;
@@ -228,6 +232,17 @@ void	copy_expand(char *dst, const char *src, t_env *env)
 					}
 					dst += digits;
 					continue ;
+				}
+				else if (src[1] == '$')
+				{
+					*dst++ = *src++;
+					*dst++ = *src++;
+					continue ;
+				}
+				else if (src[1] == '\0')
+				{
+					*dst = *src;
+					dst++;
 				}
 			}
 			else if (*src != '\'' && *src != '\"')

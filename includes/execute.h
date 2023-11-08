@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:00:33 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/15 16:44:03 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/08 10:28:29 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@
 # include <sys/wait.h>
 
 int		execute_simple_command(char *const argv[], t_env *env);
-void	puterr_exit(const char *input, const char *msg);
+void	puterr(const char *input, const char *msg);
+void	puterr_exit(const char *input, const char *msg, int exit_status);
 void	putsyserr_exit(const char *syscall_name);
 bool	is_builtin(char *cmd);
 bool	is_directory(char *path);
