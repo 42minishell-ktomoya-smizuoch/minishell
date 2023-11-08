@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/08 12:51:21 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/08 14:47:37 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ static int	execute_executable(char *const argv[], t_env *env)
 		putsyserr_exit("fork");
 	else if (pid == 0)
 	{
+		set_signal(1);
 		if (ft_strchr(argv[0], '/'))
 			execute_abspath(argv, env);
 		else
@@ -248,6 +249,7 @@ int	main(int argc, char **argv, char **envp)
 		return (FAILURE);
 	while (1)
 	{
+		set_signal(0);
 		line = readline("minishell$ ");
 		if (!line)
 		{
