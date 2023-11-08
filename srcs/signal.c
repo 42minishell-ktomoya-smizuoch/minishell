@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 15:16:43 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/08 13:12:41 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/08 15:30:21 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ void	handler_exec(int signum)
 	{
 		write (STDIN_FILENO, "Quit: 3\n", 8);
 		g_signal = 131;
-	}	
-		
+	}
 }
 
 void	handler_heardoc(int signum)
