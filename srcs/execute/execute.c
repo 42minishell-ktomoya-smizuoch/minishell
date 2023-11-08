@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/08 10:44:34 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/08 12:51:21 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,10 @@ int execute_command(t_node *ast, t_env *env)
 		redir = redir->right;
 	while (redir && (redir->kind == NODE_LESS || redir->kind == NODE_GREAT || redir->kind == NODE_DGREAT || redir->kind == NODE_DLESS))
 	{
-		file_here = ft_substr(redir->str, 0, redir->len);
+		if (redir->expand)
+			file_here = redir->expand;
+		else
+			file_here = ft_substr(redir->str, 0, redir->len);
 		if (flag == 1)
 			restore_fd(fd[0], fd[1]);
 		else if (flag == 2)
@@ -162,7 +165,7 @@ int execute_command(t_node *ast, t_env *env)
 			fd = redirect_input(tmp_file, fd);
 			flag = 2;
 		}
-		free(file_here);
+		// free(file_here);
 		if (!fd)
 			return (ERROR);
 		redir = redir->right;
