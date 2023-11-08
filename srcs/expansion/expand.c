@@ -55,6 +55,19 @@ size_t	count_env_len(const char **key_head, t_env *env)
 	return (len);
 }
 
+size_t	count_digits(int num)
+{
+	size_t	count;
+
+	count = 1;
+	while (num / 10 != 0)
+	{
+		count++;
+		num /= 10;
+	}
+	return (count);
+}
+
 size_t	count_len(const char *line, t_env *env)
 {
 	// 1文字ずつ走査する
@@ -78,6 +91,12 @@ size_t	count_len(const char *line, t_env *env)
 					len += count_env_len(&line, env);
 					continue ;
 				}
+				else if (line[1] == '?')
+				{
+					line += 2;
+					len += count_digits(env->exit_status);
+					continue ;
+				}
 				else
 					len++;
 			}
@@ -94,6 +113,16 @@ size_t	count_len(const char *line, t_env *env)
 					len += count_env_len(&line, env);
 					continue ;
 				}
+				else if (line[1] == '?')
+				{
+					line += 2;
+					len += count_digits(env->exit_status);
+					continue ;
+				}
+				else if (line[1] == '$')
+					len += 2;
+				else if (line[1] == '\0')
+					len++;
 			}
 			else if (*line != '\'' && *line != '\"')
 				len++;
@@ -129,6 +158,9 @@ void	copy_env(char **dst, const char **src, t_env *env)
 void	copy_expand(char *dst, const char *src, t_env *env)
 {
 	t_state	state = STATE_GENERAL;
+	size_t	digits;
+	size_t	i;
+	int		num;
 
 	while (*src)
 	{
@@ -149,6 +181,20 @@ void	copy_expand(char *dst, const char *src, t_env *env)
 				{
 					src++;
 					copy_env(&dst, &src, env);
+					continue ;
+				}
+				else if (src[1] == '?')
+				{
+					src += 2;
+					digits = count_digits(env->exit_status);
+					i = digits;
+					num = env->exit_status;
+					while (i--)
+					{
+						dst[i] = num % 10 + '0';
+						num /= 10;
+					}
+					dst += digits;
 					continue ;
 				}
 				else
@@ -173,6 +219,31 @@ void	copy_expand(char *dst, const char *src, t_env *env)
 					copy_env(&dst, &src, env);
 					continue ;
 				}
+				else if (src[1] == '?')
+				{
+					src += 2;
+					digits = count_digits(env->exit_status);
+					i = digits;
+					num = env->exit_status;
+					while (i--)
+					{
+						dst[i] = num % 10 + '0';
+						num /= 10;
+					}
+					dst += digits;
+					continue ;
+				}
+				else if (src[1] == '$')
+				{
+					*dst++ = *src++;
+					*dst++ = *src++;
+					continue ;
+				}
+				else if (src[1] == '\0')
+				{
+					*dst = *src;
+					dst++;
+				}
 			}
 			else if (*src != '\'' && *src != '\"')
 			{
@@ -188,9 +259,10 @@ char	*expand_node(const char *line, t_env *env)
 {
 	char	*expanded;
 	size_t	len = count_len(line, env);
-	
+	// printf("len: %zu\n", len);
 	expanded = ft_calloc(len + 1, sizeof(char));
 	copy_expand(expanded, line, env);
+	// printf("expanded: %s\n", expanded);
 	return (expanded);
 }
 
