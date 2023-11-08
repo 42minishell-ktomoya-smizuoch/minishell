@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 15:35:49 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/08 10:30:21 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/08 15:58:43 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,12 @@ static int	search_file(char *here_doc)
 char	*here_document(char *limiter)
 {
 	int			fd;
+	int			fd2;
 	int			ret;
 	const char	*line;
 	char		hear_doc[36];
 
+	fd2 = dup(0);
 	ret = 34;
 	ft_memset(hear_doc, 0, 36);
 	ft_memcpy(hear_doc, "/tmp/.here_doc_aaaaaaaaaaaaaaaaaaaa", 35);
@@ -53,6 +55,11 @@ char	*here_document(char *limiter)
 	{
 		set_signal(2);
 		line = readline("> ");
+		if (g_signal == 1)
+		{
+			dup2(fd2, 0);
+			break ;
+		}
 		if (!line)
 			break ;
 		if (ft_strcmp(line, limiter) == 0)
