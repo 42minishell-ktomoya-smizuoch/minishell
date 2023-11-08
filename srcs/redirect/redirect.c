@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 09:53:58 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/10/18 20:36:09 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/08 10:29:47 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,10 @@ int	*redirect_append(const char *file, int *fd)
 int	*redirect_input(const char *file, int *fd)
 {
 	if (access(file, F_OK) == ERROR)
-		puterr_exit(file, strerror(errno));
+	{
+		puterr(file, strerror(errno));
+		return (NULL);
+	}
 	fd[0] = dup(STDIN_FILENO);
 	close(STDIN_FILENO);
 	fd[1] = open(file, O_RDONLY);

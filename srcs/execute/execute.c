@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/07 12:37:49 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/08 10:44:34 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,38 +36,6 @@ static int	execute_builtin(char *cmds[], t_env *env)
 		return (builtin_env(cmds, env));
 	else
 		return (builtin_exit(cmds));
-}
-
-static int	execute_executable(char *const argv[], t_env *env)
-{
-	pid_t	pid;
-	int		status;
-
-	status = 0;
-	pid = fork();
-	if (pid < 0)
-		putsyserr_exit("fork");
-	else if (pid == 0)
-	{
-		if (ft_strchr(argv[0], '/'))
-			execute_abspath(argv, env);
-		else
-			search_path(argv, env);
-	}
-	else
-	{
-		if (wait(&status) != pid)
-			putsyserr_exit("wait");
-	}
-	return (status);
-}
-
-int	execute_simple_command(char *const argv[], t_env *env)
-{
-	if (is_builtin(argv[0]))
-		return (execute_builtin((char **)argv, env));
-	else
-		return (execute_executable(argv, env));
 }
 
 size_t	count_args(t_node *ast)
@@ -104,7 +72,7 @@ char	**make_argument_list(t_node *ast)
 	while (i < count && ast->kind == NODE_ARGUMENT)
 	{
 		if (ast->expand)
-			args[i] = ft_substr(ast->expand, 0, ft_strlen(ast->expand));
+			args[i] = ast->expand;
 		else
 			args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
 		ast = ast->right;
@@ -112,6 +80,44 @@ char	**make_argument_list(t_node *ast)
 	}
 	return (args);
 }
+
+static int	execute_executable(char *const argv[], t_env *env)
+{
+	pid_t	pid;
+	int		status;
+
+	status = 0;
+	pid = fork();
+	if (pid < 0)
+		putsyserr_exit("fork");
+	else if (pid == 0)
+	{
+		if (ft_strchr(argv[0], '/'))
+			execute_abspath(argv, env);
+		else
+			search_path(argv, env);
+	}
+	else
+	{
+		if (wait(&status) != pid)
+			putsyserr_exit("wait");
+		if (WIFEXITED(status))
+			env->exit_status = WEXITSTATUS(status);
+	}
+	return (status);
+}
+
+int	execute_simple_command(char *const argv[], t_env *env)
+{
+	if (is_builtin(argv[0]))
+	{
+		env->exit_status = execute_builtin((char **)argv, env);
+		return (0);
+	}
+	else
+		return (execute_executable(argv, env));
+}
+
 
 int execute_command(t_node *ast, t_env *env)
 {
@@ -121,12 +127,11 @@ int execute_command(t_node *ast, t_env *env)
 	int 	*fd;
 	int 	flag;
 	char 	*tmp_file;
-	int 	status;
+	int 	status = 0;
 
 	args = make_argument_list(ast);
 	redir = ast;
 	fd = ft_calloc(2, sizeof(int));
-	status = 0;
 	flag = 0;
 	while (redir && redir->kind == NODE_ARGUMENT)
 		redir = redir->right;
@@ -142,7 +147,11 @@ int execute_command(t_node *ast, t_env *env)
 		}
 		flag = 1;
 		if (redir->kind == NODE_LESS)
+		{
 			fd = redirect_input(file_here, fd);
+			if (!fd)
+				env->exit_status = 1;
+		}
 		else if (redir->kind == NODE_GREAT)
 			fd = redirect_output(file_here, fd);
 		else if (redir->kind == NODE_DGREAT)
