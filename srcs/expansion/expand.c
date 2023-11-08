@@ -284,6 +284,13 @@ t_node	*expand(t_node *ast, t_env *env)
 		free(unexpanded);
 		expand(ast->right, env);
 	}
+	else if (ast && (ast->kind == NODE_GREAT || ast->kind == NODE_LESS || ast->kind == NODE_DGREAT || ast->kind == NODE_DLESS))
+	{
+		unexpanded = ft_substr(ast->str, 0, ast->len);
+		ast->expand = expand_node(unexpanded, env);
+		free(unexpanded);
+		expand(ast->right, env);
+	}
 	return (ast);
 }
 
