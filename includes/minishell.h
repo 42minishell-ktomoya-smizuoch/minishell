@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 17:57:32 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/08 13:07:38 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/09 11:14:55 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "libft.h"
 # include "lexer.h"
 # include "parser.h"
+# include "expansion.h"
+# include "execute.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <readline/readline.h>

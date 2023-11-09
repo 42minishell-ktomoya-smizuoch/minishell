@@ -6,72 +6,94 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/10/27 19:22:08 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/09 11:36:03 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 // execute test
-//int	main(int argc, char **argv, char **envp)
-//{
-//	t_token		*tokens;
-//	t_node		*ast;
-//	const char	*line;
-//
-//	(void)argv;
-//	(void)envp;
-//	if (argc != 1)
-//		return (FAILURE);
-//	while (1)
-//	{
-//		line = readline("minishell$ ");
-//		if (*line)
-//			add_history(line);
-//		else
-//			continue ;
-//		tokens = lexer(line);
-//		ast = parser(tokens);
-//		print_ast(ast);
-//		free((void *)line);
-//	}
-//	return (0);
-//}
+int	main(int argc, char **argv, char **envp)
+{
+	const char	*line;
+	t_token		*token;
+	t_env		env;
+	t_node		*ast;
 
-// parser test
-  int	main(int argc, char **argv, char **envp)
-  {
-  	t_token		*tokens;
-  	t_node		*ast;
-  	const char	*line;
-
-  	(void)argv;
-  	(void)envp;
-  	if (argc != 1)
-  		return (FAILURE);
-  	while (1)
-  	{
-  		line = readline("minishell$ ");
-  		if (*line)
-  			add_history(line);
-  		tokens = lexer(line);
-  		if (!tokens)
+	(void)argv;
+	if (argc != 1)
+		return (FAILURE);
+	env.head = NULL;
+	if (env_init(&env, envp) != 0)
+		return (FAILURE);
+	while (1)
+	{
+		set_signal(0);
+		line = readline("minishell$ ");
+		if (!line)
+		{
+			write(1, "exit\n", 5);
+			exit(0);
+		}
+		else if (*line)
+			add_history(line);
+		else
+			continue ;
+		env.envp = env_to_envp(&env);
+		token = lexer(line);
+		if (!token)
 		{
 			free((void *)line);
 			continue ;
 		}
-  		ast = parser(tokens);
+		ast = parser(token);
 		if (!ast)
 		{
 			free((void *)line);
 			continue ;
 		}
-  		print_ast(ast);
-		free_node_tree(ast);
-  		free((void *)line);
-  	}
-  	return (0);
-  }
+		ast = expand(ast, &env);
+		execute(ast, &env);
+		free_env_to_envp(env.envp);
+		free((void *)line);
+	}
+	return (0);
+}
+
+// parser test
+//   int	main(int argc, char **argv, char **envp)
+//   {
+//   	t_token		*tokens;
+//   	t_node		*ast;
+//   	const char	*line;
+
+//   	(void)argv;
+//   	(void)envp;
+//   	if (argc != 1)
+//   		return (FAILURE);
+//   	while (1)
+//   	{
+//   		line = readline("minishell$ ");
+//   		if (*line)
+//   			add_history(line);
+//   		tokens = lexer(line);
+//   		if (!tokens)
+// 		{
+// 			free((void *)line);
+// 			continue ;
+// 		}
+//   		ast = parser(tokens);
+// 		if (!ast)
+// 		{
+// 			free((void *)line);
+// 			continue ;
+// 		}
+//   		print_ast(ast);
+// 		free_node_tree(ast);
+//   		free((void *)line);
+//   	}
+//   	return (0);
+//   }
 
 // lexer test
 //int	main(int argc, char **argv)
