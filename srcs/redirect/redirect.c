@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 09:53:58 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/08 10:29:47 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/09 15:27:13 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,12 @@ void	restore_fd(int save_fd, int stdfd)
 /* > file */
 int	*redirect_output(const char *file, int *fd)
 {
+	if (access(file, F_OK) == ERROR)
+	{
+		free(fd);
+		puterr(file, strerror(errno));
+		return (NULL);
+	}
 	fd[0] = dup(STDOUT_FILENO);
 	close(STDOUT_FILENO);
 	fd[1] = open(file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
@@ -89,6 +95,12 @@ int	*redirect_output(const char *file, int *fd)
 
 int	*redirect_append(const char *file, int *fd)
 {
+	if (access(file, F_OK) == ERROR)
+	{
+		free(fd);
+		puterr(file, strerror(errno));
+		return (NULL);
+	}
 	fd[0] = dup(STDOUT_FILENO);
 	close(STDOUT_FILENO);
 	fd[1] = open(file, O_WRONLY|O_CREAT|O_APPEND, 0644);
@@ -110,6 +122,7 @@ int	*redirect_input(const char *file, int *fd)
 {
 	if (access(file, F_OK) == ERROR)
 	{
+		free(fd);
 		puterr(file, strerror(errno));
 		return (NULL);
 	}
