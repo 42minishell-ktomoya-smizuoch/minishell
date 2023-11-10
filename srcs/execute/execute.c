@@ -70,9 +70,9 @@ size_t	count_args(t_node *ast)
 	size_t	count;
 
 	count = 0;
-	while (ast && ast->kind == NODE_ARGUMENT)
+	while (ast && ast->kind != NODE_PIPE)
 	{
-        if (ast->expand_flag == SUCCESS)
+        if (ast->kind == NODE_ARGUMENT && ast->expand_flag == SUCCESS)
 		    count++;
 		ast = ast->right;
 	}
@@ -88,9 +88,9 @@ char	**make_argument_list(t_node *ast)
 	count = count_args(ast);
 	args = (char **)ft_calloc(count + 1, sizeof(char *));
 	i = 0;
-	while (i < count && ast->kind == NODE_ARGUMENT)
+	while (i < count)
 	{
-        if (ast->expand_flag == FAILURE)
+        if (ast->kind != NODE_ARGUMENT || ast->expand_flag == FAILURE)
         {
             ast = ast->right;
             continue ;
@@ -125,11 +125,16 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 
 	redir = ast;
 	status = 0;
-	while (redir && redir->kind == NODE_ARGUMENT)
-		redir = redir->right;
-	while (redir && (redir->kind == NODE_LESS || redir->kind == NODE_GREAT || redir->kind == NODE_DGREAT || redir->kind == NODE_DLESS))
+//	while (redir && redir->kind == NODE_ARGUMENT)
+//		redir = redir->right;
+	while (redir && redir->kind != NODE_PIPE)
 	{
 //        printf("redir->str: %s\n", redir->str);
+        if (redir->kind == NODE_ARGUMENT)
+        {
+            redir = redir->right;
+            continue ;
+        }
 		if (fd[0] != fd[1])
 			restore_fd(fd[0], fd[1]);
         if (redir->expand_flag == FAILURE)
@@ -194,7 +199,7 @@ int execute_command(t_node *ast, t_env *env)
 	char 	*tmp_file;
 	int 	status = 0;
 
-	args = make_argument_list(ast);
+    args = make_argument_list(ast);
 	fd = ft_calloc(2, sizeof(int));
 	tmp_file = NULL;
 	if (execute_redirect(ast, fd, tmp_file) == ERROR)
@@ -219,12 +224,7 @@ int	execute(t_node *ast, t_env *env)
 {
 	int	status;
 
-	if (ast->kind == NODE_ARGUMENT)
-	{
-		status = execute_command(ast, env);
-		return (status);
-	}
-	else if (ast->kind == NODE_PIPE)
+	if (ast->kind == NODE_PIPE)
 	{
 		int		pipefd[2];
 		pid_t	pid1, pid2;
@@ -259,6 +259,11 @@ int	execute(t_node *ast, t_env *env)
 		close(pipefd[0]);
 		close(pipefd[1]);
 	}
+    else
+    {
+        status = execute_command(ast, env);
+        return (status);
+    }
 	return (0);
 }
 
