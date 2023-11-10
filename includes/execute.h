@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:00:33 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/08 10:28:29 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/09 11:15:46 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
+int		execute(t_node *ast, t_env *env);
 int		execute_simple_command(char *const argv[], t_env *env);
 void	puterr(const char *input, const char *msg);
 void	puterr_exit(const char *input, const char *msg, int exit_status);

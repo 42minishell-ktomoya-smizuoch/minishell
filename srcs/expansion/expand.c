@@ -97,6 +97,13 @@ size_t	count_len(const char *line, t_env *env)
 					len += count_digits(env->exit_status);
 					continue ;
 				}
+				else if (line[1] == '$')
+				{
+					pid_t	pid = getpid();
+					line += 2;
+					len += count_digits(pid);
+					continue ;
+				}
 				else
 					len++;
 			}
@@ -120,7 +127,12 @@ size_t	count_len(const char *line, t_env *env)
 					continue ;
 				}
 				else if (line[1] == '$')
-					len += 2;
+				{
+					pid_t	pid = getpid();
+					line += 2;
+					len += count_digits(pid);
+					continue ;
+				}
 				else if (line[1] == '\0')
 					len++;
 			}
@@ -197,6 +209,21 @@ void	copy_expand(char *dst, const char *src, t_env *env)
 					dst += digits;
 					continue ;
 				}
+				else if (src[1] == '$')
+				{
+					pid_t	pid = getpid();
+					src += 2;
+					digits = count_digits(pid);
+					i = digits;
+					num = pid;
+					while (i--)
+					{
+						dst[i] = num % 10 + '0';
+						num /= 10;
+					}
+					dst += digits;
+					continue ;
+				}
 				else
 				{
 					*dst = *src;
@@ -235,8 +262,17 @@ void	copy_expand(char *dst, const char *src, t_env *env)
 				}
 				else if (src[1] == '$')
 				{
-					*dst++ = *src++;
-					*dst++ = *src++;
+					pid_t	pid = getpid();
+					src += 2;
+					digits = count_digits(pid);
+					i = digits;
+					num = pid;
+					while (i--)
+					{
+						dst[i] = num % 10 + '0';
+						num /= 10;
+					}
+					dst += digits;
 					continue ;
 				}
 				else if (src[1] == '\0')

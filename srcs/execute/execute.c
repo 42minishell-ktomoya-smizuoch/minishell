@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/08 14:47:37 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/09 16:09:02 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,49 +38,6 @@ static int	execute_builtin(char *cmds[], t_env *env)
 		return (builtin_exit(cmds));
 }
 
-size_t	count_args(t_node *ast)
-{
-	size_t	count;
-
-	count = 0;
-	while (ast && ast->kind == NODE_ARGUMENT)
-	{
-		count++;
-		ast = ast->right;
-	}
-	while (ast && (ast->kind == NODE_LESS || ast->kind == NODE_GREAT || ast->kind == NODE_DLESS || ast->kind == NODE_DGREAT))
-	{
-		if (ast->kind == NODE_DLESS)
-		{
-			count++;
-			break ;
-		}
-		ast = ast->right;
-	}
-	return (count);
-}
-
-char	**make_argument_list(t_node *ast)
-{
-	char	**args;
-	size_t	count;
-	size_t	i;
-
-	count = count_args(ast);
-	args = (char **)ft_calloc(count + 1, sizeof(char *));
-	i = 0;
-	while (i < count && ast->kind == NODE_ARGUMENT)
-	{
-		if (ast->expand)
-			args[i] = ast->expand;
-		else
-			args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
-		ast = ast->right;
-		i++;
-	}
-	return (args);
-}
-
 static int	execute_executable(char *const argv[], t_env *env)
 {
 	pid_t	pid;
@@ -108,6 +65,41 @@ static int	execute_executable(char *const argv[], t_env *env)
 	return (status);
 }
 
+size_t	count_args(t_node *ast)
+{
+	size_t	count;
+
+	count = 0;
+	while (ast && ast->kind == NODE_ARGUMENT)
+	{
+		count++;
+		ast = ast->right;
+	}
+	return (count);
+}
+
+char	**make_argument_list(t_node *ast)
+{
+	char	**args;
+	size_t	count;
+	size_t	i;
+
+	count = count_args(ast);
+	args = (char **)ft_calloc(count + 1, sizeof(char *));
+	i = 0;
+	while (i < count && ast->kind == NODE_ARGUMENT)
+	{
+		if (ast->expand)
+			args[i] = ast->expand;
+		else
+			args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
+		ast = ast->right;
+		i++;
+	}
+	return (args);
+}
+
+
 int	execute_simple_command(char *const argv[], t_env *env)
 {
 	if (is_builtin(argv[0]))
@@ -119,21 +111,14 @@ int	execute_simple_command(char *const argv[], t_env *env)
 		return (execute_executable(argv, env));
 }
 
-
-int execute_command(t_node *ast, t_env *env)
+int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 {
-	char	**args;
 	t_node	*redir;
 	char	*file_here;
-	int 	*fd;
-	int 	flag;
-	char 	*tmp_file;
-	int 	status = 0;
+	int		status;
 
-	args = make_argument_list(ast);
 	redir = ast;
-	fd = ft_calloc(2, sizeof(int));
-	flag = 0;
+	status = 0;
 	while (redir && redir->kind == NODE_ARGUMENT)
 		redir = redir->right;
 	while (redir && (redir->kind == NODE_LESS || redir->kind == NODE_GREAT || redir->kind == NODE_DGREAT || redir->kind == NODE_DLESS))
@@ -142,48 +127,77 @@ int execute_command(t_node *ast, t_env *env)
 			file_here = redir->expand;
 		else
 			file_here = ft_substr(redir->str, 0, redir->len);
-		if (flag == 1)
+		if (fd[0] != fd[1])
 			restore_fd(fd[0], fd[1]);
-		else if (flag == 2)
-		{
-			restore_fd(fd[0], fd[1]);
-			unlink(tmp_file);
-		}
-		flag = 1;
 		if (redir->kind == NODE_LESS)
 		{
 			fd = redirect_input(file_here, fd);
 			if (!fd)
-				env->exit_status = 1;
+			{
+				free(file_here);
+				return (ERROR);
+			}
 		}
 		else if (redir->kind == NODE_GREAT)
+		{
 			fd = redirect_output(file_here, fd);
+			if (!fd)
+			{
+				free(file_here);
+				return (ERROR);
+			}
+		}
 		else if (redir->kind == NODE_DGREAT)
+		{
 			fd = redirect_append(file_here, fd);
+			if (!fd)
+			{
+				free(file_here);
+				return (ERROR);
+			}
+		}
 		else if (redir->kind == NODE_DLESS)
 		{
+			if (tmp_file)
+			{
+				unlink(tmp_file);
+				free(tmp_file);
+			}
 			tmp_file = here_document(file_here);
+			if (g_signal == 1)
+				return (ERROR);
 			fd = redirect_input(tmp_file, fd);
-			flag = 2;
 		}
-		// free(file_here);
-		if (!fd)
-			return (ERROR);
 		redir = redir->right;
 	}
-	if (flag == 0)
-		status = execute_simple_command(args, env);
-	else if (flag == 1)
+	return (0);
+}
+
+int execute_command(t_node *ast, t_env *env)
+{
+	char	**args;
+	int 	*fd;
+	char 	*tmp_file;
+	int 	status = 0;
+
+	args = make_argument_list(ast);
+	fd = ft_calloc(2, sizeof(int));
+	tmp_file = NULL;
+	if (execute_redirect(ast, fd, tmp_file) == ERROR)
 	{
-		status = execute_simple_command(args, env);
-		restore_fd(fd[0], fd[1]);
+		env->exit_status = 1;
+		return (ERROR);
 	}
-	else if (flag == 2)
-	{
-		status = execute_simple_command(args, env);
+	status = execute_simple_command(args, env);
+	if (fd[0] != fd[1])
 		restore_fd(fd[0], fd[1]);
+	if (tmp_file)
+	{
 		unlink(tmp_file);
+		free(tmp_file);
 	}
+	if (g_signal == 1)
+		g_signal = 0;
 	return (status);
 }
 
@@ -234,49 +248,49 @@ int	execute(t_node *ast, t_env *env)
 	return (0);
 }
 
-int	main(int argc, char **argv, char **envp)
-{
-	const char	*line;
-	t_token		*token;
-	t_env		env;
-	t_node		*ast;
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	const char	*line;
+// 	t_token		*token;
+// 	t_env		env;
+// 	t_node		*ast;
 
-	(void)argv;
-	if (argc != 1)
-		return (FAILURE);
-	env.head = NULL;
-	if (env_init(&env, envp) != 0)
-		return (FAILURE);
-	while (1)
-	{
-		set_signal(0);
-		line = readline("minishell$ ");
-		if (!line)
-		{
-			write(1, "exit\n", 5);
-			exit(0);
-		}
-		else if (*line)
-			add_history(line);
-		else
-			continue ;
-		env.envp = env_to_envp(&env);
-		token = lexer(line);
-		if (!token)
-		{
-			free((void *)line);
-			continue ;
-		}
-		ast = parser(token);
-		if (!ast)
-		{
-			free((void *)line);
-			continue ;
-		}
-		ast = expand(ast, &env);
-		execute(ast, &env);
-		free_env_to_envp(env.envp);
-		free((void *)line);
-	}
-	return (0);
-}
+// 	(void)argv;
+// 	if (argc != 1)
+// 		return (FAILURE);
+// 	env.head = NULL;
+// 	if (env_init(&env, envp) != 0)
+// 		return (FAILURE);
+// 	while (1)
+// 	{
+// 		set_signal(0);
+// 		line = readline("minishell$ ");
+// 		if (!line)
+// 		{
+// 			write(1, "exit\n", 5);
+// 			exit(0);
+// 		}
+// 		else if (*line)
+// 			add_history(line);
+// 		else
+// 			continue ;
+// 		env.envp = env_to_envp(&env);
+// 		token = lexer(line);
+// 		if (!token)
+// 		{
+// 			free((void *)line);
+// 			continue ;
+// 		}
+// 		ast = parser(token);
+// 		if (!ast)
+// 		{
+// 			free((void *)line);
+// 			continue ;
+// 		}
+// 		ast = expand(ast, &env);
+// 		execute(ast, &env);
+// 		free_env_to_envp(env.envp);
+// 		free((void *)line);
+// 	}
+// 	return (0);
+// }
