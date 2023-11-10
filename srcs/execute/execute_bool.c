@@ -35,3 +35,27 @@ bool	is_directory(char *path)
 		return (true);
 	return (false);
 }
+
+bool    directory_exists(char *path)
+{
+    struct stat buf;
+    char        *endp;
+    char        *dir;
+
+    endp = path;
+    endp = ft_strrchr(endp, '/');
+    // スラッシュがなければディレクトリではない。カレントディレクトリなので存在する。
+    if (!endp)
+        return (true);
+    dir = ft_substr(path, 0, endp - path);
+    if (stat(dir, &buf) == ERROR)
+    {
+        puterr(path, strerror(errno)); // Todo: exitしないputsyserr関数を作る
+        free(dir);
+        return (false);
+    }
+    free(dir);
+    if (S_ISDIR(buf.st_mode))
+        return (true);
+    return (false);
+}

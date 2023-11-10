@@ -131,6 +131,11 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 			restore_fd(fd[0], fd[1]);
 		if (redir->kind == NODE_LESS)
 		{
+            if (!directory_exists(file_here))
+            {
+                free(file_here);
+                return (ERROR);
+            }
 			fd = redirect_input(file_here, fd);
 			if (!fd)
 			{
@@ -140,6 +145,11 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 		}
 		else if (redir->kind == NODE_GREAT)
 		{
+            if (!directory_exists(file_here))
+            {
+                free(file_here);
+                return (ERROR);
+            }
 			fd = redirect_output(file_here, fd);
 			if (!fd)
 			{
@@ -149,6 +159,11 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 		}
 		else if (redir->kind == NODE_DGREAT)
 		{
+            if (!directory_exists(file_here))
+            {
+                free(file_here);
+                return (ERROR);
+            }
 			fd = redirect_append(file_here, fd);
 			if (!fd)
 			{
