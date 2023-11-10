@@ -13,6 +13,66 @@
 #include "../includes/minishell.h"
 #include "../includes/parser.h"
 
+void    print_command(t_node *node, int depth)
+{
+    char	word[100];
+    t_node  *cur = node;
+    int  i = 0;
+    int     flag = 0;
+
+    if (cur == NULL || cur->kind == TYPE_EOF)
+        return ;
+    while (i < depth)
+    {
+        printf("  ");
+        i++;
+    }
+    printf("[%d]args : ", depth);
+    while (cur && (cur->kind == NODE_ARGUMENT || cur->kind == NODE_LESS || cur->kind == NODE_GREAT || cur->kind == NODE_DGREAT || cur->kind == NODE_DLESS))
+    {
+        if (cur->kind == NODE_ARGUMENT)
+        {
+            ft_memset(word, 0, 100);
+            if (cur->expand)
+                ft_memcpy(word, cur->expand, ft_strlen(cur->expand));
+            else
+                ft_memcpy(word, cur->str, cur->len);
+            printf("%s", word);
+            if (cur->right && cur->right->kind == NODE_ARGUMENT)
+                printf(", ");
+        }
+        else if (cur->kind == NODE_LESS || cur->kind == NODE_GREAT || cur->kind == NODE_DGREAT || cur->kind == NODE_DLESS)
+            flag = 1;
+        cur = cur->right;
+
+    }
+    if (flag != 1)
+        return ;
+    printf(" ");
+    printf("redirect: ");
+    cur = node;
+    while (cur && (cur->kind == NODE_ARGUMENT || cur->kind == NODE_LESS || cur->kind == NODE_GREAT || cur->kind == NODE_DGREAT || cur->kind == NODE_DLESS))
+    {
+        if (cur->kind == NODE_LESS || cur->kind == NODE_GREAT || cur->kind == NODE_DGREAT || cur->kind == NODE_DLESS)
+            ft_memset(word, 0, 100);
+        if (cur->expand)
+            ft_memcpy(word, cur->expand, ft_strlen(cur->expand));
+        else
+            ft_memcpy(word, cur->str, cur->len);
+        if (cur->kind == NODE_LESS)
+		    printf("<%s", word);
+        else if (cur->kind == NODE_GREAT)
+            printf(">%s", word);
+        else if (cur->kind == NODE_DGREAT)
+            printf(">>%s", word);
+        else if (cur->kind == NODE_DLESS)
+            printf("<<%s", word);
+        if (cur->right && (cur->kind == NODE_LESS || cur->kind == NODE_GREAT || cur->kind == NODE_DGREAT || cur->kind == NODE_DLESS))
+            printf(", ");
+        cur = cur->right;
+    }
+}
+
 void	print_node_tree(t_node *node, int depth)
 {
 	int		i;
@@ -31,13 +91,11 @@ void	print_node_tree(t_node *node, int depth)
 		printf("  ");
 		i++;
 	}
-	if (node->kind == NODE_ARGUMENT)
+	if (node->kind == NODE_ARGUMENT || node->kind == NODE_LESS || node->kind == NODE_GREAT || node->kind == NODE_DGREAT || node->kind == NODE_DLESS)
 	{
-		if (node->expand)
-			printf("[%d]command: %s, args: ", depth, word);
-		else
-			printf("[%d]command: %s, args: ", depth, word);
-		print_argument_list(node->right, depth + 1);
+//		printf("[%d]command: %s, args: ", depth, word);
+//		print_argument_list(node->right, depth + 1);
+        print_command(node, depth);
 		printf("\n");
 	}
 	else if (node->kind == NODE_PIPE)
@@ -46,29 +104,29 @@ void	print_node_tree(t_node *node, int depth)
 		print_node_tree(node->left, depth + 1);
 		print_node_tree(node->right, depth + 1);
 	}
-	else if (node->kind == NODE_LESS)
-	{
-		printf("[%d]<, filename: %s\n", depth, word);
-		print_node_tree(node->left, depth + 1);
-		print_node_tree(node->right, depth + 1);
-	}
-	else if (node->kind == NODE_GREAT)
-	{
-		printf("[%d]>, filename: %s\n", depth, word);
-		print_node_tree(node->left, depth + 1);
-		print_node_tree(node->right, depth + 1);
-	}
-	else if (node->kind == NODE_DGREAT)
-	{
-		printf("[%d]>>, filename: %s\n", depth, word);
-		print_node_tree(node->left, depth + 1);
-		print_node_tree(node->right, depth + 1);
-	}
-	else if (node->kind == NODE_DLESS)
-	{
-		print_redirect_list(node, depth);
-		printf("\n");
-	}
+//	else if (node->kind == NODE_LESS)
+//	{
+//		printf("[%d]<, filename: %s\n", depth, word);
+//		print_node_tree(node->left, depth + 1);
+//		print_node_tree(node->right, depth + 1);
+//	}
+//	else if (node->kind == NODE_GREAT)
+//	{
+//		printf("[%d]>, filename: %s\n", depth, word);
+//		print_node_tree(node->left, depth + 1);
+//		print_node_tree(node->right, depth + 1);
+//	}
+//	else if (node->kind == NODE_DGREAT)
+//	{
+//		printf("[%d]>>, filename: %s\n", depth, word);
+//		print_node_tree(node->left, depth + 1);
+//		print_node_tree(node->right, depth + 1);
+//	}
+//	else if (node->kind == NODE_DLESS)
+//	{
+//		print_redirect_list(node, depth);
+//		printf("\n");
+//	}
 }
 
 //void print_node(t_node *node, int depth) {
