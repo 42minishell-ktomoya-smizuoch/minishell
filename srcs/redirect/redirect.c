@@ -70,6 +70,18 @@ void	restore_fd(int save_fd, int stdfd)
 /* > file */
 int	*redirect_output(const char *file, int *fd)
 {
+    if (is_directory((char *)file))
+    {
+        puterr(file, strerror(EISDIR));
+        free(fd);
+        return (NULL);
+    }
+    if (access(file, W_OK) == ERROR)
+    {
+        puterr(file, strerror(errno));
+        free(fd);
+        return (NULL);
+    }
 	fd[0] = dup(STDOUT_FILENO);
 	close(STDOUT_FILENO);
 	fd[1] = open(file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
@@ -89,6 +101,18 @@ int	*redirect_output(const char *file, int *fd)
 
 int	*redirect_append(const char *file, int *fd)
 {
+    if (is_directory((char *)file))
+    {
+        puterr(file, strerror(EISDIR));
+        free(fd);
+        return (NULL);
+    }
+    if (access(file, W_OK) == ERROR)
+    {
+        puterr(file, strerror(errno));
+        free(fd);
+        return (NULL);
+    }
 	fd[0] = dup(STDOUT_FILENO);
 	close(STDOUT_FILENO);
 	fd[1] = open(file, O_WRONLY|O_CREAT|O_APPEND, 0644);
@@ -108,6 +132,18 @@ int	*redirect_append(const char *file, int *fd)
 //}
 int	*redirect_input(const char *file, int *fd)
 {
+    if (is_directory((char *)file))
+    {
+        puterr(file, strerror(EISDIR));
+        free(fd);
+        return (NULL);
+    }
+    if (access(file, R_OK) == ERROR)
+    {
+        puterr(file, strerror(errno));
+        free(fd);
+        return (NULL);
+    }
 	fd[0] = dup(STDIN_FILENO);
 	close(STDIN_FILENO);
 	fd[1] = open(file, O_RDONLY);
