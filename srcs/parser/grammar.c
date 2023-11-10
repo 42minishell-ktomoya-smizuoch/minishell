@@ -33,11 +33,6 @@
 
 void	put_syntax_error(t_token *tok)
 {
-	char	input[100000];
-
-	ft_memset(input, 0, 100000);
-	if (tok && tok->type == TYPE_GENERAL)
-		ft_memcpy(input, tok->str, tok->len);
 	ft_putstr_fd("syntax error near unexpected token `", STDERR_FILENO);
 	if (tok && tok->type == TYPE_PIPE)
 		ft_putstr_fd("|", STDERR_FILENO);
@@ -50,7 +45,7 @@ void	put_syntax_error(t_token *tok)
 	else if (tok && tok->type == TYPE_DLESS)
 		ft_putstr_fd("<<", STDERR_FILENO);
 	else if (tok && tok->type == TYPE_GENERAL)
-		ft_putstr_fd(input, STDERR_FILENO);
+        write(STDERR_FILENO, tok->str, tok->len);
 	else if (tok && tok->type == TYPE_EOF)
 		ft_putstr_fd("newline", STDERR_FILENO);
 	ft_putendl_fd("'", STDERR_FILENO);
