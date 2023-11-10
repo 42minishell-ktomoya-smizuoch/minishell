@@ -295,6 +295,8 @@ char	*expand_node(const char *line, t_env *env)
 {
 	char	*expanded;
 	size_t	len = count_len(line, env);
+    if (len == 0)
+        return (NULL);
 	// printf("len: %zu\n", len);
 	expanded = ft_calloc(len + 1, sizeof(char));
 	copy_expand(expanded, line, env);
@@ -316,6 +318,8 @@ t_node	*expand(t_node *ast, t_env *env)
 	{
 		unexpanded = ft_substr(ast->str, 0, ast->len);
 		ast->expand = expand_node(unexpanded, env);
+        if (!ast->expand && (ft_strchr(unexpanded, '$') || ft_strchr(unexpanded, '\'') || ft_strchr(unexpanded, '\"')))
+            ast->expand_flag = FAILURE;
 		// printf("ast->expand: %s\n", ast->expand);
 		free(unexpanded);
 		expand(ast->right, env);
@@ -324,6 +328,8 @@ t_node	*expand(t_node *ast, t_env *env)
 	{
 		unexpanded = ft_substr(ast->str, 0, ast->len);
 		ast->expand = expand_node(unexpanded, env);
+        if (!ast->expand && (ft_strchr(unexpanded, '$') || ft_strchr(unexpanded, '\'') || ft_strchr(unexpanded, '\"')))
+            ast->expand_flag = FAILURE;
 		free(unexpanded);
 		expand(ast->right, env);
 	}

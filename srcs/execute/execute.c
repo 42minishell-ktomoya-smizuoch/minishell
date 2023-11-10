@@ -72,7 +72,8 @@ size_t	count_args(t_node *ast)
 	count = 0;
 	while (ast && ast->kind == NODE_ARGUMENT)
 	{
-		count++;
+        if (ast->expand_flag == SUCCESS)
+		    count++;
 		ast = ast->right;
 	}
 	return (count);
@@ -89,7 +90,12 @@ char	**make_argument_list(t_node *ast)
 	i = 0;
 	while (i < count && ast->kind == NODE_ARGUMENT)
 	{
-		if (ast->expand)
+        if (ast->expand_flag == FAILURE)
+        {
+            ast = ast->right;
+            continue ;
+        }
+		else if (ast->expand)
 			args[i] = ast->expand;
 		else
 			args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
@@ -123,12 +129,20 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 		redir = redir->right;
 	while (redir && (redir->kind == NODE_LESS || redir->kind == NODE_GREAT || redir->kind == NODE_DGREAT || redir->kind == NODE_DLESS))
 	{
-		if (redir->expand)
-			file_here = redir->expand;
-		else
-			file_here = ft_substr(redir->str, 0, redir->len);
+//        printf("redir->str: %s\n", redir->str);
 		if (fd[0] != fd[1])
 			restore_fd(fd[0], fd[1]);
+        if (redir->expand_flag == FAILURE)
+        {
+            file_here = ft_substr(redir->str, 0, redir->len);
+            puterr(file_here, "ambiguous redirect");
+            free(file_here);
+            return (ERROR);
+        }
+        else if (redir->expand)
+            file_here = redir->expand;
+        else
+            file_here = ft_substr(redir->str, 0, redir->len);
 		if (redir->kind == NODE_LESS)
 		{
 			fd = redirect_input(file_here, fd);

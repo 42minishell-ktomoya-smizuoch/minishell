@@ -34,6 +34,7 @@ typedef struct s_node
 	const char		*str;
 	size_t 			len;
 	char			*expand;
+    int             expand_flag;
 }	t_node;
 
 // nodeの構造体にcomanndの構造体を追加する
