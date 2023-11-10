@@ -76,7 +76,7 @@ int	*redirect_output(const char *file, int *fd)
         free(fd);
         return (NULL);
     }
-    if (access(file, W_OK) == ERROR)
+    if (access(file, W_OK) == ERROR && errno != ENOENT)
     {
         puterr(file, strerror(errno));
         free(fd);
@@ -107,7 +107,7 @@ int	*redirect_append(const char *file, int *fd)
         free(fd);
         return (NULL);
     }
-    if (access(file, W_OK) == ERROR)
+    if (access(file, W_OK) == ERROR && errno != ENOENT)
     {
         puterr(file, strerror(errno));
         free(fd);
