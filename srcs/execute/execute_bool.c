@@ -30,7 +30,7 @@ bool	is_directory(char *path)
 	struct stat	buf;
 
 	if (stat(path, &buf) == ERROR)
-		putsyserr_exit("stat");
+		return (false);
 	if (S_ISDIR(buf.st_mode))
 		return (true);
 	return (false);

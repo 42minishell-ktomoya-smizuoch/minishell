@@ -27,6 +27,7 @@ void	puterr_exit(const char *input, const char *msg, int exit_status);
 void	putsyserr_exit(const char *syscall_name);
 bool	is_builtin(char *cmd);
 bool	is_directory(char *path);
+bool    directory_exists(char *path);
 void	execute_abspath(char *const argv[], t_env *env);
 char	*get_path_value(char *const argv[], t_env *env);
 void	search_path(char *const argv[], t_env *env);

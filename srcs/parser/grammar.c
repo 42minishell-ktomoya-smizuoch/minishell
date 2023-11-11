@@ -14,30 +14,11 @@
 #include "../../includes/minishell.h"
 
 /*
- * 目標: cmd_suffixの文法を実装する
- * 準目標:
+ * 目標: cmd_prefixの文法を実装する
  */
-
-/*
- * リダイレクトの文法
- * コマンド名　引数1 引数2 ... 引数n <リダイレクト1> <リダイレクト2> ... <リダイレクトn>
- */
-
-//void	*syntax_error_null(const char *token)
-//{
-//	ft_putstr_fd("syntax error near unexpected token `", STDERR_FILENO);
-//	ft_putstr_fd(token, STDERR_FILENO);
-//	ft_putendl_fd("'", STDERR_FILENO);
-//	return (NULL);
-//}
 
 void	put_syntax_error(t_token *tok)
 {
-	char	input[100000];
-
-	ft_memset(input, 0, 100000);
-	if (tok && tok->type == TYPE_GENERAL)
-		ft_memcpy(input, tok->str, tok->len);
 	ft_putstr_fd("syntax error near unexpected token `", STDERR_FILENO);
 	if (tok && tok->type == TYPE_PIPE)
 		ft_putstr_fd("|", STDERR_FILENO);
@@ -50,7 +31,7 @@ void	put_syntax_error(t_token *tok)
 	else if (tok && tok->type == TYPE_DLESS)
 		ft_putstr_fd("<<", STDERR_FILENO);
 	else if (tok && tok->type == TYPE_GENERAL)
-		ft_putstr_fd(input, STDERR_FILENO);
+        write(STDERR_FILENO, tok->str, tok->len);
 	else if (tok && tok->type == TYPE_EOF)
 		ft_putstr_fd("newline", STDERR_FILENO);
 	ft_putendl_fd("'", STDERR_FILENO);
@@ -63,101 +44,75 @@ void	*syntax_error_null(t_token *tok)
 }
 
 /*
- * pipeline = command ('|' command)*
+ * command_line = command ('|' command)*
  */
-t_node	*command_line(t_token *tok, int *flag)
-{
-	t_node	*node;
-
-	if (!expect(TYPE_GENERAL, tok))
-	{
-		if (expect_next(TYPE_GENERAL, tok))
-			return (syntax_error_null(tok->cur));
-		else
-			return (syntax_error_null(tok->cur->next));
-	}
-	node = command(tok, flag);
-	if (!node)
-		return (NULL);
-	while (1)
-	{
-		if (consume(TYPE_PIPE, tok))
-		{
-			if (expect(TYPE_GENERAL, tok))
-			{
-				node = new_branch(NODE_PIPE, node, command(tok, flag));
-				if (!node)
-				{
-					*flag = ERROR;
-					return (NULL);
-				}
-			}
-			else
-			{
-				*flag = ERROR;
-				put_syntax_error(tok->cur);
-				return (node);
-			}
-		}
-		else
-			return (node);
-	}
-}
-
-/*
- * simple_command ::= cmd_name word_list?
- * word_list ::= word+
- */
-//t_node	*command(t_token *tok)
+//t_node	*command_line(t_token *tok, int *flag)
 //{
-//	t_node	*cmd;
-//	t_token	*cur;
 //	t_node	*node;
 //
-//	cmd = NULL;
-//	cur = tok->cur;
-//	while (cur->type != TYPE_EOF && cur->type != TYPE_PIPE)
+//	if (!expect(TYPE_GENERAL, tok))
 //	{
-//		node = new_node(NODE_ARGUMENT);
-//		if (!node)
-//		{
-//			// Todo: 構文木をfreeする関数を作る
-//			return (NULL);
-//		}
-//		node->word = ft_substr(cur->str, 0, cur->len);
-//		if (node->word == NULL)
-//		{
-//			// Todo: freeする
-//			return (NULL);
-//		}
-//		lstadd_back_node(&cmd, node);
-//		cur = cur->next;
+//		if (expect_next(TYPE_GENERAL, tok))
+//			return (syntax_error_null(tok->cur));
+//		else
+//			return (syntax_error_null(tok->cur->next));
 //	}
-//	tok->cur = cur;
-//	return (cmd);
-//}
-
-/* command ::= cmd_name cmd_suffix? */
-/* cmd_name ::= WORD */
-//t_node	*command(t_token *tok)
-//{
-//	t_token	*cur;
-//	t_node	*cmd;
-//	t_node	*node;
-//
-//	cur = tok->cur;
-//	cmd = new_node(NODE_COMMAND);
-//	node->word = ft_substr(cur->str, 0, cur->len);
+//	node = command(tok, flag);
+//	if (!node)
+//		return (NULL);
 //	while (1)
 //	{
-//		if (cur->type == TYPE_PIPE
-//			|| cur->type == TYPE_EOF)
-//			break ;
+//		if (consume(TYPE_PIPE, tok))
+//		{
+//			if (expect(TYPE_GENERAL, tok))
+//			{
+//				node = new_branch(NODE_PIPE, node, command(tok, flag));
+//				if (!node)
+//				{
+//					*flag = ERROR;
+//					return (NULL);
+//				}
+//			}
+//			else
+//			{
+//				*flag = ERROR;
+//				put_syntax_error(tok->cur);
+//				return (node);
+//			}
+//		}
 //		else
-//			node = cmd_suffix
+//			return (node);
 //	}
-//	return (node);
 //}
+
+t_node	*command_line(t_token *tok, int *flag)
+{
+    t_node  *node;
+
+    node = command(tok, flag);
+    if (!node)
+        return (NULL);
+    while (1)
+    {
+        if (consume(TYPE_PIPE, tok))
+        {
+            if (expect(TYPE_EOF, tok) || expect(TYPE_PIPE, tok))
+            {
+                *flag = ERROR;
+                put_syntax_error(tok->cur);
+                return (node);
+            }
+            node = new_branch(NODE_PIPE, node, command(tok, flag));
+            if (!node)
+            {
+                *flag = ERROR;
+                return (NULL);
+            }
+        }
+        else
+            return (node);
+    }
+}
 
 /* cmd_suffix ::= (io_redirect | WORD)+ */
 //t_node	*cmd_suffix(t_token *tok)
@@ -190,21 +145,52 @@ t_node	*command_line(t_token *tok, int *flag)
 //	return (suffix);
 //}
 
-/* command ::= cmd_args io_redirects */
-t_node	*command(t_token *tok, int *flag)
+/*
+ * command ::= cmd_name cmd_suffix?
+ *           | cmd_prefix (cmd_word cmd_suffix?)?
+ */
+t_node  *command(t_token *tok, int *flag)
 {
-	t_node	*cmd;
-	t_node	*redirects;
+    t_node  *list;
+    t_node  *node;
 
-	if (*flag == ERROR)
-		return (NULL);
-	cmd = cmd_args(tok, flag);
-	if (!cmd)
-		return (NULL);
-	redirects = io_redirects(tok, flag);
-	lstadd_back_node(&cmd, redirects);
-	return (cmd);
+    if (expect(TYPE_PIPE, tok) || expect(TYPE_EOF, tok))
+    {
+        *flag = ERROR;
+        return (syntax_error_null(tok->cur));
+    }
+    else if (expect(TYPE_GENERAL, tok))
+        list = cmd_arg(tok, flag);
+    else
+        list = io_redirect(tok, flag);
+    while (!expect(TYPE_EOF, tok) && !expect(TYPE_PIPE, tok))
+    {
+        if (expect(TYPE_GENERAL, tok))
+            node = cmd_arg(tok, flag);
+        else
+            node = io_redirect(tok, flag);
+        if (!node)
+            break ;
+        lstadd_back_node(&list, node);
+    }
+    return (list);
 }
+
+/* command ::= cmd_args io_redirects */
+//t_node	*command(t_token *tok, int *flag)
+//{
+//	t_node	*cmd;
+//	t_node	*redirects;
+//
+//	if (*flag == ERROR)
+//		return (NULL);
+//	cmd = cmd_args(tok, flag);
+//	if (!cmd)
+//		return (NULL);
+//	redirects = io_redirects(tok, flag);
+//	lstadd_back_node(&cmd, redirects);
+//	return (cmd);
+//}
 
 /* cmd_args ::= cmd_arg cmd_args* */
 t_node	*cmd_args(t_token *tok, int *flag)
@@ -302,19 +288,31 @@ t_node	*io_file(t_token *tok, int *flag)
 		*flag = ERROR;
 		return (NULL);
 	}
-	if (expect(TYPE_GENERAL, tok))
-	{
-		if (expect_next(TYPE_GENERAL, tok))
-		{
-			*flag = ERROR;
-			free(node);
-			return (syntax_error_null(tok->cur->next));
-		}
-		set_node_value(node, tok->cur->str, tok->cur->len);
-		if (consume(TYPE_GENERAL, tok))
-			return (node);
-	}
-	else
+//	if (expect(TYPE_GENERAL, tok))
+//	{
+//		if (expect_next(TYPE_GENERAL, tok))
+//		{
+//			*flag = ERROR;
+//			free(node);
+//			return (syntax_error_null(tok->cur->next));
+//		}
+//		set_node_value(node, tok->cur->str, tok->cur->len);
+//		if (consume(TYPE_GENERAL, tok))
+//			return (node);
+//	}
+//	else
+//	{
+//		*flag = ERROR;
+//		free(node);
+//		return (syntax_error_null(tok->cur));
+//	}
+    if (expect(TYPE_GENERAL, tok))
+    {
+        set_node_value(node, tok->cur->str, tok->cur->len);
+        if (consume(TYPE_GENERAL, tok))
+            return (node);
+    }
+    else
 	{
 		*flag = ERROR;
 		free(node);
@@ -329,27 +327,40 @@ t_node	*io_here(t_token *tok, int *flag)
 	t_node	*node;
 
 	node = NULL;
-	if (expect(TYPE_GENERAL, tok))
-	{
-		if (expect_next(TYPE_GENERAL, tok))
-		{
-			*flag = ERROR;
-			return (syntax_error_null(tok->cur->next));
-		}
-		node = new_node(NODE_DLESS);
-		if (!node)
-		{
-			*flag = ERROR;
-			return (NULL);
-		}
-		set_node_value(node, tok->cur->str, tok->cur->len);
-		if (consume(TYPE_GENERAL, tok))
-			return (node);
-	}
-	else
-	{
-		*flag = ERROR;
-		return (syntax_error_null(tok->cur));
-	}
+//	if (expect(TYPE_GENERAL, tok))
+//	{
+//		if (expect_next(TYPE_GENERAL, tok))
+//		{
+//			*flag = ERROR;
+//			return (syntax_error_null(tok->cur->next));
+//		}
+//		node = new_node(NODE_DLESS);
+//		if (!node)
+//		{
+//			*flag = ERROR;
+//			return (NULL);
+//		}
+//		set_node_value(node, tok->cur->str, tok->cur->len);
+//		if (consume(TYPE_GENERAL, tok))
+//			return (node);
+//	}
+//	else
+//	{
+//		*flag = ERROR;
+//		return (syntax_error_null(tok->cur));
+//	}
+    if (!expect(TYPE_GENERAL, tok))
+    {
+        *flag = ERROR;
+        return (syntax_error_null(tok->cur));
+    }
+    node = new_node(NODE_DLESS);
+    if (!node)
+    {
+        *flag = ERROR;
+        return (NULL);
+    }
+    set_node_value(node, tok->cur->str, tok->cur->len);
+    consume(TYPE_GENERAL, tok);
 	return (node);
 }

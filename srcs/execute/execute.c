@@ -70,9 +70,10 @@ size_t	count_args(t_node *ast)
 	size_t	count;
 
 	count = 0;
-	while (ast && ast->kind == NODE_ARGUMENT)
+	while (ast && ast->kind != NODE_PIPE)
 	{
-		count++;
+        if (ast->kind == NODE_ARGUMENT && ast->expand_flag == SUCCESS)
+		    count++;
 		ast = ast->right;
 	}
 	return (count);
@@ -87,9 +88,14 @@ char	**make_argument_list(t_node *ast)
 	count = count_args(ast);
 	args = (char **)ft_calloc(count + 1, sizeof(char *));
 	i = 0;
-	while (i < count && ast->kind == NODE_ARGUMENT)
+	while (i < count)
 	{
-		if (ast->expand)
+        if (ast->kind != NODE_ARGUMENT || ast->expand_flag == FAILURE)
+        {
+            ast = ast->right;
+            continue ;
+        }
+		else if (ast->expand)
 			args[i] = ast->expand;
 		else
 			args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
@@ -119,16 +125,29 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 
 	redir = ast;
 	status = 0;
-	while (redir && redir->kind == NODE_ARGUMENT)
-		redir = redir->right;
-	while (redir && (redir->kind == NODE_LESS || redir->kind == NODE_GREAT || redir->kind == NODE_DGREAT || redir->kind == NODE_DLESS))
+//	while (redir && redir->kind == NODE_ARGUMENT)
+//		redir = redir->right;
+	while (redir && redir->kind != NODE_PIPE)
 	{
-		if (redir->expand)
-			file_here = redir->expand;
-		else
-			file_here = ft_substr(redir->str, 0, redir->len);
+//        printf("redir->str: %s\n", redir->str);
+        if (redir->kind == NODE_ARGUMENT)
+        {
+            redir = redir->right;
+            continue ;
+        }
 		if (fd[0] != fd[1])
 			restore_fd(fd[0], fd[1]);
+        if (redir->expand_flag == FAILURE)
+        {
+            file_here = ft_substr(redir->str, 0, redir->len);
+            puterr(file_here, "ambiguous redirect");
+            free(file_here);
+            return (ERROR);
+        }
+        else if (redir->expand)
+            file_here = redir->expand;
+        else
+            file_here = ft_substr(redir->str, 0, redir->len);
 		if (redir->kind == NODE_LESS)
 		{
 			fd = redirect_input(file_here, fd);
@@ -140,7 +159,7 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 		}
 		else if (redir->kind == NODE_GREAT)
 		{
-			fd = redirect_output(file_here, fd);
+            fd = redirect_output(file_here, fd);
 			if (!fd)
 			{
 				free(file_here);
@@ -180,7 +199,7 @@ int execute_command(t_node *ast, t_env *env)
 	char 	*tmp_file;
 	int 	status = 0;
 
-	args = make_argument_list(ast);
+    args = make_argument_list(ast);
 	fd = ft_calloc(2, sizeof(int));
 	tmp_file = NULL;
 	if (execute_redirect(ast, fd, tmp_file) == ERROR)
@@ -205,12 +224,7 @@ int	execute(t_node *ast, t_env *env)
 {
 	int	status;
 
-	if (ast->kind == NODE_ARGUMENT)
-	{
-		status = execute_command(ast, env);
-		return (status);
-	}
-	else if (ast->kind == NODE_PIPE)
+	if (ast->kind == NODE_PIPE)
 	{
 		int		pipefd[2];
 		pid_t	pid1, pid2;
@@ -245,6 +259,11 @@ int	execute(t_node *ast, t_env *env)
 		close(pipefd[0]);
 		close(pipefd[1]);
 	}
+    else
+    {
+        status = execute_command(ast, env);
+        return (status);
+    }
 	return (0);
 }
 
