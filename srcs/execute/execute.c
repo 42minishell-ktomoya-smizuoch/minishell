@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/11 13:55:53 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/11 14:10:14 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 				free(tmp_file);
 			}
 			tmp_file = here_document(file_here);
-			if (g_signal == 1)
+			if (g_signal == 2)
 				return (ERROR);
 			fd = redirect_input(tmp_file, fd);
 		}
@@ -221,7 +221,7 @@ int execute_command(t_node *ast, t_env *env)
 		unlink(tmp_file);
 		free(tmp_file);
 	}
-	if (g_signal == 1)
+	if (g_signal == 2)
 		g_signal = 0;
 	return (status);
 }
