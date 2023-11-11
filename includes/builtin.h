@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/02 12:37:10 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/03 14:59:21 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/11 14:35:34 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,6 @@ int builtin_pwd(char **argv);
 int	builtin_export(char **argv, t_env *env);
 int	builtin_unset(char **argv, t_env *env);
 int	builtin_env(char **argv, t_env *env);
-int builtin_exit(char **argv);
+int	builtin_exit(char **argv, t_env *env);
 
 # endif

@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 09:39:54 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/11 12:28:42 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/11 14:37:14 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,15 @@ static bool	is_number(char *str)
 	return (false);
 }
 
-int	builtin_exit(char **argv)
+int	builtin_exit(char **argv, t_env *env)
 {
 	long	ret;
 	char	*str;
 
 	if (argv[1] == NULL)
 	{
-		write(1, "exit\n", 5);
+		if (env->pipe_fd != 1)
+			write(1, "exit\n", 5);
 		exit(SUCCESS);
 	}
 	errno = 0;
@@ -50,7 +51,8 @@ int	builtin_exit(char **argv)
 	}
 	if (ret != 0 || errno == 0)
 	{
-		write(STDERR_FILENO, "exit\n", 5);
+		if (env->pipe_fd != 1)
+			write(STDERR_FILENO, "exit\n", 5);
 		exit((int)ret);
 	}
 	ft_putstr_fd("exit\nexit: ", STDERR_FILENO);
