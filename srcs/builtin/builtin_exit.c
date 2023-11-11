@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 09:39:54 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/13 16:47:45 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/10 11:32:22 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ int	builtin_exit(char **argv)
 		write(1, "exit\n", 5);
 		exit(SUCCESS);
 	}
-	errno = 0;
 	ret = ft_strtol(argv[1], &str, 10);
 	if (argv[2] && errno == 0)
 	{
@@ -47,6 +46,11 @@ int	builtin_exit(char **argv)
 			write(STDERR_FILENO, "exit\n", 5);
 			exit((int)ret);
 		}
+	}
+	if (ret != 0 || errno == 0)
+	{
+		write(STDERR_FILENO, "exit\n", 5);
+		exit((int)ret);
 	}
 	ft_putstr_fd("exit\nexit: ", STDERR_FILENO);
 	ft_putstr_fd(argv[1], STDERR_FILENO);

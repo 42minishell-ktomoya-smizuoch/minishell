@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 15:35:49 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/08 15:58:43 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/10 13:52:29 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ char	*here_document(char *limiter)
 	free((void *)line);
 	ft_putstr_fd("\0", fd);
 	close(fd);
+	close(fd2);
 	return (ft_strdup(hear_doc));
 }
 
