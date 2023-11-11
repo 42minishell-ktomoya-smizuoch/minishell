@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/09 16:09:02 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/11 13:55:53 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,17 @@ static int	execute_executable(char *const argv[], t_env *env)
 	}
 	else
 	{
-		if (wait(&status) != pid)
-			putsyserr_exit("wait");
-		if (WIFEXITED(status))
-			env->exit_status = WEXITSTATUS(status);
-	}
+        set_signal(3);
+        if (wait(&status) != pid)
+            putsyserr_exit("wait");
+        if (WIFEXITED(status))
+            env->exit_status = WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
+        {
+            write (1, "\n", 1);
+            env->exit_status = WTERMSIG(status) + 128;
+        }
+    }
 	return (status);
 }
 

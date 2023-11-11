@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 15:35:49 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/10 13:52:29 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/11 13:52:57 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,12 @@ char	*here_document(char *limiter)
 	{
 		set_signal(2);
 		line = readline("> ");
-		if (g_signal == 1)
+		if (g_signal == 2)
 		{
-			dup2(fd2, 0);
-			break ;
+			close(fd);
+			free((void *)line);
+			restore_fd(fd2, STDIN_FILENO);
+			return (NULL);
 		}
 		if (!line)
 			break ;
