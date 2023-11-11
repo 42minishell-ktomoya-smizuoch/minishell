@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/09 11:36:03 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/11 13:07:40 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ int	main(int argc, char **argv, char **envp)
 		return (FAILURE);
 	while (1)
 	{
+		g_signal = 0;
 		set_signal(0);
+		check_signal(&env);
 		line = readline("minishell$ ");
 		if (!line)
 		{
@@ -39,6 +41,7 @@ int	main(int argc, char **argv, char **envp)
 			add_history(line);
 		else
 			continue ;
+		check_signal(&env);
 		env.envp = env_to_envp(&env);
 		token = lexer(line);
 		if (!token)
@@ -47,6 +50,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		ast = parser(token);
+		check_signal(&env);
 		if (!ast)
 		{
 			free((void *)line);
@@ -54,6 +58,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		ast = expand(ast, &env);
 		execute(ast, &env);
+		check_signal(&env);
 		free_env_to_envp(env.envp);
 		free((void *)line);
 	}
