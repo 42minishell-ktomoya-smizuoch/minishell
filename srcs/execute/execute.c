@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/11 14:10:14 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/11 14:44:46 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	execute_builtin(char *cmds[], t_env *env)
 	else if (ft_strcmp(cmds[0], "env") == 0)
 		return (builtin_env(cmds, env));
 	else
-		return (builtin_exit(cmds));
+		return (builtin_exit(cmds, env));
 }
 
 static int	execute_executable(char *const argv[], t_env *env)
@@ -241,6 +241,7 @@ int	execute(t_node *ast, t_env *env)
 		pid1 = fork();
 		if (pid1 == 0)
 		{
+			env->pipe_fd = 1;
 			dup2(pipefd[1], STDOUT_FILENO);
 			close(pipefd[0]);
 			close(pipefd[1]);
@@ -252,6 +253,7 @@ int	execute(t_node *ast, t_env *env)
 		pid2 = fork();
 		if (pid2 == 0)
 		{
+			env->pipe_fd = 1;
 			dup2(pipefd[0], STDIN_FILENO);
 			close(pipefd[1]);
 			close(pipefd[0]);
