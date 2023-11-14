@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/11 14:44:46 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/14 11:54:42 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "../../includes/execute.h"
 #include "../../includes/redirect.h"
 #include "../../includes/minishell.h"
+#include "../../includes/pipe.h"
 
 /*
  * 目標: 単純なコマンドを出力できるようにする
@@ -58,8 +59,12 @@ static int	execute_executable(char *const argv[], t_env *env)
 	else
 	{
         set_signal(3);
+        // if (wait(&status) == -1)
         if (wait(&status) != pid)
+		{
+			write(1, "aaaaa", 5);
             putsyserr_exit("wait");
+		}
         if (WIFEXITED(status))
             env->exit_status = WEXITSTATUS(status);
         else if (WIFSIGNALED(status))
@@ -234,6 +239,7 @@ int	execute(t_node *ast, t_env *env)
 	{
 		int		pipefd[2];
 		pid_t	pid1, pid2;
+		int	stdin_fd = dup(0);
 
 		if (pipe(pipefd) < 0)
 			putsyserr_exit("pipe");
@@ -248,24 +254,21 @@ int	execute(t_node *ast, t_env *env)
 			execute_simple_command(cmd1, env);
 			exit(0);
 		}
-
+		dup2(pipefd[0], STDIN_FILENO);
+		close(pipefd[0]);
+		close(pipefd[1]);
 		char	**cmd2 = make_argument_list(ast->right);
 		pid2 = fork();
 		if (pid2 == 0)
 		{
 			env->pipe_fd = 1;
-			dup2(pipefd[0], STDIN_FILENO);
-			close(pipefd[1]);
-			close(pipefd[0]);
 			execute_simple_command(cmd2, env);
 			exit(0);
 		}
 		int	status;
+		dup2(stdin_fd, STDIN_FILENO);
 		waitpid(pid1, &status, 0);
 		waitpid(pid2, &status, 0);
-
-		close(pipefd[0]);
-		close(pipefd[1]);
 	}
     else
     {

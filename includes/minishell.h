@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 17:57:32 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/11 13:00:56 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/11 15:39:08 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "parser.h"
 # include "expansion.h"
 # include "execute.h"
+# include "pipe.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <readline/readline.h>
