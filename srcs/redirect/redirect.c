@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 09:53:58 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/09 16:07:15 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/14 11:25:37 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,24 +68,81 @@ void	restore_fd(int save_fd, int stdfd)
 //}
 
 /* > file */
-int	*redirect_output(const char *file, int *fd)
+// int	redirect_output(const char *file, int fd[2])
+int *redirect_output(const char *file, int *fd)
 {
-    if (is_directory((char *)file))
+    // if (is_directory((char *)file))
+    // {
+    //     puterr(file, strerror(EISDIR));
+    //     free(fd);
+    //     return (NULL);
+    // }
+    // if (access(file, W_OK) == ERROR && errno != ENOENT)
+    // {
+    //     puterr(file, strerror(errno));
+    //     free(fd);
+    //     return (NULL);
+    // }
+    // struct stat buf;
+    // char        *dir = NULL;
+    // char        *endp;
+    // mode_t      mode;
+
+    // endp = ft_strrchr(file, '/');
+    // /がある場合
+    // if (endp)
+    // {
+    //     dir = ft_substr(file, 0, endp - file);
+    //     printf("endp: %s\n", endp);
+    //     printf("endp - file: %zu\n", endp - file + 1);
+    //     printf("dir: %s\n", dir);
+    //     // if (stat(dir, &buf) == ERROR)
+    //     // {
+    //     //     write(1, "aaaaa\n", 6);
+    //     //     puterr(file, strerror(errno));
+    //     //     free(fd);
+    //     //     return (NULL);
+    //     // }
+    //     if (stat(dir, &buf))
+    //         perror("stat: ");
+    //     mode = buf.st_mode;
+    //     if (S_ISDIR(mode))
+    //     {
+    //         // puterr(file, strerror(EISDIR));
+    //         // free(fd);
+    //         // return (NULL);
+    //         if (!(mode & S_IXUSR))
+    //         {
+    //             puterr(file, strerror(EACCES));
+    //             free(fd);
+    //             return (NULL);
+    //         }
+    //     }
+        
+    //     free(dir);
+    // }
+    fd[0] = dup(STDOUT_FILENO);
+    // if (fd[0])
+    //     return (NULL);        
+    if (close(STDOUT_FILENO) == ERROR)
     {
-        puterr(file, strerror(EISDIR));
+        perror("minishell: dup(): ");
         free(fd);
         return (NULL);
     }
-    if (access(file, W_OK) == ERROR && errno != ENOENT)
+    fd[1] = open(file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
+    if (fd[1] == ERROR)
     {
-        puterr(file, strerror(errno));
+        perror(file);
         free(fd);
+        printf("aaaaa\n");
         return (NULL);
     }
-	fd[0] = dup(STDOUT_FILENO);
-	close(STDOUT_FILENO);
-	fd[1] = open(file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
-	return (fd);
+    return (fd);
+	// fd[0] = dup(STDOUT_FILENO);
+	// close(STDOUT_FILENO);
+	// fd[1] = open(file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
+	// return (fd);
 }
 
 /* >> file */
