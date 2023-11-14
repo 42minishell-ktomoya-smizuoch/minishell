@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/11 13:07:40 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/15 08:40:08 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!token)
 		{
 			free((void *)line);
+			free_env_to_envp(env.envp);
 			continue ;
 		}
 		ast = parser(token);
@@ -54,6 +55,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!ast)
 		{
 			free((void *)line);
+			free_env_to_envp(env.envp);
 			continue ;
 		}
 		ast = expand(ast, &env);
