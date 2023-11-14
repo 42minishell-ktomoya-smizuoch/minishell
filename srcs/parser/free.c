@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 16:43:04 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/18 19:39:04 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 07:38:20 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	free_node_tree(t_node *node)
 		free_node_tree(node->left);
 	if (node->right)
 		free_node_tree(node->right);
+	if (node->expand)
+		free(node->expand);
 	free(node);
 	node = NULL;
 }
