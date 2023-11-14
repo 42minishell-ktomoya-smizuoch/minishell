@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 09:53:58 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/09 16:07:15 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/14 16:14:44 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,121 +44,100 @@ void	restore_fd(int save_fd, int stdfd)
 	close(save_fd);
 }
 
-//int	redirect_output(char *file)
-//{
-//	int	stdout_fd;
-//
-//	stdout_fd = dup(STDOUT_FILENO);
-//	close(STDOUT_FILENO);
-//	open(file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
-//	dup2(stdout_fd, STDOUT_FILENO);
-//	close(stdout_fd);
-//	return (0);
-//}
-
 /* > file */
-//int	redirect_output(char *file)
-//{
-//	int	stdout_fd;
-//
-//	stdout_fd = dup(STDOUT_FILENO);
-//	close(STDOUT_FILENO);
-//	open(file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
-//	return (stdout_fd);
-//}
-
-/* > file */
-int	*redirect_output(const char *file, int *fd)
+int	redirect_output(const char *file, int fd[4])
 {
-    if (is_directory((char *)file))
+    int check_fd;
+
+    check_fd = open(file, O_WRONLY|O_CREAT, 0644);
+    if (check_fd == ERROR)
     {
-        puterr(file, strerror(EISDIR));
-        free(fd);
-        return (NULL);
+        perror(file);
+        return (ERROR);
     }
-    if (access(file, W_OK) == ERROR && errno != ENOENT)
+    close(check_fd);
+    fd[2] = dup(STDOUT_FILENO);
+    if (fd[2] == ERROR)
     {
-        puterr(file, strerror(errno));
-        free(fd);
-        return (NULL);
+        perror("dup");
+        return (ERROR);
     }
-	fd[0] = dup(STDOUT_FILENO);
-	close(STDOUT_FILENO);
-	fd[1] = open(file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
-	return (fd);
+    if (close(STDOUT_FILENO) == ERROR)
+    {
+        perror("close");
+        return (ERROR);
+    }
+    fd[3] = open(file, O_WRONLY|O_CREAT|O_TRUNC, 0644);
+    if (fd[3] == ERROR)
+    {
+        perror("open");
+        return (ERROR);
+    }
+    return (SUCCESS);
 }
 
 /* >> file */
-//int	redirect_append(char *file)
-//{
-//	int	stdout_fd;
-//
-//	stdout_fd = dup(STDOUT_FILENO);
-//	close(STDOUT_FILENO);
-//	open(file, O_WRONLY|O_CREAT|O_APPEND, 0644);
-//	return (stdout_fd);
-//}
-
-int	*redirect_append(const char *file, int *fd)
+int	redirect_append(const char *file, int fd[4])
 {
-    if (is_directory((char *)file))
+    int check_fd;
+
+    check_fd = open(file, O_WRONLY|O_CREAT, 0644);
+    if (check_fd == ERROR)
     {
-        puterr(file, strerror(EISDIR));
-        free(fd);
-        return (NULL);
+        perror(file);
+        return (ERROR);
     }
-    if (access(file, W_OK) == ERROR && errno != ENOENT)
+    close(check_fd);
+	fd[2] = dup(STDOUT_FILENO);
+    if (fd[2] == ERROR)
     {
-        puterr(file, strerror(errno));
-        free(fd);
-        return (NULL);
+        perror("dup");
+        return (ERROR);
     }
-	fd[0] = dup(STDOUT_FILENO);
-	close(STDOUT_FILENO);
-	fd[1] = open(file, O_WRONLY|O_CREAT|O_APPEND, 0644);
-	return (fd);
+    if (close(STDOUT_FILENO) == ERROR)
+    {
+        perror("close");
+        return (ERROR);
+    }
+	fd[3] = open(file, O_WRONLY|O_CREAT|O_APPEND, 0644);
+    if (fd[3] == ERROR)
+    {
+        perror("open");
+        return (ERROR);
+    }
+	return (SUCCESS);
 }
 
-/* < file */
-//int	redirect_input(char *file)
-//{
-//	int		stdin_fd;
-//	int 	fd;
-//
-//	stdin_fd = dup(STDIN_FILENO);
-//	close(STDIN_FILENO);
-//	fd = open(file, O_RDONLY);
-//	return (stdin_fd);
-//}
-int	*redirect_input(const char *file, int *fd)
+int	redirect_input(const char *file, int fd[4])
 {
-    if (is_directory((char *)file))
+    int check_fd;
+
+    check_fd = open(file, O_RDONLY);
+    if (check_fd == ERROR)
     {
-        puterr(file, strerror(EISDIR));
-        free(fd);
-        return (NULL);
+        perror(file);
+        return (ERROR);
     }
-    if (access(file, R_OK) == ERROR)
+    close(check_fd);
+    fd[0] = dup(STDIN_FILENO);
+    if (fd[0] == ERROR)
     {
-        puterr(file, strerror(errno));
-        free(fd);
-        return (NULL);
+        perror("dup");
+        return (ERROR);
     }
-	fd[0] = dup(STDIN_FILENO);
-	close(STDIN_FILENO);
+    if (close(STDIN_FILENO) == ERROR)
+    {
+        perror("close");
+        return (ERROR);
+    }
 	fd[1] = open(file, O_RDONLY);
-	return (fd);
+    if (fd[1] == ERROR)
+    {
+        perror("open");
+        return (ERROR);
+    }
+	return (SUCCESS);
 }
-
-//int	redirect_std(char *file, int stdfd)
-//{
-//	int	save_fd;
-//
-//	if (stdfd > 3)
-//		return (ERROR);
-//	save_fd = dup(stdfd);
-//	close(stdfd);
-//}
 
 //int	main(void)
 //{
