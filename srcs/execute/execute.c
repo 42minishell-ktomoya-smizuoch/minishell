@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/14 16:16:06 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/14 16:18:10 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,6 @@ int	execute_redirect(t_node *ast, int fd[4], char *tmp_file)
 		{
 			if (fd[0] != fd[1])
 				restore_fd(fd[0], fd[1]);
-			// fd = redirect_input(file_here, fd);
 			if (redirect_input(file_here, fd) == ERROR)
 			{
 				free(file_here);
@@ -171,7 +170,6 @@ int	execute_redirect(t_node *ast, int fd[4], char *tmp_file)
 		{
 			if (fd[2] != fd[3])
 				restore_fd(fd[2], fd[3]);
-            // fd = redirect_output(file_here, fd);
 			if (redirect_output(file_here, fd) == ERROR)
 			{
 				free(file_here);
@@ -180,7 +178,6 @@ int	execute_redirect(t_node *ast, int fd[4], char *tmp_file)
 		}
 		else if (redir->kind == NODE_DGREAT)
 		{
-			// fd = redirect_append(file_here, fd);
 			if (fd[2] != fd[3])
 				restore_fd(fd[2], fd[3]);
 			if (redirect_append(file_here, fd) == ERROR)
@@ -201,7 +198,6 @@ int	execute_redirect(t_node *ast, int fd[4], char *tmp_file)
 			tmp_file = here_document(file_here);
 			if (g_signal == 2)
 				return (ERROR);
-			// fd = redirect_input(tmp_file, fd);
 			redirect_input(tmp_file, fd);
 		}
 		redir = redir->right;
