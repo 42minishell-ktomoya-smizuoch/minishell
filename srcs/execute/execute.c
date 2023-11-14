@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/14 11:54:42 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/14 16:16:06 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ char	**make_argument_list(t_node *ast)
 	size_t	i;
 
 	count = count_args(ast);
+	if (count == 0)
+		return (NULL);
 	args = (char **)ft_calloc(count + 1, sizeof(char *));
 	i = 0;
 	while (i < count)
@@ -128,7 +130,7 @@ int	execute_simple_command(char *const argv[], t_env *env)
 		return (execute_executable(argv, env));
 }
 
-int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
+int	execute_redirect(t_node *ast, int fd[4], char *tmp_file)
 {
 	t_node	*redir;
 	char	*file_here;
@@ -136,18 +138,13 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 
 	redir = ast;
 	status = 0;
-//	while (redir && redir->kind == NODE_ARGUMENT)
-//		redir = redir->right;
 	while (redir && redir->kind != NODE_PIPE)
 	{
-//        printf("redir->str: %s\n", redir->str);
         if (redir->kind == NODE_ARGUMENT)
         {
             redir = redir->right;
             continue ;
         }
-		if (fd[0] != fd[1])
-			restore_fd(fd[0], fd[1]);
         if (redir->expand_flag == FAILURE)
         {
             file_here = ft_substr(redir->str, 0, redir->len);
@@ -161,8 +158,10 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
             file_here = ft_substr(redir->str, 0, redir->len);
 		if (redir->kind == NODE_LESS)
 		{
-			fd = redirect_input(file_here, fd);
-			if (!fd)
+			if (fd[0] != fd[1])
+				restore_fd(fd[0], fd[1]);
+			// fd = redirect_input(file_here, fd);
+			if (redirect_input(file_here, fd) == ERROR)
 			{
 				free(file_here);
 				return (ERROR);
@@ -170,8 +169,10 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 		}
 		else if (redir->kind == NODE_GREAT)
 		{
-            fd = redirect_output(file_here, fd);
-			if (!fd)
+			if (fd[2] != fd[3])
+				restore_fd(fd[2], fd[3]);
+            // fd = redirect_output(file_here, fd);
+			if (redirect_output(file_here, fd) == ERROR)
 			{
 				free(file_here);
 				return (ERROR);
@@ -179,8 +180,10 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 		}
 		else if (redir->kind == NODE_DGREAT)
 		{
-			fd = redirect_append(file_here, fd);
-			if (!fd)
+			// fd = redirect_append(file_here, fd);
+			if (fd[2] != fd[3])
+				restore_fd(fd[2], fd[3]);
+			if (redirect_append(file_here, fd) == ERROR)
 			{
 				free(file_here);
 				return (ERROR);
@@ -193,10 +196,13 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 				unlink(tmp_file);
 				free(tmp_file);
 			}
+			if (fd[0] != fd[1])
+				restore_fd(fd[0], fd[1]);
 			tmp_file = here_document(file_here);
 			if (g_signal == 2)
 				return (ERROR);
-			fd = redirect_input(tmp_file, fd);
+			// fd = redirect_input(tmp_file, fd);
+			redirect_input(tmp_file, fd);
 		}
 		redir = redir->right;
 	}
@@ -206,21 +212,29 @@ int	execute_redirect(t_node *ast, int *fd, char *tmp_file)
 int execute_command(t_node *ast, t_env *env)
 {
 	char	**args;
-	int 	*fd;
+	int 	fd[4];
 	char 	*tmp_file;
 	int 	status = 0;
 
     args = make_argument_list(ast);
-	fd = ft_calloc(2, sizeof(int));
+	if (!args)
+		return (ERROR);
+	ft_memset(fd, 0, 4 * sizeof(int));
 	tmp_file = NULL;
 	if (execute_redirect(ast, fd, tmp_file) == ERROR)
 	{
 		env->exit_status = 1;
+		if (fd[0] != fd[1])
+			restore_fd(fd[0], fd[1]);
+		if (fd[2] != fd[3])
+			restore_fd(fd[2], fd[3]);
 		return (ERROR);
 	}
 	status = execute_simple_command(args, env);
 	if (fd[0] != fd[1])
 		restore_fd(fd[0], fd[1]);
+	if (fd[2] != fd[3])
+		restore_fd(fd[2], fd[3]);
 	if (tmp_file)
 	{
 		unlink(tmp_file);
