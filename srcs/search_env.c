@@ -1,16 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   serch_env.c                                        :+:      :+:    :+:   */
+/*   search_env.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:51:38 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/10 15:28:55 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 08:20:15 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/expansion.h"
+
+char	*search_nenv(const char *name, t_env *env, size_t	n)
+{
+	size_t		i;
+	t_envnode	*tmp;
+
+	if (!env | !env->head | !name)
+		return (NULL);
+	i = 0;
+	tmp = env->head;
+	while (i < n && name[i])
+		i++;
+	while (tmp)
+	{
+		if (tmp->key == NULL)
+			return (NULL);
+		if (ft_strncmp(tmp->key, name, i) == 0)
+		{
+			if (tmp->key[i] != '=')
+				return (NULL);
+			return (tmp->key + i + 1);
+		}
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
 
 char	*search_env(char *name, t_env *env)
 {

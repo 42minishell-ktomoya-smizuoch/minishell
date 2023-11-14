@@ -37,16 +37,13 @@ t_state	update_state(const char c, t_state prev)
 
 size_t	count_env_len(const char **key_head, t_env *env)
 {
-	char		*key;
 	const char	*key_end = *key_head;
 	char		*value;
 	size_t		len;
 
 	while (ft_isalnum(*key_end) || *key_end == '_')
 		key_end++;
-	key = ft_substr(*key_head, 0, key_end - *key_head);
-	value = search_env(key, env);
-	free(key);
+	value = search_nenv(*key_head, env, key_end - *key_head);
 	if (value)
 		len = ft_strlen(value);
 	else
@@ -148,14 +145,12 @@ void	copy_env(char **dst, const char **src, t_env *env)
 {
 	const char	*src_nptr = *src;
 	char		*dst_nptr = *dst;
-	char		*key;
 	const char	*value;
 
 	while (ft_isalnum(*src_nptr) || *src_nptr == '_')
 		src_nptr++;
-	key = ft_substr(*src, 0, src_nptr - *src);
+	value = search_nenv(*src, env, src_nptr - *src);
 	*src = src_nptr;
-	value = search_env(key, env);
 	if (!value)
 		return ;
 	while (*value)
@@ -366,16 +361,19 @@ t_node	*expand(t_node *ast, t_env *env)
 // 		if (!token)
 // 		{
 // 			free((void *)line);
+// 			free_env_to_envp(env.envp);
 // 			continue ;
 // 		}
 // 		ast = parser(token);
 // 		if (!ast)
 // 		{
 // 			free((void *)line);
+// 			free_env_to_envp(env.envp);
 // 			continue ;
 // 		}
 // 		ast = expand(ast, &env);
 // 		print_ast(ast);
+// 		free_node_tree(ast);
 // 		free_env_to_envp(env.envp);
 // 		free((void *)line);
 // 	}
