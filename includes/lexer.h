@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 16:56:33 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/07 11:51:22 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 16:12:37 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,15 @@ typedef enum e_state
 	STATE_IN_DOUBLE_QUOTE
 }	t_state;
 
-t_token			*create_token(const char *str);
-t_token			*new_token(t_type type, const char *str, size_t len);
-size_t			count_token(t_token *tok);
-char			**malloc_token(t_token *tok);
-ssize_t			get_token_len(const char *s);
-t_type			get_token_type(const char *str);
-void			lstadd_back_token(t_token **lst, t_token *new);
-bool			is_blank(char c);
-bool			is_metachar(const char c);
-bool			startwith(const char *s1, const char *s2);
-
-void			*perror_null(const char *syscall);
+t_token		*create_token(const char *str);
+t_token		*new_token(t_type type, const char *str, size_t len);
+ssize_t		get_token_len(const char *s);
+t_type		get_token_type(const char *str);
+void		lstadd_back_token(t_token **lst, t_token *new);
+bool		is_blank(char c);
+bool		is_metachar(const char c);
+bool		startwith(const char *s1, const char *s2);
+t_token		*free_token_null(t_token *head);
+void		*perror_null(const char *syscall);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 19:38:37 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/07 11:46:18 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 16:00:32 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,7 @@ ssize_t	get_token_len(const char *s)
 
 	len = 0;
 	state = STATE_GENERAL;
-	if (*s == '\0')
-		len = 0;
-	else if (startwith(s, ">>") || startwith(s, "<<"))
+	if (startwith(s, ">>") || startwith(s, "<<"))
 		len = 2;
 	else if (ft_strchr("><|&", *s))
 		len = 1;

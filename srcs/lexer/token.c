@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kudoutomoya <kudoutomoya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/30 17:17:52 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/10/14 14:21:00 by kudoutomoya      ###   ########.fr       */
+/*   Updated: 2023/11/15 16:09:30 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,39 +59,16 @@ t_token	*create_token(const char *str)
 	return (token);
 }
 
-size_t	count_token(t_token *tok)
+void	free_token(t_token *token)
 {
-	t_token	*cur;
-	size_t	count;
-
-	cur = tok;
-	count = 0;
-	while (cur->type != TYPE_EOF)
-	{
-		count++;
-		cur = cur->next;
-	}
-	return (count);
+	if (!token)
+		return ;
+	free_token(token->next);
+	free(token);
 }
 
-char	**malloc_token(t_token *tok)
+t_token	*free_token_null(t_token *head)
 {
-	t_token	*cur;
-	char	**argv;
-	size_t	count;
-	size_t	i;
-
-	cur = tok;
-	count = count_token(tok);
-	argv = ft_calloc(count + 1, sizeof(char *));
-	i = 0;
-	while (i < count)
-	{
-		argv[i] = ft_substr(cur->str, 0, cur->len);
-		if (argv[i] == NULL)
-			return (NULL);
-		cur = cur->next;
-		i++;
-	}
-	return (argv);
+	free_token(head);
+	return (NULL);
 }
