@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/14 16:18:10 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 10:02:23 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ char	**make_argument_list(t_node *ast)
             continue ;
         }
 		else if (ast->expand)
-			args[i] = ast->expand;
+			args[i] = ft_substr(ast->expand, 0, ft_strlen(ast->expand));
 		else
 			args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
 		ast = ast->right;
@@ -130,7 +130,7 @@ int	execute_simple_command(char *const argv[], t_env *env)
 		return (execute_executable(argv, env));
 }
 
-int	execute_redirect(t_node *ast, int fd[4], char *tmp_file)
+int	execute_redirect(t_node *ast, int fd[4], char **tmp_file)
 {
 	t_node	*redir;
 	char	*file_here;
@@ -153,7 +153,7 @@ int	execute_redirect(t_node *ast, int fd[4], char *tmp_file)
             return (ERROR);
         }
         else if (redir->expand)
-            file_here = redir->expand;
+            file_here = ft_substr(redir->expand, 0, ft_strlen(redir->expand));
         else
             file_here = ft_substr(redir->str, 0, redir->len);
 		if (redir->kind == NODE_LESS)
@@ -188,21 +188,35 @@ int	execute_redirect(t_node *ast, int fd[4], char *tmp_file)
 		}
 		else if (redir->kind == NODE_DLESS)
 		{
-			if (tmp_file)
+			if (*tmp_file)
 			{
-				unlink(tmp_file);
-				free(tmp_file);
+				unlink(*tmp_file);
+				free(*tmp_file);
 			}
 			if (fd[0] != fd[1])
 				restore_fd(fd[0], fd[1]);
-			tmp_file = here_document(file_here);
+			*tmp_file = here_document(file_here);
 			if (g_signal == 2)
 				return (ERROR);
-			redirect_input(tmp_file, fd);
+			redirect_input(*tmp_file, fd);
 		}
+		free(file_here);
 		redir = redir->right;
 	}
 	return (0);
+}
+
+void	free_matrix(char **matrix)
+{
+	size_t	i;
+
+	i = 0;
+	while (matrix[i])
+	{
+		free(matrix[i]);
+		i++;
+	}
+	free(matrix);
 }
 
 int execute_command(t_node *ast, t_env *env)
@@ -217,16 +231,18 @@ int execute_command(t_node *ast, t_env *env)
 		return (ERROR);
 	ft_memset(fd, 0, 4 * sizeof(int));
 	tmp_file = NULL;
-	if (execute_redirect(ast, fd, tmp_file) == ERROR)
+	if (execute_redirect(ast, fd, &tmp_file) == ERROR)
 	{
 		env->exit_status = 1;
 		if (fd[0] != fd[1])
 			restore_fd(fd[0], fd[1]);
 		if (fd[2] != fd[3])
 			restore_fd(fd[2], fd[3]);
+		free_matrix(args);
 		return (ERROR);
 	}
 	status = execute_simple_command(args, env);
+	free_matrix(args);
 	if (fd[0] != fd[1])
 		restore_fd(fd[0], fd[1]);
 	if (fd[2] != fd[3])
