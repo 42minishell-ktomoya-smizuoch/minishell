@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:48:39 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/18 19:16:42 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 16:23:47 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@
 t_node	*parser(t_token *token)
 {
 	t_node	*ast;
-	int 	flag;
+	int		flag;
 
 	flag = 0;
 	if (!token)

@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 22:16:56 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/15 13:36:48 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 16:23:04 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	put_syntax_error(t_token *tok)
 	else if (tok && tok->type == TYPE_DLESS)
 		ft_putstr_fd("<<", STDERR_FILENO);
 	else if (tok && tok->type == TYPE_GENERAL)
-        write(STDERR_FILENO, tok->str, tok->len);
+		write(STDERR_FILENO, tok->str, tok->len);
 	else if (tok && tok->type == TYPE_EOF)
 		ft_putstr_fd("newline", STDERR_FILENO);
 	ft_putendl_fd("'", STDERR_FILENO);
@@ -87,11 +87,11 @@ void	*syntax_error_null(t_token *tok)
 
 t_node	*command_line(t_token *tok, int *flag)
 {
-    t_node  *node;
+	t_node	*node;
 
-    node = command(tok, flag);
-    if (!node)
-        return (NULL);
+	node = command(tok, flag);
+	if (!node)
+		return (NULL);
 	if (consume(TYPE_PIPE, tok))
 	{
 		if (expect(TYPE_EOF, tok) || expect(TYPE_PIPE, tok))
@@ -107,7 +107,7 @@ t_node	*command_line(t_token *tok, int *flag)
 			return (NULL);
 		}
 	}
-    return (node);
+	return (node);
 }
 
 /* cmd_suffix ::= (io_redirect | WORD)+ */
@@ -145,31 +145,31 @@ t_node	*command_line(t_token *tok, int *flag)
  * command ::= cmd_name cmd_suffix?
  *           | cmd_prefix (cmd_word cmd_suffix?)?
  */
-t_node  *command(t_token *tok, int *flag)
+t_node	*command(t_token *tok, int *flag)
 {
-    t_node  *list;
-    t_node  *node;
+	t_node	*list;
+	t_node	*node;
 
-    if (expect(TYPE_PIPE, tok) || expect(TYPE_EOF, tok))
-    {
-        *flag = ERROR;
-        return (syntax_error_null(tok->cur));
-    }
-    else if (expect(TYPE_GENERAL, tok))
-        list = cmd_arg(tok, flag);
-    else
-        list = io_redirect(tok, flag);
-    while (!expect(TYPE_EOF, tok) && !expect(TYPE_PIPE, tok))
-    {
-        if (expect(TYPE_GENERAL, tok))
-            node = cmd_arg(tok, flag);
-        else
-            node = io_redirect(tok, flag);
-        if (!node)
-            break ;
-        lstadd_back_node(&list, node);
-    }
-    return (list);
+	if (expect(TYPE_PIPE, tok) || expect(TYPE_EOF, tok))
+	{
+		*flag = ERROR;
+		return (syntax_error_null(tok->cur));
+	}
+	else if (expect(TYPE_GENERAL, tok))
+		list = cmd_arg(tok, flag);
+	else
+		list = io_redirect(tok, flag);
+	while (!expect(TYPE_EOF, tok) && !expect(TYPE_PIPE, tok))
+	{
+		if (expect(TYPE_GENERAL, tok))
+			node = cmd_arg(tok, flag);
+		else
+			node = io_redirect(tok, flag);
+		if (!node)
+			break ;
+		lstadd_back_node(&list, node);
+	}
+	return (list);
 }
 
 /* command ::= cmd_args io_redirects */
@@ -236,9 +236,9 @@ t_node	*io_redirects(t_token *tok, int *flag)
 		return (NULL);
 	list = NULL;
 	while (expect(TYPE_LESS, tok)
-		   || expect(TYPE_GREAT, tok)
-		   || expect(TYPE_DLESS, tok)
-		   || expect(TYPE_DGREAT, tok))
+		|| expect(TYPE_GREAT, tok)
+		|| expect(TYPE_DLESS, tok)
+		|| expect(TYPE_DGREAT, tok))
 	{
 		node = io_redirect(tok, flag);
 		if (!node)
@@ -284,31 +284,13 @@ t_node	*io_file(t_token *tok, int *flag)
 		*flag = ERROR;
 		return (NULL);
 	}
-//	if (expect(TYPE_GENERAL, tok))
-//	{
-//		if (expect_next(TYPE_GENERAL, tok))
-//		{
-//			*flag = ERROR;
-//			free(node);
-//			return (syntax_error_null(tok->cur->next));
-//		}
-//		set_node_value(node, tok->cur->str, tok->cur->len);
-//		if (consume(TYPE_GENERAL, tok))
-//			return (node);
-//	}
-//	else
-//	{
-//		*flag = ERROR;
-//		free(node);
-//		return (syntax_error_null(tok->cur));
-//	}
-    if (expect(TYPE_GENERAL, tok))
-    {
-        set_node_value(node, tok->cur->str, tok->cur->len);
-        if (consume(TYPE_GENERAL, tok))
-            return (node);
-    }
-    else
+	if (expect(TYPE_GENERAL, tok))
+	{
+		set_node_value(node, tok->cur->str, tok->cur->len);
+		if (consume(TYPE_GENERAL, tok))
+			return (node);
+	}
+	else
 	{
 		*flag = ERROR;
 		free(node);
@@ -323,40 +305,18 @@ t_node	*io_here(t_token *tok, int *flag)
 	t_node	*node;
 
 	node = NULL;
-//	if (expect(TYPE_GENERAL, tok))
-//	{
-//		if (expect_next(TYPE_GENERAL, tok))
-//		{
-//			*flag = ERROR;
-//			return (syntax_error_null(tok->cur->next));
-//		}
-//		node = new_node(NODE_DLESS);
-//		if (!node)
-//		{
-//			*flag = ERROR;
-//			return (NULL);
-//		}
-//		set_node_value(node, tok->cur->str, tok->cur->len);
-//		if (consume(TYPE_GENERAL, tok))
-//			return (node);
-//	}
-//	else
-//	{
-//		*flag = ERROR;
-//		return (syntax_error_null(tok->cur));
-//	}
-    if (!expect(TYPE_GENERAL, tok))
-    {
-        *flag = ERROR;
-        return (syntax_error_null(tok->cur));
-    }
-    node = new_node(NODE_DLESS);
-    if (!node)
-    {
-        *flag = ERROR;
-        return (NULL);
-    }
-    set_node_value(node, tok->cur->str, tok->cur->len);
-    consume(TYPE_GENERAL, tok);
+	if (!expect(TYPE_GENERAL, tok))
+	{
+		*flag = ERROR;
+		return (syntax_error_null(tok->cur));
+	}
+	node = new_node(NODE_DLESS);
+	if (!node)
+	{
+		*flag = ERROR;
+		return (NULL);
+	}
+	set_node_value(node, tok->cur->str, tok->cur->len);
+	consume(TYPE_GENERAL, tok);
 	return (node);
 }

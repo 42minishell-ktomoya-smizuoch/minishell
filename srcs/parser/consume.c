@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/17 05:25:30 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/18 12:51:09 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 16:18:07 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,18 @@
 
 bool	consume(t_type type, t_token *tok)
 {
-	t_token *cur;
+	t_token	*cur;
 
 	cur = tok->cur;
 	if (cur && cur->type != type)
 		return (false);
-	tok->cur =cur->next;
+	tok->cur = cur->next;
 	return (true);
 }
 
 bool	expect(t_type type, t_token *tok)
 {
-	t_token *cur;
+	t_token	*cur;
 
 	cur = tok->cur;
 	if (cur && cur->type != type)
