@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 09:39:54 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/11 14:37:14 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/15 13:05:09 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	builtin_exit(char **argv, t_env *env)
 	{
 		if (env->pipe_fd != 1)
 			write(1, "exit\n", 5);
-		exit(SUCCESS);
+		exit(env->exit_status);
 	}
 	errno = 0;
 	ret = ft_strtol(argv[1], &str, 10);
@@ -45,7 +45,8 @@ int	builtin_exit(char **argv, t_env *env)
 	{
 		if (*str == '\0' || errno == 0)
 		{
-			write(STDERR_FILENO, "exit\n", 5);
+			if (env->pipe_fd != 1)
+				write(STDERR_FILENO, "exit\n", 5);
 			exit((int)ret);
 		}
 	}

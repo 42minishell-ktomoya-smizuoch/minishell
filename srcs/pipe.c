@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/15 11:30:03 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:43:20 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ int	pipe_cmd(t_node *ast, t_env *env)
 		}
 		else if (tmp->pid == -1)
 		{
-			// free_pipenode(&a_pipe);
 			perror("fork");
 			break ;
 		}
@@ -94,8 +93,8 @@ int	pipe_cmd(t_node *ast, t_env *env)
 			if ((tmp->pid = fork()) == 0)
 			{
 				env->pipe_fd = 1;
-				execute_command(ast, env);
-				exit(0);
+				status = execute_command(ast, env);
+				exit(status);
 			}
 			else if (tmp->pid == -1)
 			{
@@ -109,11 +108,18 @@ int	pipe_cmd(t_node *ast, t_env *env)
 	dup2(a_pipe.save_fd, 0);
 	while (tmp->next)
 	{
-		waitpid(tmp->pid, &status, 0);
+		waitpid(tmp->pid, 0, 0);
 		tmp = tmp->next;
 	}
 	waitpid(tmp->pid, &status, 0);
+	if (WIFEXITED(status))
+        env->exit_status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+    {
+        write (1, "\n", 1);
+    	env->exit_status = WTERMSIG(status) + 128;
+    }
 	tmp = a_pipe.top;
-	// free_pipenode(&a_pipe);
+	free_pipenode(&a_pipe);
 	return (0);
 }
