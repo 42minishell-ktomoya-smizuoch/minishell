@@ -35,6 +35,7 @@ PARSER_FILES = parser.c \
 	grammar.c \
 	consume.c \
 	free.c \
+	parser_error.c \
 
 PARSER_SRCS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
