@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   grammar.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 22:16:56 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/07 12:00:08 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 11:41:10 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,8 @@ t_node	*command_line(t_token *tok, int *flag)
                 put_syntax_error(tok->cur);
                 return (node);
             }
-            node = new_branch(NODE_PIPE, node, command(tok, flag));
+			// なぜか再起していなかったので直したが理由は不明
+            node = new_branch(NODE_PIPE, node, command_line(tok, flag));
             if (!node)
             {
                 *flag = ERROR;
