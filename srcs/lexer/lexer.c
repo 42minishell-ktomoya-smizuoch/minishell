@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/29 16:37:58 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/07 11:55:30 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 16:09:20 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,6 @@ static void	skip_spaces(const char **str)
 void	*perror_null(const char *syscall)
 {
 	perror(syscall);
-	return (NULL);
-}
-
-void	free_token(t_token *token)
-{
-	if (!token)
-		return ;
-	free_token(token->next);
-	free(token);
-}
-
-t_token *free_token_null(t_token *head)
-{
-	free_token(head);
 	return (NULL);
 }
 

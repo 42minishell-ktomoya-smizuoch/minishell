@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   grammar.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 22:16:56 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/15 11:41:10 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/15 13:36:48 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,27 +92,22 @@ t_node	*command_line(t_token *tok, int *flag)
     node = command(tok, flag);
     if (!node)
         return (NULL);
-    while (1)
-    {
-        if (consume(TYPE_PIPE, tok))
-        {
-            if (expect(TYPE_EOF, tok) || expect(TYPE_PIPE, tok))
-            {
-                *flag = ERROR;
-                put_syntax_error(tok->cur);
-                return (node);
-            }
-			// なぜか再起していなかったので直したが理由は不明
-            node = new_branch(NODE_PIPE, node, command_line(tok, flag));
-            if (!node)
-            {
-                *flag = ERROR;
-                return (NULL);
-            }
-        }
-        else
-            return (node);
-    }
+	if (consume(TYPE_PIPE, tok))
+	{
+		if (expect(TYPE_EOF, tok) || expect(TYPE_PIPE, tok))
+		{
+			*flag = ERROR;
+			put_syntax_error(tok->cur);
+			return (node);
+		}
+		node = new_branch(NODE_PIPE, node, command_line(tok, flag));
+		if (!node)
+		{
+			*flag = ERROR;
+			return (NULL);
+		}
+	}
+    return (node);
 }
 
 /* cmd_suffix ::= (io_redirect | WORD)+ */
