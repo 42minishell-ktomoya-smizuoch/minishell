@@ -292,10 +292,8 @@ char	*expand_node(const char *line, t_env *env)
 	size_t	len = count_len(line, env);
     if (len == 0)
         return (NULL);
-	// printf("len: %zu\n", len);
 	expanded = ft_calloc(len + 1, sizeof(char));
 	copy_expand(expanded, line, env);
-	// printf("expanded: %s\n", expanded);
 	return (expanded);
 }
 
@@ -311,21 +309,31 @@ t_node	*expand(t_node *ast, t_env *env)
 	}
 	else if (ast && ast->kind == NODE_ARGUMENT)
 	{
-		unexpanded = ft_substr(ast->str, 0, ast->len);
-		ast->expand = expand_node(unexpanded, env);
-        if (!ast->expand && (ft_strchr(unexpanded, '$') || ft_strchr(unexpanded, '\'') || ft_strchr(unexpanded, '\"')))
-            ast->expand_flag = FAILURE;
-		// printf("ast->expand: %s\n", ast->expand);
-		free(unexpanded);
+		if (ft_memchr(ast->str, '$', ast->len) || ft_memchr(ast->str, '\'', ast->len) || ft_memchr(ast->str, '\"', ast->len))
+		{
+			unexpanded = ft_substr(ast->str, 0, ast->len);
+			ast->expand = expand_node(unexpanded, env);
+			if (!ast->expand && (ft_strchr(unexpanded, '$') || ft_strchr(unexpanded, '\'') || ft_strchr(unexpanded, '\"')))
+				ast->expand_flag = FAILURE;
+			// printf("ast->expand: %s\n", ast->expand);
+			free(unexpanded);
+		}
+		else
+			ast->expand = NULL;
 		expand(ast->right, env);
 	}
 	else if (ast && (ast->kind == NODE_GREAT || ast->kind == NODE_LESS || ast->kind == NODE_DGREAT || ast->kind == NODE_DLESS))
 	{
-		unexpanded = ft_substr(ast->str, 0, ast->len);
-		ast->expand = expand_node(unexpanded, env);
-        if (!ast->expand && (ft_strchr(unexpanded, '$') || ft_strchr(unexpanded, '\'') || ft_strchr(unexpanded, '\"')))
-            ast->expand_flag = FAILURE;
-		free(unexpanded);
+		if (ft_memchr(ast->str, '$', ast->len) || ft_memchr(ast->str, '\'', ast->len) || ft_memchr(ast->str, '\"', ast->len))
+		{
+			unexpanded = ft_substr(ast->str, 0, ast->len);
+			ast->expand = expand_node(unexpanded, env);
+			if (!ast->expand && (ft_strchr(unexpanded, '$') || ft_strchr(unexpanded, '\'') || ft_strchr(unexpanded, '\"')))
+				ast->expand_flag = FAILURE;
+			free(unexpanded);
+		}
+		else
+			ast->expand = NULL;
 		expand(ast->right, env);
 	}
 	return (ast);
