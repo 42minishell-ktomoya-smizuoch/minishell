@@ -6,13 +6,13 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:51:38 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/15 08:20:15 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 08:57:25 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/expansion.h"
 
-char	*search_nenv(const char *name, t_env *env, size_t	n)
+char	*search_nenv(const char *name, t_env *env, size_t n)
 {
 	size_t		i;
 	t_envnode	*tmp;
