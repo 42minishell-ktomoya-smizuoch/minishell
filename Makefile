@@ -14,6 +14,7 @@ SRCS_FILES = minishell.c \
 	env_init.c \
 	signal.c \
 	search_env.c \
+	pipe.c \
 
 SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))
 OBJS = $(SRCS:.c=.o)

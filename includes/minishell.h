@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 17:57:32 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/11 15:39:08 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/15 09:00:10 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void 	print_node(t_node *node, int depth);
 
 int		set_signal(int mode);
 void	check_signal(t_env *env);
+
+int		pipe_cmd(t_node *ast, t_env *env);
 
 extern int g_signal;
 
