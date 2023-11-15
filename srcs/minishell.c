@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/15 08:40:08 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 09:12:18 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int	main(int argc, char **argv, char **envp)
 		ast = expand(ast, &env);
 		execute(ast, &env);
 		check_signal(&env);
+		free_node_tree(ast);
 		free_env_to_envp(env.envp);
 		free((void *)line);
 	}
