@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:14:23 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/16 08:42:52 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/16 10:20:15 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,9 @@ void	lstadd_back_node(t_node **lst, t_node *new);
 bool	consume(t_type type, t_token *tok);
 bool	expect(t_type type, t_token *tok);
 bool	expect_next(t_type type, t_token *tok);
+bool	expect_node(t_node *node, t_node_kind kind);
+bool	expect_redirect(t_node *node);
+bool	expect_command(t_node *node);
 bool	consume_type(t_type type, t_token *tok);
 void	free_token(t_token *tok);
 void	free_token_list(t_token *head);

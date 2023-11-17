@@ -36,6 +36,7 @@ PARSER_FILES = parser.c \
 	consume.c \
 	free.c \
 	parser_error.c \
+	expect_node.c \
 
 PARSER_SRCS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
@@ -43,6 +44,9 @@ OBJS += $(PARSER_OBJS)
 
 EXPAND_DIR = $(SRCS_DIR)/expansion
 EXPAND_FILES = expand.c \
+	expand_bool.c \
+	count_len.c \
+	copy_expand.c \
 
 EXPAND_SRCS = $(addprefix $(EXPAND_DIR)/, $(EXPAND_FILES))
 EXPAND_OBJS = $(EXPAND_SRCS:.c=.o)
@@ -81,7 +85,8 @@ OBJS += $(EXECUTE_OBJS)
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -I$(shell brew --prefix readline)/include
-DEBUGFLAGS = -g3 -O0
+DEBUGFLAGS = -g3 -fsanitize=address -O0
+# DEBUGFLAGS = -g3 -O0 
 RM = rm
 RMFLAGS = -f
 

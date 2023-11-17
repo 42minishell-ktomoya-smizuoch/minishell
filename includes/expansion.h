@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:25:53 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/15 08:20:20 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/17 10:55:33 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_env
 	char				**envp;
 	int					exit_status;
 	int					pipe_fd;
+	char				*tmp;
 }	t_env;
 
 int		env_init(t_env *env, char **envp);
@@ -47,5 +48,10 @@ char	**env_to_envp(t_env *env);
 void	*free_env_to_envp(char **envp);
 
 t_node	*expand(t_node *ast, t_env *env);
+bool	is_expandable(const char *s, size_t len);
+size_t	count_len(const char *line, t_env *env);
+size_t	count_digits(int num);
+t_state	update_state(const char c, t_state prev);
+void	copy_expand(char *dst, const char *src, t_env *env);
 
 #endif
