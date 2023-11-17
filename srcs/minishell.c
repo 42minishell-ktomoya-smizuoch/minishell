@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/17 09:35:58 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/17 10:08:27 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	main(int argc, char **argv, char **envp)
 		check_signal(&env);
 		if (!ast)
 		{
-			env.exit_status = 2;
+			env.exit_status = 258;
 			free((void *)line);
 			free_env_to_envp(env.envp);
 			continue ;
