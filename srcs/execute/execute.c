@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/15 12:36:54 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/17 14:46:54 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 #include "../../includes/redirect.h"
 #include "../../includes/minishell.h"
 #include "../../includes/pipe.h"
-
-/*
- * 目標: 単純なコマンドを出力できるようにする
- * 準目標: 構文木にあるコマンドの引数群をmallocする
- */
 
 static int	execute_builtin(char *cmds[], t_env *env)
 {
@@ -46,7 +41,7 @@ static int	execute_executable(char *const argv[], t_env *env)
 
 	status = 0;
 	pid = fork();
-	if (pid < 0)
+	if (pid == ERROR)
 		putsyserr_exit("fork");
 	else if (pid == 0)
 	{
@@ -58,21 +53,17 @@ static int	execute_executable(char *const argv[], t_env *env)
 	}
 	else
 	{
-        set_signal(3);
-        // if (wait(&status) == -1)
-        if (wait(&status) != pid)
+		set_signal(3);
+		if (wait(&status) != pid)
+			putsyserr_exit("wait");
+		if (WIFEXITED(status))
+			env->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
 		{
-			write(1, "aaaaa", 5);
-            putsyserr_exit("wait");
+			write(1, "\n", 1);
+			env->exit_status = WTERMSIG(status) + 128;
 		}
-        if (WIFEXITED(status))
-            env->exit_status = WEXITSTATUS(status);
-        else if (WIFSIGNALED(status))
-        {
-            write (1, "\n", 1);
-            env->exit_status = WTERMSIG(status) + 128;
-        }
-    }
+	}
 	return (status);
 }
 
@@ -83,8 +74,8 @@ size_t	count_args(t_node *ast)
 	count = 0;
 	while (ast && ast->kind != NODE_PIPE)
 	{
-        if (ast->kind == NODE_ARGUMENT && ast->expand_flag == SUCCESS)
-		    count++;
+		if (ast->kind == NODE_ARGUMENT && ast->expand_flag == SUCCESS)
+			count++;
 		ast = ast->right;
 	}
 	return (count);
@@ -103,21 +94,20 @@ char	**make_argument_list(t_node *ast)
 	i = 0;
 	while (i < count)
 	{
-        if (ast->kind != NODE_ARGUMENT || ast->expand_flag == FAILURE)
-        {
-            ast = ast->right;
-            continue ;
-        }
+		if (ast->kind != NODE_ARGUMENT || ast->expand_flag == FAILURE)
+		{
+			ast = ast->right;
+			continue ;
+		}
 		else if (ast->expand)
 			args[i] = ft_substr(ast->expand, 0, ft_strlen(ast->expand));
 		else
-			args[i] = ft_substr(ast->str, 0, ast->len); // Todo: mallocのfree
+			args[i] = ft_substr(ast->str, 0, ast->len);
 		ast = ast->right;
 		i++;
 	}
 	return (args);
 }
-
 
 int	execute_simple_command(char *const argv[], t_env *env)
 {
@@ -130,7 +120,7 @@ int	execute_simple_command(char *const argv[], t_env *env)
 		return (execute_executable(argv, env));
 }
 
-int	execute_redirect(t_node *ast, int fd[4], char **tmp_file)
+int execute_redirect(t_node *ast, int fd[4], char **tmp_file)
 {
 	t_node	*redir;
 	char	*file_here;
@@ -140,22 +130,22 @@ int	execute_redirect(t_node *ast, int fd[4], char **tmp_file)
 	status = 0;
 	while (redir && redir->kind != NODE_PIPE)
 	{
-        if (redir->kind == NODE_ARGUMENT)
-        {
-            redir = redir->right;
-            continue ;
-        }
-        if (redir->expand_flag == FAILURE)
-        {
-            file_here = ft_substr(redir->str, 0, redir->len);
-            puterr(file_here, "ambiguous redirect");
-            free(file_here);
-            return (ERROR);
-        }
-        else if (redir->expand)
-            file_here = ft_substr(redir->expand, 0, ft_strlen(redir->expand));
-        else
-            file_here = ft_substr(redir->str, 0, redir->len);
+		if (redir->kind == NODE_ARGUMENT)
+		{
+			redir = redir->right;
+			continue ;
+		}
+		if (redir->expand_flag == FAILURE)
+		{
+			file_here = ft_substr(redir->str, 0, redir->len);
+			puterr(file_here, "ambiguous redirect");
+			free(file_here);
+			return (ERROR);
+		}
+		else if (redir->expand)
+			file_here = ft_substr(redir->expand, 0, ft_strlen(redir->expand));
+		else
+			file_here = ft_substr(redir->str, 0, redir->len);
 		if (redir->kind == NODE_LESS)
 		{
 			if (fd[0] != fd[1])
@@ -219,18 +209,33 @@ void	free_matrix(char **matrix)
 	free(matrix);
 }
 
-int execute_command(t_node *ast, t_env *env)
+bool	exists_redirect(t_node *node)
+{
+	t_node	*cur;
+
+	cur = node;
+	while (cur && !expect_node(cur, NODE_PIPE))
+	{
+		if (expect_redirect(cur))
+			return (true);
+		cur = cur->right;
+	}
+	return (false);
+}
+
+int	execute_command(t_node *ast, t_env *env)
 {
 	char	**args;
-	int 	fd[4];
-	char 	*tmp_file;
-	int 	status = 0;
+	int		fd[4];
+	char	*tmp_file;
+	int		status;
 
-    args = make_argument_list(ast);
-	if (!args)
+	args = make_argument_list(ast);
+	if (!args && !exists_redirect(ast))
 		return (ERROR);
 	ft_memset(fd, 0, 4 * sizeof(int));
 	tmp_file = NULL;
+	status = 0;
 	if (execute_redirect(ast, fd, &tmp_file) == ERROR)
 	{
 		env->exit_status = 1;
@@ -241,8 +246,13 @@ int execute_command(t_node *ast, t_env *env)
 		free_matrix(args);
 		return (ERROR);
 	}
-	status = execute_simple_command(args, env);
-	free_matrix(args);
+	// if (!args)
+	// 	return (SUCCESS);
+	if (args)
+	{
+		status = execute_simple_command(args, env);
+		free_matrix(args);
+	}
 	if (fd[0] != fd[1])
 		restore_fd(fd[0], fd[1]);
 	if (fd[2] != fd[3])
@@ -257,52 +267,18 @@ int execute_command(t_node *ast, t_env *env)
 	return (status);
 }
 
-int	execute(t_node *ast, t_env *env)
+int execute(t_node *ast, t_env *env)
 {
 	int	status;
 
-	if (ast->kind == NODE_PIPE)
-	{
+	if (expect_node(ast, NODE_PIPE))
 		pipe_cmd(ast, env);
-		// int		pipefd[2];
-		// pid_t	pid1, pid2;
-		// int	stdin_fd = dup(0);
-
-		// if (pipe(pipefd) < 0)
-		// 	putsyserr_exit("pipe");
-		// char	**cmd1 = make_argument_list(ast->left);
-		// pid1 = fork();
-		// if (pid1 == 0)
-		// {
-		// 	env->pipe_fd = 1;
-		// 	dup2(pipefd[1], STDOUT_FILENO);
-		// 	close(pipefd[0]);
-		// 	close(pipefd[1]);
-		// 	execute_simple_command(cmd1, env);
-		// 	exit(0);
-		// }
-		// dup2(pipefd[0], STDIN_FILENO);
-		// close(pipefd[0]);
-		// close(pipefd[1]);
-		// char	**cmd2 = make_argument_list(ast->right);
-		// pid2 = fork();
-		// if (pid2 == 0)
-		// {
-		// 	env->pipe_fd = 1;
-		// 	execute_simple_command(cmd2, env);
-		// 	exit(0);
-		// }
-		// int	status;
-		// dup2(stdin_fd, STDIN_FILENO);
-		// waitpid(pid1, &status, 0);
-		// waitpid(pid2, &status, 0);
+	else
+	{
+		status = execute_command(ast, env);
+		return (status);
 	}
-    else
-    {
-        status = execute_command(ast, env);
-        return (status);
-    }
-	return (0);
+	return (SUCCESS);
 }
 
 // int	main(int argc, char **argv, char **envp)
