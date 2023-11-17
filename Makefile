@@ -6,10 +6,7 @@ LIBFT_DIR = $(SRCS_DIR)/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SRCS_FILES = minishell.c \
-	display_prompt.c \
-	launch_executable.c \
 	print.c \
-	set_errno_and_exit.c \
 	env_to_envp.c \
 	env_init.c \
 	signal.c \
@@ -35,6 +32,8 @@ PARSER_FILES = parser.c \
 	grammar.c \
 	consume.c \
 	free.c \
+	parser_error.c \
+	expect_node.c \
 
 PARSER_SRCS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
@@ -42,6 +41,9 @@ OBJS += $(PARSER_OBJS)
 
 EXPAND_DIR = $(SRCS_DIR)/expansion
 EXPAND_FILES = expand.c \
+	expand_bool.c \
+	count_len.c \
+	copy_expand.c \
 
 EXPAND_SRCS = $(addprefix $(EXPAND_DIR)/, $(EXPAND_FILES))
 EXPAND_OBJS = $(EXPAND_SRCS:.c=.o)
@@ -63,6 +65,7 @@ OBJS += $(BUILTIN_OBJS)
 REDIRECT_DIR = $(SRCS_DIR)/redirect
 REDIRECT_FILES = redirect.c \
 	here_document.c \
+	redirect_error.c \
 
 REDIRECT_SRCS = $(addprefix $(REDIRECT_DIR)/, $(REDIRECT_FILES))
 REDIRECT_OBJS = $(REDIRECT_SRCS:.c=.o)
@@ -80,7 +83,8 @@ OBJS += $(EXECUTE_OBJS)
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -I$(shell brew --prefix readline)/include
-DEBUGFLAGS = -g3 -O0
+DEBUGFLAGS = -g3 -fsanitize=address -O0
+# DEBUGFLAGS = -g3 -O0 
 RM = rm
 RMFLAGS = -f
 

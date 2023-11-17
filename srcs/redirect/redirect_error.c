@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   set_errno_and_exit.c                               :+:      :+:    :+:   */
+/*   redirect_error.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/03 15:49:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/09/03 15:49:45 by ktomoya          ###   ########.fr       */
+/*   Created: 2023/11/17 11:34:55 by ktomoya           #+#    #+#             */
+/*   Updated: 2023/11/17 11:53:47 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/redirect.h"
 
-void	set_errno_and_exit(const char *str, int errnum)
+int	perror_retint(const char *msg, int retnum)
 {
-	errno = errnum;
-	ft_putstr_fd(str, STDERR_FILENO);
-	exit(errnum);
+	perror(msg);
+	return (retnum);
 }

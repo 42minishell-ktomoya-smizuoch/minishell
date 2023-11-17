@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/12 11:27:06 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/09/18 10:56:23 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/15 16:24:16 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,34 +44,6 @@ t_node	*new_branch(t_node_kind kind, t_node *left, t_node *right)
 	node->right = right;
 	return (node);
 }
-
-//t_node	*new_branch_word(t_node_kind kind, t_token *tok, t_node *left, t_node *right)
-//{
-//	t_node	*node;
-//
-//	node = new_node(kind);
-//	node->word = ft_substr(tok->str, 0, tok->len);
-//	node->left = left;
-//	node->right = right;
-//	return (node);
-//}
-
-//void	add_child_node(t_node *parent, t_node *child)
-//{
-//	t_node	*sibling;
-//
-//	if (!parent || !child)
-//		return ;
-//	if (parent->first_child == NULL)
-//		parent->first_child = child;
-//	else
-//	{
-//		sibling = parent->first_child;
-//		while (sibling->next_sibling != NULL)
-//			sibling = sibling->next_sibling;
-//		sibling->next_sibling = child;
-//	}
-//}
 
 void	lstadd_back_node(t_node **lst, t_node *new)
 {

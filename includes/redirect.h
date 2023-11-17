@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 15:32:14 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/14 16:08:07 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/17 11:34:33 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,6 @@ int		redirect_input(const char *file, int fd[4]);
 int		redirect_output(const char *file, int fd[4]);
 int		redirect_append(const char *file, int fd[4]);
 void	restore_fd(int save_fd, int stdfd);
+int		perror_retint(const char *msg, int retnum);
 
 #endif
