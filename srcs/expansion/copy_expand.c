@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 10:54:41 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/17 10:55:03 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/17 11:02:44 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,25 @@
 
 void	copy_env(char **dst, const char **src, t_env *env)
 {
-	const char	*src_nptr;
-	char		*dst_nptr;
+	const char	*srcp;
+	char		*dstp;
 	const char	*value;
 
-	src_nptr = *src;
-	dst_nptr = *dst;
-	while (ft_isalnum(*src_nptr) || *src_nptr == '_')
-		src_nptr++;
-	value = search_nenv(*src, env, src_nptr - *src);
-	*src = src_nptr;
+	srcp = *src;
+	dstp = *dst;
+	while (ft_isalnum(*srcp) || *srcp == '_')
+		srcp++;
+	value = search_nenv(*src, env, srcp - *src);
+	*src = srcp;
 	if (!value)
 		return ;
 	while (*value)
 	{
-		*dst_nptr = *value;
-		dst_nptr++;
+		*dstp = *value;
+		dstp++;
 		value++;
 	}
-	*dst = dst_nptr;
+	*dst = dstp;
 }
 
 void	copy_status(char **dst, t_env *env)
