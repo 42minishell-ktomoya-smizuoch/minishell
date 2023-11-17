@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 17:57:32 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/15 09:00:10 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/17 11:13:27 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,7 @@
 //	size_t			len;
 //}	t_node;
 
-int		display_prompt(void);
-void	launch_executable(const char *exe_path);
 t_token	*lexer(const char *str);
-void	set_errno_and_exit(const char *str, int errnum);
 
 t_node	*parser(t_token *tokens);
 
