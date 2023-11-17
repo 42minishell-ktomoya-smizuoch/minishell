@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/16 08:19:35 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/17 09:35:58 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ int	main(int argc, char **argv, char **envp)
 		else if (*line)
 			add_history(line);
 		else
+		{
+			free((void *)line);
 			continue ;
+		}
 		check_signal(&env);
 		env.envp = env_to_envp(&env);
 		token = lexer(line);
