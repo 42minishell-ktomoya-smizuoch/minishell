@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 15:16:43 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/11 13:49:51 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:57:20 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,7 @@ void	handler_heardoc(int signum)
 
 void	handler_sigint(int signum)
 {
-	(void)signum;
-	if (g_signal == 2)
-	{
-        rl_on_new_line();
-        rl_replace_line("", 0);
-        rl_redisplay();
-	}
-    else
+    if (signum == SIGINT)
     {
 		write(1, "\n", 1);
 		g_signal = 1;
@@ -84,6 +77,7 @@ int	set_signal(int mode)
 		sa.sa_handler = handler_sigint;
 		sa.sa_flags = 0;
 		sigaction(SIGINT, &sa, NULL);
+		sa.sa_handler = SIG_IGN;
 		sigaction(SIGQUIT, &sa, NULL);
 	}
 	else if (mode == 1)
@@ -98,6 +92,7 @@ int	set_signal(int mode)
 		sa.sa_handler = handler_heardoc;
 		sa.sa_flags = SA_SIGINFO;
 		sigaction(SIGINT, &sa, NULL);
+		sa.sa_handler = SIG_IGN;
 		sigaction(SIGQUIT, &sa, NULL);
 	}
 	else if (mode == 3)
