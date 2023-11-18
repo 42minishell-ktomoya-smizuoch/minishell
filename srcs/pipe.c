@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/15 14:43:20 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/18 15:23:37 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int	pipe_cmd(t_node *ast, t_env *env)
 			putsyserr_exit("pipe");
 		if ((tmp->pid = fork()) == 0)
 		{
+			set_signal(1);
 			env->pipe_fd = 1;
 			dup2(tmp->fd[1], STDOUT_FILENO);
 			close(tmp->fd[0]);
@@ -83,6 +84,7 @@ int	pipe_cmd(t_node *ast, t_env *env)
 			perror("fork");
 			break ;
 		}
+		set_signal(3);
 		dup2(tmp->fd[0], STDIN_FILENO);
 		close(tmp->fd[0]);
 		close(tmp->fd[1]);
@@ -92,6 +94,7 @@ int	pipe_cmd(t_node *ast, t_env *env)
 			tmp = new_pipenode(&a_pipe);
 			if ((tmp->pid = fork()) == 0)
 			{
+				set_signal(1);
 				env->pipe_fd = 1;
 				status = execute_command(ast, env);
 				exit(status);
@@ -101,6 +104,7 @@ int	pipe_cmd(t_node *ast, t_env *env)
 				perror("fork");
 				break ;
 			}
+			set_signal(3);
 			break ;
 		}
 	}
