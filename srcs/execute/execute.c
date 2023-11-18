@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/17 14:46:54 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/18 10:42:32 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,55 +16,17 @@
 #include "../../includes/minishell.h"
 #include "../../includes/pipe.h"
 
-static int	execute_builtin(char *cmds[], t_env *env)
+void	free_matrix(char **matrix)
 {
-	if (ft_strcmp(cmds[0], "echo") == 0)
-		return (builtin_echo(cmds));
-	else if (ft_strcmp(cmds[0], "cd") == 0)
-		return (builtin_cd(cmds, env));
-	else if (ft_strcmp(cmds[0], "pwd") == 0)
-		return (builtin_pwd(cmds));
-	else if (ft_strcmp(cmds[0], "export") == 0)
-		return (builtin_export(cmds, env));
-	else if (ft_strcmp(cmds[0], "unset") == 0)
-		return (builtin_unset(cmds, env));
-	else if (ft_strcmp(cmds[0], "env") == 0)
-		return (builtin_env(cmds, env));
-	else
-		return (builtin_exit(cmds, env));
-}
+	size_t	i;
 
-static int	execute_executable(char *const argv[], t_env *env)
-{
-	pid_t	pid;
-	int		status;
-
-	status = 0;
-	pid = fork();
-	if (pid == ERROR)
-		putsyserr_exit("fork");
-	else if (pid == 0)
+	i = 0;
+	while (matrix[i])
 	{
-		set_signal(1);
-		if (ft_strchr(argv[0], '/'))
-			execute_abspath(argv, env);
-		else
-			search_path(argv, env);
+		free(matrix[i]);
+		i++;
 	}
-	else
-	{
-		set_signal(3);
-		if (wait(&status) != pid)
-			putsyserr_exit("wait");
-		if (WIFEXITED(status))
-			env->exit_status = WEXITSTATUS(status);
-		else if (WIFSIGNALED(status))
-		{
-			write(1, "\n", 1);
-			env->exit_status = WTERMSIG(status) + 128;
-		}
-	}
-	return (status);
+	free(matrix);
 }
 
 size_t	count_args(t_node *ast)
@@ -109,165 +71,34 @@ char	**make_argument_list(t_node *ast)
 	return (args);
 }
 
-int	execute_simple_command(char *const argv[], t_env *env)
-{
-	if (is_builtin(argv[0]))
-	{
-		env->exit_status = execute_builtin((char **)argv, env);
-		return (0);
-	}
-	else
-		return (execute_executable(argv, env));
-}
-
-int execute_redirect(t_node *ast, int fd[4], char **tmp_file)
-{
-	t_node	*redir;
-	char	*file_here;
-	int		status;
-
-	redir = ast;
-	status = 0;
-	while (redir && redir->kind != NODE_PIPE)
-	{
-		if (redir->kind == NODE_ARGUMENT)
-		{
-			redir = redir->right;
-			continue ;
-		}
-		if (redir->expand_flag == FAILURE)
-		{
-			file_here = ft_substr(redir->str, 0, redir->len);
-			puterr(file_here, "ambiguous redirect");
-			free(file_here);
-			return (ERROR);
-		}
-		else if (redir->expand)
-			file_here = ft_substr(redir->expand, 0, ft_strlen(redir->expand));
-		else
-			file_here = ft_substr(redir->str, 0, redir->len);
-		if (redir->kind == NODE_LESS)
-		{
-			if (fd[0] != fd[1])
-				restore_fd(fd[0], fd[1]);
-			if (redirect_input(file_here, fd) == ERROR)
-			{
-				free(file_here);
-				return (ERROR);
-			}
-		}
-		else if (redir->kind == NODE_GREAT)
-		{
-			if (fd[2] != fd[3])
-				restore_fd(fd[2], fd[3]);
-			if (redirect_output(file_here, fd) == ERROR)
-			{
-				free(file_here);
-				return (ERROR);
-			}
-		}
-		else if (redir->kind == NODE_DGREAT)
-		{
-			if (fd[2] != fd[3])
-				restore_fd(fd[2], fd[3]);
-			if (redirect_append(file_here, fd) == ERROR)
-			{
-				free(file_here);
-				return (ERROR);
-			}
-		}
-		else if (redir->kind == NODE_DLESS)
-		{
-			if (*tmp_file)
-			{
-				unlink(*tmp_file);
-				free(*tmp_file);
-			}
-			if (fd[0] != fd[1])
-				restore_fd(fd[0], fd[1]);
-			*tmp_file = here_document(file_here);
-			if (g_signal == 2)
-				return (ERROR);
-			redirect_input(*tmp_file, fd);
-		}
-		free(file_here);
-		redir = redir->right;
-	}
-	return (0);
-}
-
-void	free_matrix(char **matrix)
-{
-	size_t	i;
-
-	i = 0;
-	while (matrix[i])
-	{
-		free(matrix[i]);
-		i++;
-	}
-	free(matrix);
-}
-
-bool	exists_redirect(t_node *node)
-{
-	t_node	*cur;
-
-	cur = node;
-	while (cur && !expect_node(cur, NODE_PIPE))
-	{
-		if (expect_redirect(cur))
-			return (true);
-		cur = cur->right;
-	}
-	return (false);
-}
-
 int	execute_command(t_node *ast, t_env *env)
 {
-	char	**args;
 	int		fd[4];
 	char	*tmp_file;
 	int		status;
+	char	**args;
 
-	args = make_argument_list(ast);
-	if (!args && !exists_redirect(ast))
-		return (ERROR);
 	ft_memset(fd, 0, 4 * sizeof(int));
 	tmp_file = NULL;
 	status = 0;
 	if (execute_redirect(ast, fd, &tmp_file) == ERROR)
 	{
 		env->exit_status = 1;
-		if (fd[0] != fd[1])
-			restore_fd(fd[0], fd[1]);
-		if (fd[2] != fd[3])
-			restore_fd(fd[2], fd[3]);
-		free_matrix(args);
+		restore_stdfd(fd);
 		return (ERROR);
 	}
-	// if (!args)
-	// 	return (SUCCESS);
+	args = make_argument_list(ast);
 	if (args)
 	{
-		status = execute_simple_command(args, env);
+		status = launch_command(args, env);
 		free_matrix(args);
 	}
-	if (fd[0] != fd[1])
-		restore_fd(fd[0], fd[1]);
-	if (fd[2] != fd[3])
-		restore_fd(fd[2], fd[3]);
-	if (tmp_file)
-	{
-		unlink(tmp_file);
-		free(tmp_file);
-	}
-	if (g_signal == 2)
-		g_signal = 0;
+	restore_stdfd(fd);
+	ft_unlink(tmp_file);
 	return (status);
 }
 
-int execute(t_node *ast, t_env *env)
+int	execute(t_node *ast, t_env *env)
 {
 	int	status;
 
@@ -276,6 +107,8 @@ int execute(t_node *ast, t_env *env)
 	else
 	{
 		status = execute_command(ast, env);
+		if (g_signal == 2)
+			g_signal = 0;
 		return (status);
 	}
 	return (SUCCESS);
