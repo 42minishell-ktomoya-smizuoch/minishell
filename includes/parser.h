@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:14:23 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/16 10:20:15 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/18 10:30:07 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ bool	expect_node(t_node *node, t_node_kind kind);
 bool	expect_redirect(t_node *node);
 bool	expect_command(t_node *node);
 bool	consume_type(t_type type, t_token *tok);
+bool	consume_right(t_node **node, t_node_kind kind);
 void	free_token(t_token *tok);
 void	free_token_list(t_token *head);
 void	free_node_tree(t_node *node);

@@ -34,6 +34,7 @@ PARSER_FILES = parser.c \
 	free.c \
 	parser_error.c \
 	expect_node.c \
+	consume_right.c \
 
 PARSER_SRCS = $(addprefix $(PARSER_DIR)/, $(PARSER_FILES))
 PARSER_OBJS = $(PARSER_SRCS:.c=.o)
@@ -76,6 +77,9 @@ EXECUTE_FILES = execute.c \
 	execute_error.c \
 	execute_bool.c \
 	execute_path.c \
+	execute_utils.c \
+	execute_redirect.c \
+	launch_command.c \
 
 EXECUTE_SRCS = $(addprefix $(EXECUTE_DIR)/, $(EXECUTE_FILES))
 EXECUTE_OBJS = $(EXECUTE_SRCS:.c=.o)

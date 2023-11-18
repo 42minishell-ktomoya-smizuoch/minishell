@@ -1,35 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strspn.c                                        :+:      :+:    :+:   */
+/*   execute_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/12 15:14:20 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/17 13:25:54 by ktomoya          ###   ########.fr       */
+/*   Created: 2023/11/18 10:23:53 by ktomoya           #+#    #+#             */
+/*   Updated: 2023/11/18 10:25:02 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/libft.h"
+#include "../../includes/execute.h"
 
-size_t	ft_strspn(const char *s, const char *accept)
+void	restore_stdfd(int fd[4])
 {
-	const char	*p;
+	if (fd[0] != fd[1])
+		restore_fd(fd[0], fd[1]);
+	if (fd[2] != fd[3])
+		restore_fd(fd[2], fd[3]);
+}
 
-	if (accept[0] == '\0')
-		return (0);
-	p = s;
-	if (accept[1] == '\0')
+void	ft_unlink(char *file)
+{
+	if (file)
 	{
-		while (*s == *accept)
-			s++;
-		return (s - p);
+		unlink(file);
+		free(file);
 	}
-	while (*s != '\0')
-	{
-		if (ft_strchr(accept, *s) == NULL)
-			break ;
-		s++;
-	}
-	return (s - p);
 }

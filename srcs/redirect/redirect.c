@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 09:53:58 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/17 11:58:26 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/18 08:21:29 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,13 @@ int	redirect_output(const char *file, int fd[4])
 {
 	int	check_fd;
 
+	if (fd[2] != fd[3])
+		restore_fd(fd[2], fd[3]);
 	check_fd = open(file, O_WRONLY | O_CREAT, 0644);
 	if (check_fd == ERROR)
 		return (perror_retint(file, ERROR));
-	close(check_fd);
+	if (close(check_fd) == ERROR)
+		return (perror_retint("close", ERROR));
 	fd[2] = dup(STDOUT_FILENO);
 	if (fd[2] == ERROR)
 		return (perror_retint("dup", ERROR));
@@ -47,10 +50,13 @@ int	redirect_append(const char *file, int fd[4])
 {
 	int	check_fd;
 
+	if (fd[2] != fd[3])
+		restore_fd(fd[2], fd[3]);
 	check_fd = open(file, O_WRONLY | O_CREAT, 0644);
 	if (check_fd == ERROR)
 		return (perror_retint(file, ERROR));
-	close(check_fd);
+	if (close(check_fd) == ERROR)
+		return (perror_retint("close", ERROR));
 	fd[2] = dup(STDOUT_FILENO);
 	if (fd[2] == ERROR)
 		return (perror_retint("dup", ERROR));
@@ -66,10 +72,13 @@ int	redirect_input(const char *file, int fd[4])
 {
 	int	check_fd;
 
+	if (fd[0] != fd[1])
+		restore_fd(fd[0], fd[1]);
 	check_fd = open(file, O_RDONLY);
 	if (check_fd == ERROR)
 		return (perror_retint(file, ERROR));
-	close(check_fd);
+	if (close(check_fd) == ERROR)
+		return (perror_retint("close", ERROR));
 	fd[0] = dup(STDIN_FILENO);
 	if (fd[0] == ERROR)
 		return (perror_retint("dup", ERROR));

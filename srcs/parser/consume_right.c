@@ -1,35 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strspn.c                                        :+:      :+:    :+:   */
+/*   consume_right.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/12 15:14:20 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/17 13:25:54 by ktomoya          ###   ########.fr       */
+/*   Created: 2023/11/18 10:29:06 by ktomoya           #+#    #+#             */
+/*   Updated: 2023/11/18 10:29:26 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/libft.h"
+#include "../../includes/parser.h"
 
-size_t	ft_strspn(const char *s, const char *accept)
+bool	consume_right(t_node **node, t_node_kind kind)
 {
-	const char	*p;
+	t_node	*cur;
 
-	if (accept[0] == '\0')
-		return (0);
-	p = s;
-	if (accept[1] == '\0')
-	{
-		while (*s == *accept)
-			s++;
-		return (s - p);
-	}
-	while (*s != '\0')
-	{
-		if (ft_strchr(accept, *s) == NULL)
-			break ;
-		s++;
-	}
-	return (s - p);
+	cur = *node;
+	if (!cur || cur->kind != kind)
+		return (false);
+	*node = cur->right;
+	return (true);
 }
