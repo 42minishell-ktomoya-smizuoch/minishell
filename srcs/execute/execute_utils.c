@@ -6,11 +6,24 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 10:23:53 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/18 10:25:02 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/20 08:48:30 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/execute.h"
+
+void	free_matrix(char **matrix)
+{
+	size_t	i;
+
+	i = 0;
+	while (matrix[i])
+	{
+		free(matrix[i]);
+		i++;
+	}
+	free(matrix);
+}
 
 void	restore_stdfd(int fd[4])
 {

@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:00:33 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/18 10:36:11 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/20 08:49:13 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,6 @@ void	search_path(char *const argv[], t_env *env);
 char	**make_argument_list(t_node *ast);
 void	restore_stdfd(int fd[4]);
 void	ft_unlink(char *file);
+void	free_matrix(char **matrix);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/18 10:42:32 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/20 08:46:10 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,6 @@
 #include "../../includes/redirect.h"
 #include "../../includes/minishell.h"
 #include "../../includes/pipe.h"
-
-void	free_matrix(char **matrix)
-{
-	size_t	i;
-
-	i = 0;
-	while (matrix[i])
-	{
-		free(matrix[i]);
-		i++;
-	}
-	free(matrix);
-}
 
 size_t	count_args(t_node *ast)
 {
@@ -43,6 +30,21 @@ size_t	count_args(t_node *ast)
 	return (count);
 }
 
+int	get_arg(char **dst, t_node *node, char **head)
+{
+	(void)head;
+	if (node->expand)
+		*dst = ft_substr(node->expand, 0, ft_strlen(node->expand));
+	else
+		*dst = ft_substr(node->str, 0, node->len);
+	if (!*dst)
+	{
+		free_matrix(head);
+		return (perror_retint("malloc", ERROR));
+	}
+	return (SUCCESS);
+}
+
 char	**make_argument_list(t_node *ast)
 {
 	char	**args;
@@ -52,7 +54,9 @@ char	**make_argument_list(t_node *ast)
 	count = count_args(ast);
 	if (count == 0)
 		return (NULL);
-	args = (char **)ft_calloc(count + 1, sizeof(char *));
+	args = ft_calloc(count + 1, sizeof(char *));
+	if (!args)
+		return (perror_null("malloc"));
 	i = 0;
 	while (i < count)
 	{
@@ -61,10 +65,8 @@ char	**make_argument_list(t_node *ast)
 			ast = ast->right;
 			continue ;
 		}
-		else if (ast->expand)
-			args[i] = ft_substr(ast->expand, 0, ft_strlen(ast->expand));
-		else
-			args[i] = ft_substr(ast->str, 0, ast->len);
+		if (get_arg(&args[i], ast, args) == ERROR)
+			return (NULL);
 		ast = ast->right;
 		i++;
 	}
