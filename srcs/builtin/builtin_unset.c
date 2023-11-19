@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:44 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/13 14:33:51 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/19 16:35:27 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,17 @@ static void	ft_shift_env(t_envnode *env, t_env *env_list)
 	tmp = env;
 	if (env->next == NULL && env->prev == NULL)
 	{
-		free(env->key);
-		env->key = NULL;
-		free(env);
+		unset_utility(env, env_list, 1);
 		return ;
 	}
 	else if (env->next == NULL && env->prev != NULL)
 	{
-		env->prev->next = NULL;
-		free(env->key);
-		env->key = NULL;
-		free(env);
+		unset_utility(env, env_list, 2);
 		return ;
 	}
 	else if (env->next != NULL && env->prev == NULL)
 	{
-		env_list->head = env->next;
-		env->next->prev = NULL;
-		free(env->key);
-		env->key = NULL;
-		free(env);
+		unset_utility(env, env_list, 3);
 		return ;
 	}
 	env->prev->next = env->next;
