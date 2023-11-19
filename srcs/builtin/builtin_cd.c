@@ -6,11 +6,12 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:40:39 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/31 09:39:57 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/19 14:43:05 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/builtin.h"
+#include "../../includes/minishell.h"
 
 static void	setoldpwd(t_env *env, char *oldpwd)
 {
@@ -53,6 +54,22 @@ static void	setpwd(t_env *env, char *pwd)
 	free (pwd);
 }
 
+int	home_cd(t_env *env)
+{
+	char	*home;
+
+	home = search_env("HOME", env);
+	if (home == NULL)
+	{
+		return (1);
+	}
+	if (chdir(home) != 0)
+	{
+		return (1);
+	}
+	return (0);
+}
+
 static int	free_and_return(char *str, int ret)
 {
 	if (ret == 1)
@@ -67,9 +84,16 @@ int	builtin_cd(char **argv, t_env *env)
 	char		*oldpwd;
 
 	oldpwd = getcwd(NULL, 0);
-	if (argv == NULL || argv[1] == '\0')
+	if (argv == NULL)
 		return (free_and_return(oldpwd, SUCCESS));
-	if (chdir(argv[1]) != 0)
+	if (argv[1] == '\0')
+	{
+		if (home_cd(env) != 0)
+		{
+			free_and_return(oldpwd, FAILURE);
+		}
+	}
+	else if (chdir(argv[1]) != 0)
 		return (free_and_return(oldpwd, FAILURE));
 	setoldpwd(env, oldpwd);
 	setpwd(env, getcwd(NULL, 0));
