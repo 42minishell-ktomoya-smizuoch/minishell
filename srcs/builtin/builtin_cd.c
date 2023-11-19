@@ -6,12 +6,11 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:40:39 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/19 14:43:05 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/19 15:18:04 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/builtin.h"
-#include "../../includes/minishell.h"
 
 static void	setoldpwd(t_env *env, char *oldpwd)
 {
@@ -84,13 +83,14 @@ int	builtin_cd(char **argv, t_env *env)
 	char		*oldpwd;
 
 	oldpwd = getcwd(NULL, 0);
-	if (argv == NULL)
-		return (free_and_return(oldpwd, SUCCESS));
-	if (argv[1] == '\0')
+	if (argv == NULL || argv[1] == '\0')
 	{
 		if (home_cd(env) != 0)
 		{
-			free_and_return(oldpwd, FAILURE);
+			if (oldpwd != NULL)
+				free(oldpwd);
+			write(2, "cd: HOME not set\n", 18);
+			return (FAILURE);
 		}
 	}
 	else if (chdir(argv[1]) != 0)
@@ -99,7 +99,7 @@ int	builtin_cd(char **argv, t_env *env)
 	setpwd(env, getcwd(NULL, 0));
 	if (!oldpwd)
 	{
-		perror ("getcwd");
+		perror ("cd");
 		return (FAILURE);
 	}
 	free(oldpwd);
