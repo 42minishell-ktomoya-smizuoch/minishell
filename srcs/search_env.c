@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/10 14:51:38 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/15 08:57:25 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/19 12:03:45 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 char	*search_nenv(const char *name, t_env *env, size_t n)
 {
 	size_t		i;
+	size_t		j;
 	t_envnode	*tmp;
 
 	if (!env | !env->head | !name)
@@ -27,9 +28,10 @@ char	*search_nenv(const char *name, t_env *env, size_t n)
 	{
 		if (tmp->key == NULL)
 			return (NULL);
-		if (ft_strncmp(tmp->key, name, i) == 0)
+		j = ft_strcspn(tmp->key, "=");
+		if (ft_strncmp(tmp->key, name, i) == 0 && i == j)
 		{
-			if (tmp->key[i] != '=')
+			if (tmp->key[j] != '=')
 				return (NULL);
 			return (tmp->key + i + 1);
 		}

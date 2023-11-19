@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 10:54:41 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/17 11:02:44 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/19 14:26:46 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,12 @@ void	copy_expand(char *dst, const char *src, t_env *env)
 	{
 		state = update_state(*src, state);
 		if ((state == STATE_IN_DOUBLE_QUOTE && *src == '$')
-			|| (state == STATE_GENERAL && *src == '$'))
+			|| (state == STATE_GENERAL && *src == '$' && src[1] != '\0'))
 		{
-			copy_doll_suffix(&dst, &src, env);
+			if (state == STATE_GENERAL && ft_strchr("\'\"", src[1]))
+				src++;
+			else
+				copy_doll_suffix(&dst, &src, env);
 			continue ;
 		}
 		else if ((state == STATE_IN_QUOTE && *src != '\'')
