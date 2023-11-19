@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 10:49:16 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/17 10:50:36 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/19 14:26:51 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,12 @@ size_t	count_len(const char *line, t_env *env)
 	{
 		state = update_state(*line, state);
 		if ((state == STATE_IN_DOUBLE_QUOTE && *line == '$')
-			|| (state == STATE_GENERAL && *line == '$'))
+			|| (state == STATE_GENERAL && *line == '$' && line[1] != '\0'))
 		{
-			len += count_dollsuffix_len(&line, env);
+			if (state == STATE_GENERAL && ft_strchr("\'\"", line[1]))
+				line++;
+			else
+				len += count_dollsuffix_len(&line, env);
 			continue ;
 		}
 		else if ((state == STATE_IN_QUOTE && *line != '\'')

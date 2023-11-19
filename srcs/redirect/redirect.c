@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/17 09:53:58 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/18 08:21:29 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/18 12:04:00 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@ int	redirect_output(const char *file, int fd[4])
 {
 	int	check_fd;
 
+	if (!file)
+	{
+		puterr(" ", strerror(ENOENT));
+		return (ERROR);
+	}
 	if (fd[2] != fd[3])
 		restore_fd(fd[2], fd[3]);
 	check_fd = open(file, O_WRONLY | O_CREAT, 0644);
@@ -50,6 +55,11 @@ int	redirect_append(const char *file, int fd[4])
 {
 	int	check_fd;
 
+	if (!file)
+	{
+		puterr(" ", strerror(ENOENT));
+		return (ERROR);
+	}
 	if (fd[2] != fd[3])
 		restore_fd(fd[2], fd[3]);
 	check_fd = open(file, O_WRONLY | O_CREAT, 0644);
@@ -72,6 +82,11 @@ int	redirect_input(const char *file, int fd[4])
 {
 	int	check_fd;
 
+	if (!file)
+	{
+		puterr(" ", strerror(ENOENT));
+		return (ERROR);
+	}
 	if (fd[0] != fd[1])
 		restore_fd(fd[0], fd[1]);
 	check_fd = open(file, O_RDONLY);

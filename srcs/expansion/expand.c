@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:18:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/17 10:57:22 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/19 11:18:50 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ t_node	*expand(t_node *ast, t_env *env)
 	{
 		expand(ast->left, env);
 		expand(ast->right, env);
+		return (ast);
 	}
 	if (is_expandable(ast->str, ast->len))
 	{
