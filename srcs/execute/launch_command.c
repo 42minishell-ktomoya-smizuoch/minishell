@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 10:38:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/18 10:40:18 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/20 14:52:49 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	wait_child(pid_t pid, t_env *env)
 		write(1, "\n", 1);
 		env->exit_status = WTERMSIG(status) + 128;
 	}
-	return (status);
+	return (env->exit_status);
 }
 
 static int	execute_builtin(char *cmds[], t_env *env)
@@ -67,7 +67,7 @@ static int	execute_executable(char *const argv[], t_env *env)
 	else
 	{
 		set_signal(3);
-		wait_child(pid, env);
+		status = wait_child(pid, env);
 	}
 	return (status);
 }

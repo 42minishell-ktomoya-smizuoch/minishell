@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 10:32:45 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/18 11:48:02 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/20 12:48:22 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ int	parse_file(t_node *node, char **file_here)
 int	execute_heredocument(char *eof, int fd[4], char **tmp_file)
 {
 	ft_unlink(*tmp_file);
+	if (fd[0] != fd[1])
+		restore_fd(fd[0], fd[1]);
 	*tmp_file = here_document(eof);
 	if (g_signal == 2)
 		return (ERROR);
