@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/20 08:46:10 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/20 09:14:32 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	execute_command(t_node *ast, t_env *env)
 	{
 		env->exit_status = 1;
 		restore_stdfd(fd);
-		return (ERROR);
+		return (1);
 	}
 	args = make_argument_list(ast);
 	if (args)
