@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/20 09:14:32 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/20 09:59:48 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,29 @@
 #include "../../includes/minishell.h"
 #include "../../includes/pipe.h"
 
-size_t	count_args(t_node *ast)
+size_t	count_args(t_node *ast, t_env *env)
 {
 	size_t	count;
+	int		exist_expandable;
 
 	count = 0;
+	exist_expandable = 0;
 	while (ast && ast->kind != NODE_PIPE)
 	{
 		if (ast->kind == NODE_ARGUMENT && ast->expand_flag == SUCCESS)
 			count++;
+		else if (ast->kind == NODE_ARGUMENT && ast->expand_flag == FAILURE
+			&& !ft_strchr(ast->str, '$'))
+			exist_expandable = 1;
 		ast = ast->right;
 	}
+	if (count == 0 && exist_expandable == 1)
+	{
+		puterr(" ", "command not found");
+		env->exit_status = 127;
+	}
+	else if (count == 0)
+		env->exit_status = 0;
 	return (count);
 }
 
@@ -45,13 +57,13 @@ int	get_arg(char **dst, t_node *node, char **head)
 	return (SUCCESS);
 }
 
-char	**make_argument_list(t_node *ast)
+char	**make_argument_list(t_node *ast, t_env *env)
 {
 	char	**args;
 	size_t	count;
 	size_t	i;
 
-	count = count_args(ast);
+	count = count_args(ast, env);
 	if (count == 0)
 		return (NULL);
 	args = ft_calloc(count + 1, sizeof(char *));
@@ -89,7 +101,7 @@ int	execute_command(t_node *ast, t_env *env)
 		restore_stdfd(fd);
 		return (1);
 	}
-	args = make_argument_list(ast);
+	args = make_argument_list(ast, env);
 	if (args)
 	{
 		status = launch_command(args, env);
