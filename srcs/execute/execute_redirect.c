@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 10:32:45 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/20 12:48:22 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/22 08:33:50 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,15 @@ int	free_retint(void *content, int retnum)
 
 int	parse_file(t_node *node, char **file_here)
 {
-	if (node->expand_flag == FAILURE && ft_memchr(node->str, '$', node->len))
+	if (node->expand_flag == FAILURE
+		&& ft_memchr(node->str, '$', node->len)
+		&& node->kind != NODE_DLESS)
 	{
 		puterr_len(node->str, node->len, "ambiguous redirect");
 		return (ERROR);
 	}
+	else if (node->expand_flag == FAILURE && node->kind == NODE_DLESS)
+		*file_here = ft_substr(node->str, 0, node->len);
 	else if (node->expand_flag == FAILURE)
 	{
 		*file_here = NULL;
