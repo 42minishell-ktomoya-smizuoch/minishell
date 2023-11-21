@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 17:57:32 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/21 09:33:16 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/21 11:31:13 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,7 @@ int	g_signal;
 //}	t_node;
 
 t_token	*lexer(const char *str);
-
 t_node	*parser(t_token *tokens);
-
-void	print_ast(t_node *root);
-void	print_argument_list(t_node *node, int depth);
-void	print_node_tree(t_node *node, int depth);
-void	print_redirect_list(t_node *node, int depth);
-void 	print_node(t_node *node, int depth);
 
 int		set_signal(int mode);
 void	check_signal(t_env *env);

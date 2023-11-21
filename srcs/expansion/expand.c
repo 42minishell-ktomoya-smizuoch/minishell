@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:18:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/19 11:18:50 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/21 12:27:46 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,45 +43,51 @@ t_state	update_state(const char c, t_state prev)
 	return (new);
 }
 
-char	*expand_node(const char *line, t_env *env)
-{
-	char	*expanded;
-	size_t	len;
-
-	len = count_len(line, env);
-	if (len == 0)
-		return (NULL);
-	expanded = ft_calloc(len + 1, sizeof(char));
-	copy_expand(expanded, line, env);
-	return (expanded);
-}
-
-t_node	*expand(t_node *ast, t_env *env)
+int	expand_node(t_node *node, t_env *env)
 {
 	char	*unexpand;
+	size_t	len;
 
+	unexpand = ft_substr(node->str, 0, node->len);
+	if (!unexpand)
+		return (ERROR);
+	len = count_len(unexpand, env);
+	if (len == 0)
+	{
+		node->expand_flag = FAILURE;
+		return (FAILURE);
+	}
+	node->expand = ft_calloc(len + 1, sizeof(char));
+	if (!node->expand)
+	{
+		free(unexpand);
+		return (ERROR);
+	}
+	copy_expand(node->expand, unexpand, env);
+	free(unexpand);
+	return (SUCCESS);
+}
+
+int	expand(t_node *ast, t_env *env)
+{
 	if (!ast)
-		return (NULL);
+		return (FAILURE);
 	if (expect_node(ast, NODE_PIPE))
 	{
-		expand(ast->left, env);
-		expand(ast->right, env);
-		return (ast);
+		if (expand(ast->left, env) == ERROR)
+			return (ERROR);
+		if (expand(ast->right, env) == ERROR)
+			return (ERROR);
+		return (SUCCESS);
 	}
 	if (is_expandable(ast->str, ast->len))
 	{
-		unexpand = ft_substr(ast->str, 0, ast->len);
-		if (!unexpand)
-			return (perror_null("malloc"));
-		ast->expand = expand_node(unexpand, env);
-		if (!ast->expand)
-			ast->expand_flag = FAILURE;
-		free(unexpand);
+		if (expand_node(ast, env) == ERROR)
+			return (perror_retint("malloc", ERROR));
 	}
 	else
 		ast->expand = NULL;
-	expand(ast->right, env);
-	return (ast);
+	return (expand(ast->right, env));
 }
 
 // int	main(int argc, char **argv, char **envp)
