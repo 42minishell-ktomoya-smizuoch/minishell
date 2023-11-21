@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/21 14:17:59 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/21 14:45:20 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,36 +53,36 @@ int	ft_free(void *content)
 // 		continue ;
 // }
 
-void	launch_minishell(t_env *env)
-{
-	while (1)
-	{
-		set_signal(0);
-		check_signal(&env);
-		line = readline("minishell$ ");
-		if (!line && write(1, "exit\n", 5) == 5)
-			exit(0);
-		else if (*line)
-			add_history(line);
-		else if (*line == '\0' && ft_free((void *)line) == SUCCESS)
-			continue ;
-		check_signal(&env);
-		env.envp = env_to_envp(&env);
-		token = lexer(line);
-		if (!token && minishell_free(0, line, &env, NULL) == SUCCESS)
-			continue ;
-		ast = parser(token);
-		check_signal(&env);
-		if (!ast && minishell_free(1, line, &env, NULL) == SUCCESS)
-			continue ;
-		if (expand(ast, &env) == ERROR
-			&& minishell_free(2, line, &env, ast) == SUCCESS)
-			continue ;
-		execute(ast, &env);
-		check_signal(&env);
-		minishell_free(2, line, &env, ast);
-	}
-}
+// void	launch_minishell(t_env *env)
+// {
+// 	while (1)
+// 	{
+// 		set_signal(0);
+// 		check_signal(&env);
+// 		line = readline("minishell$ ");
+// 		if (!line && write(1, "exit\n", 5) == 5)
+// 			exit(0);
+// 		else if (*line)
+// 			add_history(line);
+// 		else if (*line == '\0' && ft_free((void *)line) == SUCCESS)
+// 			continue ;
+// 		check_signal(&env);
+// 		env.envp = env_to_envp(&env);
+// 		token = lexer(line);
+// 		if (!token && minishell_free(0, line, &env, NULL) == SUCCESS)
+// 			continue ;
+// 		ast = parser(token);
+// 		check_signal(&env);
+// 		if (!ast && minishell_free(1, line, &env, NULL) == SUCCESS)
+// 			continue ;
+// 		if (expand(ast, &env) == ERROR
+// 			&& minishell_free(2, line, &env, ast) == SUCCESS)
+// 			continue ;
+// 		execute(ast, &env);
+// 		check_signal(&env);
+// 		minishell_free(2, line, &env, ast);
+// 	}
+// }
 
 // execute test
 int	main(int argc, char **argv, char **envp)
@@ -115,14 +115,12 @@ int	main(int argc, char **argv, char **envp)
 		if (!token && minishell_free(0, line, &env, NULL) == SUCCESS)
 			continue ;
 		ast = parser(token);
-		check_signal(&env);
 		if (!ast && minishell_free(1, line, &env, NULL) == SUCCESS)
 			continue ;
 		if (expand(ast, &env) == ERROR
 			&& minishell_free(2, line, &env, ast) == SUCCESS)
 			continue ;
 		execute(ast, &env);
-		check_signal(&env);
 		minishell_free(2, line, &env, ast);
 	}
 	return (0);
