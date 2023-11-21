@@ -6,13 +6,12 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/18 15:23:37 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/21 14:49:59 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/execute.h"
-
 
 t_pipenode	*new_pipenode(t_pipe *a_pipe)
 {
@@ -117,12 +116,12 @@ int	pipe_cmd(t_node *ast, t_env *env)
 	}
 	waitpid(tmp->pid, &status, 0);
 	if (WIFEXITED(status))
-        env->exit_status = WEXITSTATUS(status);
-    else if (WIFSIGNALED(status))
-    {
-        write (1, "\n", 1);
-    	env->exit_status = WTERMSIG(status) + 128;
-    }
+		env->exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+	{
+		write (1, "\n", 1);
+		env->exit_status = WTERMSIG(status) + 128;
+	}
 	tmp = a_pipe.top;
 	free_pipenode(&a_pipe);
 	return (0);
