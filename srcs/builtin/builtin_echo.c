@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:09:46 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/09/08 13:01:21 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/21 15:34:59 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,10 @@ bool	n_check(char **argv, size_t *i)
 		if (argv[*i][j] != 'n')
 			return (false);
 		j++;
+	}
+	if (j == 1)
+	{
+		return (false);
 	}
 	return (true);
 }
