@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/19 15:54:14 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/21 11:48:23 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,7 @@ int	main(int argc, char **argv, char **envp)
 			free_env_to_envp(env.envp);
 			continue ;
 		}
-		ast = expand(ast, &env);
-		if (!ast)
+		if (expand(ast, &env) == ERROR)
 		{
 			free((void *)line);
 			free_env_to_envp(env.envp);

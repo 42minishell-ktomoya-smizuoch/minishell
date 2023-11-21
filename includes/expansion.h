@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:25:53 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/17 10:55:33 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/21 11:27:05 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,6 @@ typedef struct s_envnode
 	struct s_envnode	*prev;
 }	t_envnode;
 
-//typedef struct s_env
-//{
-//	struct s_envnode	*head;
-//}	t_env;
-
 typedef struct s_env
 {
 	struct s_envnode	*head;
@@ -47,7 +42,7 @@ char	*search_nenv(const char *name, t_env *env, size_t n);
 char	**env_to_envp(t_env *env);
 void	*free_env_to_envp(char **envp);
 
-t_node	*expand(t_node *ast, t_env *env);
+int		expand(t_node *ast, t_env *env);
 bool	is_expandable(const char *s, size_t len);
 size_t	count_len(const char *line, t_env *env);
 size_t	count_digits(int num);
