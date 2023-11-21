@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 17:57:32 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/17 11:13:27 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/21 09:33:16 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <termios.h>
 
 # define SUCCESS 0
+
+int	g_signal;
 
 //typedef struct s_env
 //{
@@ -65,6 +67,10 @@ void 	print_node(t_node *node, int depth);
 
 int		set_signal(int mode);
 void	check_signal(t_env *env);
+
+void	handler_exec(int signum);
+void	handler_heardoc(int signum);
+void	handler_sigint(int signum);
 
 int		pipe_cmd(t_node *ast, t_env *env);
 
