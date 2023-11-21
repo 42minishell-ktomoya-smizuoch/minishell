@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:18:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/21 12:27:46 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/21 13:22:06 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ int	expand_node(t_node *node, t_env *env)
 	if (len == 0)
 	{
 		node->expand_flag = FAILURE;
+		free(unexpand);
 		return (FAILURE);
 	}
 	node->expand = ft_calloc(len + 1, sizeof(char));
