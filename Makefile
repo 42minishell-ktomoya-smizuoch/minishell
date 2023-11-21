@@ -6,7 +6,6 @@ LIBFT_DIR = $(SRCS_DIR)/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 SRCS_FILES = minishell.c \
-	print.c \
 	env_to_envp.c \
 	env_init.c \
 	signal.c \
