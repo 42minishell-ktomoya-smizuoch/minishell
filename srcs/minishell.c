@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/21 14:45:20 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/21 16:43:55 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,55 +53,13 @@ int	ft_free(void *content)
 // 		continue ;
 // }
 
-// void	launch_minishell(t_env *env)
-// {
-// 	while (1)
-// 	{
-// 		set_signal(0);
-// 		check_signal(&env);
-// 		line = readline("minishell$ ");
-// 		if (!line && write(1, "exit\n", 5) == 5)
-// 			exit(0);
-// 		else if (*line)
-// 			add_history(line);
-// 		else if (*line == '\0' && ft_free((void *)line) == SUCCESS)
-// 			continue ;
-// 		check_signal(&env);
-// 		env.envp = env_to_envp(&env);
-// 		token = lexer(line);
-// 		if (!token && minishell_free(0, line, &env, NULL) == SUCCESS)
-// 			continue ;
-// 		ast = parser(token);
-// 		check_signal(&env);
-// 		if (!ast && minishell_free(1, line, &env, NULL) == SUCCESS)
-// 			continue ;
-// 		if (expand(ast, &env) == ERROR
-// 			&& minishell_free(2, line, &env, ast) == SUCCESS)
-// 			continue ;
-// 		execute(ast, &env);
-// 		check_signal(&env);
-// 		minishell_free(2, line, &env, ast);
-// 	}
-// }
-
-// execute test
-int	main(int argc, char **argv, char **envp)
+void	launch_minishell(t_env *env,
+		const char	*line, t_token *token, t_node *ast)
 {
-	const char	*line;
-	t_token		*token;
-	t_env		env;
-	t_node		*ast;
-
-	(void)argv;
-	if (argc != 1)
-		return (FAILURE);
-	env.head = NULL;
-	if (env_init(&env, envp) != 0)
-		return (FAILURE);
 	while (1)
 	{
 		set_signal(0);
-		check_signal(&env);
+		check_signal(env);
 		line = readline("minishell$ ");
 		if (!line && write(1, "exit\n", 5) == 5)
 			exit(0);
@@ -109,20 +67,34 @@ int	main(int argc, char **argv, char **envp)
 			add_history(line);
 		else if (*line == '\0' && ft_free((void *)line) == SUCCESS)
 			continue ;
-		check_signal(&env);
-		env.envp = env_to_envp(&env);
+		check_signal(env);
+		env->envp = env_to_envp(env);
 		token = lexer(line);
-		if (!token && minishell_free(0, line, &env, NULL) == SUCCESS)
+		if (!token && minishell_free(0, line, env, NULL) == SUCCESS)
 			continue ;
 		ast = parser(token);
-		if (!ast && minishell_free(1, line, &env, NULL) == SUCCESS)
+		if (!ast && minishell_free(1, line, env, NULL) == SUCCESS)
 			continue ;
-		if (expand(ast, &env) == ERROR
-			&& minishell_free(2, line, &env, ast) == SUCCESS)
+		if (expand(ast, env) == ERROR
+			&& minishell_free(2, line, env, ast) == SUCCESS)
 			continue ;
-		execute(ast, &env);
-		minishell_free(2, line, &env, ast);
+		execute(ast, env);
+		minishell_free(2, line, env, ast);
 	}
+}
+
+// execute test
+int	main(int argc, char **argv, char **envp)
+{
+	t_env		env;
+
+	(void)argv;
+	if (argc != 1)
+		return (FAILURE);
+	env.head = NULL;
+	if (env_init(&env, envp) != 0)
+		return (FAILURE);
+	launch_minishell(&env, NULL, NULL, NULL);
 	return (0);
 }
 
