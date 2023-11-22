@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe_command.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 14:10:47 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/22 14:22:13 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/22 14:37:11 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,16 @@ int	parse_redirect_file(t_node *nd, char **file)
 	return (SUCCESS);
 }
 
+int	exec_pipe_heredocument(int fd[2], char *tmp_file, int *heredoc_flag)
+{
+	if (fd[0] != fd[1])
+		restore_fd(fd[0], fd[1]);
+	if (redirect_input(tmp_file, fd) == ERROR)
+		return (ERROR);
+	*heredoc_flag = 1;
+	return (SUCCESS);
+}
+
 int	exec_pipe_redirect(t_node *nd, int fd[4], char *tmp_file)
 {
 	char	*file;
@@ -82,14 +92,9 @@ int	exec_pipe_redirect(t_node *nd, int fd[4], char *tmp_file)
 			return (free_retint(file, ERROR));
 		else if (nd->kind == NODE_DGREAT && redirect_append(file, fd) == ERROR)
 			return (free_retint(file, ERROR));
-		else if (nd->kind == NODE_DLESS && heredoc_flag == 0)
-		{
-			if (fd[0] != fd[1])
-				restore_fd(fd[0], fd[1]);
-			if (redirect_input(tmp_file, fd) == ERROR)
-				return (ERROR);
-			heredoc_flag = 1;
-		}
+		else if ((nd->kind == NODE_DLESS && heredoc_flag == 0)
+			&& exec_pipe_heredocument(fd, tmp_file, &heredoc_flag) == ERROR)
+			return (free_retint(file, ERROR));
 		free(file);
 		nd = nd->right;
 	}
