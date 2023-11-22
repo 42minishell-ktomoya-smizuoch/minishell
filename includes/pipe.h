@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 16:04:48 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/11 15:49:00 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/22 15:28:56 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 # define PIPE_H
 
 # include"libft.h"
-#include "expansion.h"
-#include "parser.h"
-#include "execute.h"
-#include "minishell.h"
+# include "expansion.h"
+# include "parser.h"
+# include "execute.h"
+# include "minishell.h"
 # include<libc.h>
 
 typedef struct s_pipenode
