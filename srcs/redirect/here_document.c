@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 15:35:49 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/22 13:27:10 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/22 14:01:34 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ static bool	while_readline(int fd, int fd2, const char *line, char *limiter)
 		ft_putendl_fd(line, fd);
 		free((void *)line);
 	}
+	free((void *)line);
 	return (TRUE);
 }
 
@@ -87,7 +88,6 @@ char	*here_document(char *limiter)
 	}
 	if (while_readline(fd, fd2, line, limiter) == FALSE)
 		return (NULL);
-	free((void *)line);
 	ft_putstr_fd("\0", fd);
 	close(fd);
 	close(fd2);
