@@ -11,6 +11,7 @@ SRCS_FILES = minishell.c \
 	signal.c \
 	search_env.c \
 	pipe.c \
+	pipe_utils.c \
 	signal_utils.c \
 
 SRCS = $(addprefix $(SRCS_DIR)/, $(SRCS_FILES))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe_command.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 14:10:47 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/22 14:11:49 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/22 14:22:13 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,9 @@ int	srch_here_exec(t_node *nd, t_env *env, char **tmp_file)
 		if (parse_file(nd, &here_end) == ERROR)
 			return (ERROR);
 		*tmp_file = here_document(here_end);
-		if (g_signal == 2)
-		{
-			free(here_end);
-			return (ERROR);
-		}
 		free(here_end);
+		if (g_signal == 2)
+			return (ERROR);
 	}
 	return (srch_here_exec(nd->right, env, tmp_file));
 }

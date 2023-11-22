@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 17:57:32 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/21 11:31:13 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/22 14:20:22 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ void	handler_heardoc(int signum);
 void	handler_sigint(int signum);
 
 int		pipe_cmd(t_node *ast, t_env *env);
+
+void		free_pipenode(t_pipe *a_pipe);
+t_pipenode	*new_pipenode(t_pipe *a_pipe);
 
 extern int g_signal;
 
