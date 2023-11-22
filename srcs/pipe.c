@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/22 12:26:57 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/22 13:33:22 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,11 @@ int	srch_here_exec(t_node *nd, t_env *env, char **tmp_file)
 		if (parse_file(nd, &here_end) == ERROR)
 			return (ERROR);
 		*tmp_file = here_document(here_end);
+		if (g_signal == 2)
+		{
+			free(here_end);
+			return (ERROR);
+		}
 		free(here_end);
 	}
 	return (srch_here_exec(nd->right, env, tmp_file));
@@ -174,12 +179,12 @@ int	pipe_cmd(t_node *ast, t_env *env)
 	tmp_file = NULL;
 	while (ast->kind == NODE_PIPE)
 	{
+		set_signal(1);
 		tmp = new_pipenode(&a_pipe);
 		if (pipe(tmp->fd) < 0)
 			putsyserr_exit("pipe");
-		srch_here_exec(ast, env, &tmp_file);
-		if (g_signal == 2)
-			return (ERROR);
+		if (srch_here_exec(ast, env, &tmp_file) == ERROR)
+			break ;
 		if ((tmp->pid = fork()) == 0)
 		{
 			set_signal(1);
@@ -223,7 +228,9 @@ int	pipe_cmd(t_node *ast, t_env *env)
 	dup2(a_pipe.save_fd, 0);
 	while (tmp->next)
 	{
-		waitpid(tmp->pid, 0, 0);
+		waitpid(tmp->pid, &status, 0);
+		if (WIFSIGNALED(status))
+			write (1, "\n", 1);
 		tmp = tmp->next;
 	}
 	waitpid(tmp->pid, &status, 0);

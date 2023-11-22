@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 15:35:49 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/21 14:41:51 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/22 13:27:10 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ static bool	while_readline(int fd, int fd2, const char *line, char *limiter)
 		{
 			close(fd);
 			free((void *)line);
-			free(limiter);
 			restore_fd(fd2, STDIN_FILENO);
 			return (FALSE);
 		}

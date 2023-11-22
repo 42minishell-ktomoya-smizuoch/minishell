@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_redirect.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 10:32:45 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/22 08:33:50 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/22 13:37:26 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,11 @@ int	execute_heredocument(char *eof, int fd[4], char **tmp_file)
 		restore_fd(fd[0], fd[1]);
 	*tmp_file = here_document(eof);
 	if (g_signal == 2)
+	{
+		write (1, "\n", 1);
+		free (eof);
 		return (ERROR);
+	}
 	redirect_input(*tmp_file, fd);
 	return (SUCCESS);
 }
