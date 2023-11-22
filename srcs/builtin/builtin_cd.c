@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:40:39 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/19 15:18:04 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/22 16:38:53 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	home_cd(t_env *env)
 {
 	char	*home;
 
-	home = search_env("HOME", env);
+	home = search_nenv("HOME", env, 4);
 	if (home == NULL)
 	{
 		return (1);
