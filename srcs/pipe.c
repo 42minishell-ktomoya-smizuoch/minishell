@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/22 15:19:31 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/22 15:23:19 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,15 @@ void	end_child(t_node *ast, t_env *env, t_pipenode *tmp, char *tmp_file)
 	set_signal(3);
 }
 
+void	setup_signal_and_pipe(t_pipe *a_pipe, t_pipenode **tmp)
+{
+	set_signal(1);
+	*tmp = new_pipenode(a_pipe);
+	if (pipe((*tmp)->fd) < 0)
+		putsyserr_exit("pipe");
+	(*tmp)->pid = fork();
+}
+
 int	pipe_cmd(t_node *ast, t_env *env)
 {
 	t_pipe		a_pipe;
@@ -69,11 +78,7 @@ int	pipe_cmd(t_node *ast, t_env *env)
 	{
 		if (srch_here_exec(ast, env, &tmp_file) == ERROR)
 			break ;
-		set_signal(1);
-		tmp = new_pipenode(&a_pipe);
-		if (pipe(tmp->fd) < 0)
-			putsyserr_exit("pipe");
-		tmp->pid = fork();
+		setup_signal_and_pipe(&a_pipe, &tmp);
 		if (tmp->pid == 0)
 			pipe_child(ast, env, tmp, tmp_file);
 		else if (tmp->pid == -1 && perror_retint("fork", ERROR) == ERROR)
