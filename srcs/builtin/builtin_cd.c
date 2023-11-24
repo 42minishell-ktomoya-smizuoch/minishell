@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:40:39 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/22 16:38:53 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/24 15:23:30 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	home_cd(t_env *env)
 	home = search_nenv("HOME", env, 4);
 	if (home == NULL)
 	{
-		return (1);
+		return (2);
 	}
 	if (chdir(home) != 0)
 	{
@@ -81,15 +81,20 @@ static int	free_and_return(char *str, int ret)
 int	builtin_cd(char **argv, t_env *env)
 {
 	char		*oldpwd;
+	int			i;
 
 	oldpwd = getcwd(NULL, 0);
 	if (argv == NULL || argv[1] == '\0')
 	{
-		if (home_cd(env) != 0)
+		i = home_cd(env);
+		if (i != 0)
 		{
 			if (oldpwd != NULL)
 				free(oldpwd);
-			write(2, "cd: HOME not set\n", 18);
+			if (i == 1)
+				write(2, "cd: HOME not set\n", 18);
+			else
+				perror ("cd");
 			return (FAILURE);
 		}
 	}
@@ -98,12 +103,8 @@ int	builtin_cd(char **argv, t_env *env)
 	setoldpwd(env, oldpwd);
 	setpwd(env, getcwd(NULL, 0));
 	if (!oldpwd)
-	{
-		perror ("cd");
-		return (FAILURE);
-	}
-	free(oldpwd);
-	return (SUCCESS);
+		return (free_and_return(oldpwd, 1));
+	return (free_and_return(oldpwd, 0));
 }
 
 // int	env_init(t_env *env, char **envp);

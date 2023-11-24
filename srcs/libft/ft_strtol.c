@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 10:16:40 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/13 16:46:35 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/24 15:17:39 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,15 @@ long long	check_errornod(long long result, int base, char n, int sign)
 	return (result * base + (n - '0'));
 }
 
-int	chaeck_base(int base)
-{
-	if (base < 2 || base > 36)
-	{
-		errno = EINVAL;
-		return (FAILURE);
-	}
-	return (SUCCESS);
-}
+// int	chaeck_base(int base)
+// {
+// 	if (base < 2 || base > 36)
+// 	{
+// 		errno = EINVAL;
+// 		return (FAILURE);
+// 	}
+// 	return (SUCCESS);
+// }
 
 bool	check_e(char **endptr, const char *nptr, long long *result, int sign)
 {
@@ -74,6 +74,15 @@ bool	check_e(char **endptr, const char *nptr, long long *result, int sign)
 	return (SUCCESS);
 }
 
+bool	sign_c(const char *nptr, int *sign)
+{
+	if (*nptr == '-')
+		*sign = -1;
+	if (*nptr == '-' || *nptr == '+')
+		return (true);
+	return (false);
+}
+
 long int	ft_strtol(const char *nptr, char **endptr, int base)
 {
 	long long	result;
@@ -81,21 +90,19 @@ long int	ft_strtol(const char *nptr, char **endptr, int base)
 
 	result = 0;
 	sign = 1;
-	if (chaeck_base(base) == FAILURE)
-		return (0);
 	while (*nptr == ' ' || (*nptr >= '\t' && *nptr <= '\r'))
 		nptr++;
-	if (*nptr == '-')
-		sign = -1;
-	if (*nptr == '-' || *nptr == '+')
+	if (sign_c(nptr, &sign))
 		nptr++;
-	while (ft_isalnum(*nptr))
+	if (*nptr == '\0')
+		errno = EINVAL;
+	while (*nptr)
 	{
 		if (ft_isalpha(*nptr) && base > 10)
 			result = check_errornoa(result, base, *nptr, sign);
 		else if (ft_isdigit(*nptr))
 			result = check_errornod(result, base, *nptr, sign);
-		else
+		else if (!(*nptr == ' ' || (*nptr >= '\t' && *nptr <= '\r')))
 			errno = EINVAL;
 		nptr++;
 	}
