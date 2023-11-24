@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 09:39:54 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/19 16:53:26 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/24 18:25:01 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,11 @@ void	put_exit_m(long ret, char **argv, t_env *env, int mode)
 	}
 	if (mode == 2)
 	{
+		if (ft_strncmp("-9223372036854775808\0", argv[1], 22) == 0)
+		{
+			write(1, "exit\n", 5);
+			exit(0);
+		}
 		ft_putstr_fd("exit\nexit: ", STDERR_FILENO);
 		ft_putstr_fd(argv[1], STDERR_FILENO);
 		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
