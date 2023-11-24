@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 15:16:43 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/21 09:30:51 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/24 17:38:37 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,10 @@ void	handler_heardoc(int signum)
 	(void)signum;
 	if (signum == SIGINT)
 	{
+		rl_replace_line("", 0);
 		close(0);
 		g_signal = 2;
+		rl_done = 1;
 	}
 }
 
