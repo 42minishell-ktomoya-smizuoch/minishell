@@ -98,6 +98,8 @@ RMFLAGS = -f
 .PHONY: all clean fclean re debug
 
 $(NAME): $(OBJS) $(LIBFT)
+	@echo "set echo-control-characters off" > ~/.inputrc
+	@echo "set enable-bracketed-paste off" >> ~/.inputrc
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME) -lreadline -L $(shell brew --prefix readline)/lib
 
 $(LIBFT):
