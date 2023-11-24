@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:18:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/21 13:22:06 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/25 07:53:31 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	expand_node(t_node *node, t_env *env)
 	if (!unexpand)
 		return (ERROR);
 	len = count_len(unexpand, env);
-	if (len == 0)
+	if (len == 0 && ft_strchr(node->str, '$'))
 	{
 		node->expand_flag = FAILURE;
 		free(unexpand);
