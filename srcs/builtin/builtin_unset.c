@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:44 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/19 16:35:27 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/24 13:50:50 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,9 @@ static bool	env_check_alpha(char *str)
 int	builtin_unset(char **argv, t_env *env)
 {
 	int	i;
+	int	ret;
 
+	ret = 0;
 	i = 1;
 	if (argv == NULL || argv[1] == NULL || env == NULL)
 		return (0);
@@ -123,13 +125,13 @@ int	builtin_unset(char **argv, t_env *env)
 			ft_putstr_fd("unset: `", 2);
 			ft_putstr_fd(argv[i], 2);
 			ft_putendl_fd("': not a valid identifier", 2);
-			return (1);
+			ret = 1;
 		}
 		if (ft_getenv(argv[i], env))
 			ft_unsetenv(argv[i], env);
 		i++;
 	}
-	return (0);
+	return (ret);
 }
 
 // #include "../../includes/expansion.h"
