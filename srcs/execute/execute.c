@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/20 09:59:48 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/25 08:23:39 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,32 +19,21 @@
 size_t	count_args(t_node *ast, t_env *env)
 {
 	size_t	count;
-	int		exist_expandable;
 
 	count = 0;
-	exist_expandable = 0;
 	while (ast && ast->kind != NODE_PIPE)
 	{
 		if (ast->kind == NODE_ARGUMENT && ast->expand_flag == SUCCESS)
 			count++;
-		else if (ast->kind == NODE_ARGUMENT && ast->expand_flag == FAILURE
-			&& !ft_strchr(ast->str, '$'))
-			exist_expandable = 1;
 		ast = ast->right;
 	}
-	if (count == 0 && exist_expandable == 1)
-	{
-		puterr(" ", "command not found");
-		env->exit_status = 127;
-	}
-	else if (count == 0)
+	if (count == 0)
 		env->exit_status = 0;
 	return (count);
 }
 
 int	get_arg(char **dst, t_node *node, char **head)
 {
-	(void)head;
 	if (node->expand)
 		*dst = ft_substr(node->expand, 0, ft_strlen(node->expand));
 	else
