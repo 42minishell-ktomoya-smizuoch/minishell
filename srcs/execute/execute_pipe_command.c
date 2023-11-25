@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 14:10:47 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/22 14:37:11 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/25 11:07:43 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,29 +39,6 @@ int	srch_here_exec(t_node *nd, t_env *env, char **tmp_file)
 			return (ERROR);
 	}
 	return (srch_here_exec(nd->right, env, tmp_file));
-}
-
-int	parse_redirect_file(t_node *nd, char **file)
-{
-	if (nd->expand_flag == FAILURE
-		&& ft_memchr(nd->str, '$', nd->len)
-		&& nd->kind != NODE_DLESS)
-	{
-		puterr_len(nd->str, nd->len, "ambiguous redirect");
-		return (ERROR);
-	}
-	else if (nd->expand_flag == FAILURE)
-	{
-		*file = NULL;
-		return (FAILURE);
-	}
-	else if (nd->expand)
-		*file = ft_substr(nd->expand, 0, ft_strlen(nd->expand));
-	else
-		*file = ft_substr(nd->str, 0, nd->len);
-	if (!*file)
-		return (putsyserr_retint("malloc", ERROR));
-	return (SUCCESS);
 }
 
 int	exec_pipe_heredocument(int fd[2], char *tmp_file, int *heredoc_flag)
