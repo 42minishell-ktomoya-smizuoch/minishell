@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/03 16:40:39 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/24 15:23:30 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/25 08:46:41 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,12 @@ int	home_cd(t_env *env)
 	home = search_nenv("HOME", env, 4);
 	if (home == NULL)
 	{
+		write(2, "cd: HOME not set\n", 18);
 		return (2);
 	}
 	if (chdir(home) != 0)
 	{
+		perror ("cd");
 		return (1);
 	}
 	return (0);
@@ -80,24 +82,22 @@ static int	free_and_return(char *str, int ret)
 
 int	builtin_cd(char **argv, t_env *env)
 {
-	char		*oldpwd;
-	int			i;
+	char	*oldpwd;
+	int		i;
 
 	oldpwd = getcwd(NULL, 0);
-	if (argv == NULL || argv[1] == '\0')
+	if (argv == NULL || argv[1] == NULL)
 	{
 		i = home_cd(env);
 		if (i != 0)
 		{
 			if (oldpwd != NULL)
 				free(oldpwd);
-			if (i == 1)
-				write(2, "cd: HOME not set\n", 18);
-			else
-				perror ("cd");
 			return (FAILURE);
 		}
 	}
+	else if (argv[1][0] == '\0')
+		return (free_and_return(oldpwd, SUCCESS));
 	else if (chdir(argv[1]) != 0)
 		return (free_and_return(oldpwd, FAILURE));
 	setoldpwd(env, oldpwd);
