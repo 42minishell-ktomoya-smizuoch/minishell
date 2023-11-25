@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_redirect.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 10:32:45 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/22 13:37:26 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/25 10:50:53 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,20 @@
 
 int	free_retint(void *content, int retnum)
 {
-	free(content);
+	if (content)
+		free(content);
 	return (retnum);
 }
 
 int	parse_file(t_node *node, char **file_here)
 {
-	if (node->expand_flag == FAILURE
-		&& ft_memchr(node->str, '$', node->len)
-		&& node->kind != NODE_DLESS)
-	{
-		puterr_len(node->str, node->len, "ambiguous redirect");
-		return (ERROR);
-	}
-	else if (node->expand_flag == FAILURE && node->kind == NODE_DLESS)
+	if (node->kind == NODE_DLESS
+		&& !(node->str[0] == '\"' && node->str[2] == '\0'))
 		*file_here = ft_substr(node->str, 0, node->len);
 	else if (node->expand_flag == FAILURE)
 	{
-		*file_here = NULL;
-		return (FAILURE);
+		puterr_len(node->str, node->len, "ambiguous redirect");
+		return (ERROR);
 	}
 	else if (node->expand)
 		*file_here = ft_substr(node->expand, 0, ft_strlen(node->expand));
@@ -60,12 +55,10 @@ int	execute_heredocument(char *eof, int fd[4], char **tmp_file)
 	return (SUCCESS);
 }
 
-int	execute_redirect(t_node *ast, int fd[4], char **tmp_file)
+int	execute_redirect(t_node *nd, int fd[4], char **tmp_file)
 {
-	t_node	*nd;
 	char	*file;
 
-	nd = ast;
 	while (expect_command(nd))
 	{
 		if (consume_right(&nd, NODE_ARGUMENT))
