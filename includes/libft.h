@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 11:25:31 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/17 13:29:34 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/25 17:33:27 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include <unistd.h>
 # include <limits.h>
 # include <errno.h>
-# include <float.h>
 # include <stdarg.h>
 # include <inttypes.h>
 # include <stdbool.h>
