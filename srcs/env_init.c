@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 15:38:20 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/15 16:08:40 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/25 17:23:02 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	env_add_back(t_env *env, char *envp)
 		tmp->next = new;
 	}
 	return (0);
-}	
+}
 
 void	env_clear(t_env *env)
 {
