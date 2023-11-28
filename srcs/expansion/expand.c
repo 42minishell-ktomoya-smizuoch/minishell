@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 09:18:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/25 07:53:31 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/28 18:17:31 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,22 @@ int	expand_node(t_node *node, t_env *env)
 	return (SUCCESS);
 }
 
+int	make_tmpfile(t_node *node)
+{
+	char	*eof;
+
+	if (parse_file(node, &eof) == ERROR)
+		return (ERROR);
+	node->tmp_file = here_document(eof);
+	free(eof);
+	if (g_signal == 2)
+	{
+		write(STDOUT_FILENO, "\n", 1);
+		return (ERROR);
+	}
+	return (SUCCESS);
+}
+
 int	expand(t_node *ast, t_env *env)
 {
 	if (!ast)
@@ -88,6 +104,11 @@ int	expand(t_node *ast, t_env *env)
 	}
 	else
 		ast->expand = NULL;
+	if (expect_node(ast, NODE_DLESS))
+	{
+		if (make_tmpfile(ast) == ERROR)
+			return (ERROR);
+	}
 	return (expand(ast->right, env));
 }
 
