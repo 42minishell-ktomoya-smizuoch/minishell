@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/22 15:23:19 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/28 15:33:23 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	pipe_wait(t_env *env, t_pipenode *tmp, t_pipe *a_pipe, char *tmp_file)
 
 	status = 0;
 	tmp = a_pipe->top;
-	dup2(a_pipe->save_fd, 0);
+	restore_fd(a_pipe->save_fd, 0);
 	while (tmp->next)
 	{
 		waitpid(tmp->pid, &status, 0);
