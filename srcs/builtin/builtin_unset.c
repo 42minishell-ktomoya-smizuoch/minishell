@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:44 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/24 13:50:50 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/29 14:51:11 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ int	builtin_unset(char **argv, t_env *env)
 		return (0);
 	while (argv[i])
 	{
+		
 		if (env_check_alpha(argv[i]) == false)
 		{
 			ft_putstr_fd("unset: `", 2);
@@ -127,7 +128,7 @@ int	builtin_unset(char **argv, t_env *env)
 			ft_putendl_fd("': not a valid identifier", 2);
 			ret = 1;
 		}
-		if (ft_getenv(argv[i], env))
+		if (ft_strcmp(argv[i], "_") != 0 && ft_getenv(argv[i], env))
 			ft_unsetenv(argv[i], env);
 		i++;
 	}
