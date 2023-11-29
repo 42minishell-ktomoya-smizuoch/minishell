@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/21 16:43:55 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/29 15:25:52 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,9 @@ int	main(int argc, char **argv, char **envp)
 	if (argc != 1)
 		return (FAILURE);
 	env.head = NULL;
+	env.envp = NULL;
+	env.exit_status = 0;
+	env.pipe_fd = 0;
 	if (env_init(&env, envp) != 0)
 		return (FAILURE);
 	launch_minishell(&env, NULL, NULL, NULL);

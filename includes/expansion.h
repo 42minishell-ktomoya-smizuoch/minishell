@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansion.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:25:53 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/21 11:27:05 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/29 15:26:00 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ typedef struct s_env
 	char				**envp;
 	int					exit_status;
 	int					pipe_fd;
-	char				*tmp;
 }	t_env;
 
 int		env_init(t_env *env, char **envp);
