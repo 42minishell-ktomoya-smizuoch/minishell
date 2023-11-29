@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 09:39:54 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/24 18:25:01 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/29 16:04:51 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,15 @@ static bool	is_number(char *str)
 	return (false);
 }
 
+static void	put_numerror(char *argv)
+{
+	if (argv == NULL)
+		return ;
+	ft_putstr_fd("exit: ", STDERR_FILENO);
+	ft_putstr_fd(argv, STDERR_FILENO);
+	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+}
+
 void	put_exit_m(long ret, char **argv, t_env *env, int mode)
 {
 	if (mode == 1)
@@ -35,12 +44,13 @@ void	put_exit_m(long ret, char **argv, t_env *env, int mode)
 	{
 		if (ft_strncmp("-9223372036854775808\0", argv[1], 22) == 0)
 		{
-			write(1, "exit\n", 5);
+			if (env->pipe_fd != 1)
+				write(1, "exit\n", 5);
 			exit(0);
 		}
-		ft_putstr_fd("exit\nexit: ", STDERR_FILENO);
-		ft_putstr_fd(argv[1], STDERR_FILENO);
-		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
+		if (env->pipe_fd != 1)
+			write(1, "exit\n", 5);
+		put_numerror(argv[1]);
 		exit(255);
 	}
 	if (mode == 3)
@@ -49,6 +59,13 @@ void	put_exit_m(long ret, char **argv, t_env *env, int mode)
 			write(STDERR_FILENO, "exit\n", 5);
 		exit((int)ret);
 	}
+}
+
+static void	put_many_error(t_env *env)
+{
+	if (env->pipe_fd != 1)
+		write(1, "exit\n", 5);
+	ft_putendl_fd("exit: too many arguments", STDERR_FILENO);
 }
 
 int	builtin_exit(char **argv, t_env *env)
@@ -63,7 +80,7 @@ int	builtin_exit(char **argv, t_env *env)
 	ret = ft_strtol(argv[1], &str, 10);
 	if (argv[2] && errno == 0)
 	{
-		ft_putendl_fd("exit\nexit: too many arguments", STDERR_FILENO);
+		put_many_error(env);
 		return (FAILURE);
 	}
 	if (errno != 0)
