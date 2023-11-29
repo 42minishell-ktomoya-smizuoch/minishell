@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/29 10:27:59 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/29 14:56:23 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ void	pipe_wait(t_env *env, t_pipenode *tmp, t_pipe *a_pipe, char *tmp_file)
 	while (tmp->next)
 	{
 		waitpid(tmp->pid, &status, 0);
-		if (WIFSIGNALED(status))
-			write (1, "\n", 1);
 		tmp = tmp->next;
 	}
 	waitpid(tmp->pid, &status, 0);

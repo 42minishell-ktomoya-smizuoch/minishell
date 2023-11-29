@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:44 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/29 14:51:11 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/29 15:21:02 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 static void	ft_shift_env(t_envnode *env, t_env *env_list)
 {
-	t_envnode	*tmp;
-
-	tmp = env;
 	if (env->next == NULL && env->prev == NULL)
 	{
 		unset_utility(env, env_list, 1);
@@ -120,7 +117,6 @@ int	builtin_unset(char **argv, t_env *env)
 		return (0);
 	while (argv[i])
 	{
-		
 		if (env_check_alpha(argv[i]) == false)
 		{
 			ft_putstr_fd("unset: `", 2);
