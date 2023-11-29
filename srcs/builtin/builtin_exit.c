@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 09:39:54 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/29 16:04:51 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/29 16:31:04 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	put_exit_m(long ret, char **argv, t_env *env, int mode)
 	if (mode == 1)
 	{
 		if (env->pipe_fd != 1)
-			write(1, "exit\n", 5);
+			write(STDERR_FILENO, "exit\n", 5);
 		exit(env->exit_status);
 	}
 	if (mode == 2)
@@ -45,11 +45,11 @@ void	put_exit_m(long ret, char **argv, t_env *env, int mode)
 		if (ft_strncmp("-9223372036854775808\0", argv[1], 22) == 0)
 		{
 			if (env->pipe_fd != 1)
-				write(1, "exit\n", 5);
+				write(STDERR_FILENO, "exit\n", 5);
 			exit(0);
 		}
 		if (env->pipe_fd != 1)
-			write(1, "exit\n", 5);
+			write(STDERR_FILENO, "exit\n", 5);
 		put_numerror(argv[1]);
 		exit(255);
 	}
@@ -64,7 +64,7 @@ void	put_exit_m(long ret, char **argv, t_env *env, int mode)
 static void	put_many_error(t_env *env)
 {
 	if (env->pipe_fd != 1)
-		write(1, "exit\n", 5);
+		write(STDERR_FILENO, "exit\n", 5);
 	ft_putendl_fd("exit: too many arguments", STDERR_FILENO);
 }
 
