@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:22 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/29 15:08:13 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/29 15:30:28 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,8 @@ int	builtin_export(char **argv, t_env *env)
 			ft_putendl_fd("': not a valid identifier", STDERR_FILENO);
 			status = FAILURE;
 		}
-		else if(ft_strncmp(argv[1], "_=", 2) != 0 && ft_strcmp(argv[i], "_") != 0)
+		else if (ft_strncmp(argv[1], "_=", 2) != 0
+			&& ft_strcmp(argv[i], "_") != 0)
 			ft_setenv(argv[i], env);
 		i++;
 	}
