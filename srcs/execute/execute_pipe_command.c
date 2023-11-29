@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 14:10:47 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/28 18:21:44 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:24:47 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@
 // 	// tmp_fileの二次元配列をsrch_here_exec関数に渡す
 // 	if (srch_here_exec(nd, tmp_file) == ERROR)
 // 	{
-		
 // 		return (ERROR);
 // 	}
 // 	return (SUCCESS);
