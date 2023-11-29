@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/07 18:48:39 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/16 08:41:13 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/29 15:23:16 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_node	*command_line(t_token *tok, int *flag)
 	node = command(tok, flag);
 	if (!node)
 		return (NULL);
-	if (consume(TYPE_PIPE, tok))
+	if (consume(TYPE_PIPE, tok) && *flag != ERROR)
 	{
 		if (expect(TYPE_EOF, tok) || expect(TYPE_PIPE, tok))
 		{
