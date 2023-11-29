@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/29 10:28:39 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/29 15:59:19 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,9 @@ int	execute_command(t_node *ast, t_env *env)
 	status = 0;
 	if (execute_redirect(ast, fd) == ERROR)
 	{
-		env->exit_status = 1;
+		status = 1;
 		restore_stdfd(fd);
-		return (1);
+		return (status);
 	}
 	args = make_argument_list(ast, env);
 	if (args)
@@ -100,16 +100,13 @@ int	execute_command(t_node *ast, t_env *env)
 
 int	execute(t_node *ast, t_env *env)
 {
-	int	status;
-
 	if (expect_node(ast, NODE_PIPE))
 		pipe_cmd(ast, env);
 	else
 	{
-		status = execute_command(ast, env);
+		env->exit_status = execute_command(ast, env);
 		if (g_signal == 2)
 			g_signal = 0;
-		return (status);
 	}
 	return (SUCCESS);
 }
