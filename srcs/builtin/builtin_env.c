@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:33:05 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/10/18 14:41:17 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/29 14:36:01 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ static bool	check_env(char *env)
 
 int	builtin_env(char **argv, t_env *env)
 {
-	int			i;
 	t_envnode	*tmp;
 
 	(void)argv;
@@ -39,7 +38,6 @@ int	builtin_env(char **argv, t_env *env)
 		ft_putendl_fd("env: too many arguments", STDERR_FILENO);
 		return (FAILURE);
 	}
-	i = 0;
 	tmp = env->head;
 	while (tmp)
 	{

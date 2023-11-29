@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 15:38:20 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/25 17:23:02 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/29 14:49:28 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,35 @@ static int	add_oldpwd(t_env *env)
 	return (i);
 }
 
+static int	add_anderber(t_env *env)
+{
+	int			i;
+	char		*oldpwd;
+	t_envnode	*tmp;
+
+	i = 0;
+	tmp = env->head;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, "_") == 0
+			|| ft_strncmp(tmp->key, "_=", 2) == 0)
+			return (0);
+		tmp = tmp->next;
+	}
+	oldpwd = ft_calloc(7, sizeof(char));
+	if (!oldpwd)
+	{
+		env_clear(env);
+		return (1);
+	}
+	oldpwd = ft_memcpy(oldpwd, "_", 6);
+	i = env_add_back(env, oldpwd);
+	free(oldpwd);
+	if (i != 0)
+		env_clear(env);
+	return (i);
+}
+
 int	env_init(t_env *env, char **envp)
 {
 	int	i;
@@ -106,6 +135,7 @@ int	env_init(t_env *env, char **envp)
 		}
 		i++;
 	}
+	add_anderber(env);
 	return (add_oldpwd(env));
 }
 
