@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 15:38:20 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/29 14:49:28 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/11/29 15:00:58 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ static int	add_oldpwd(t_env *env)
 	return (i);
 }
 
-static int	add_anderber(t_env *env)
+static int	add_underscore(t_env *env)
 {
 	int			i;
-	char		*oldpwd;
+	char		*underscore;
 	t_envnode	*tmp;
 
 	i = 0;
@@ -96,15 +96,15 @@ static int	add_anderber(t_env *env)
 			return (0);
 		tmp = tmp->next;
 	}
-	oldpwd = ft_calloc(7, sizeof(char));
-	if (!oldpwd)
+	underscore = ft_calloc(2, sizeof(char));
+	if (!underscore)
 	{
 		env_clear(env);
 		return (1);
 	}
-	oldpwd = ft_memcpy(oldpwd, "_", 6);
-	i = env_add_back(env, oldpwd);
-	free(oldpwd);
+	underscore = ft_memcpy(underscore, "_", 1);
+	i = env_add_back(env, underscore);
+	free(underscore);
 	if (i != 0)
 		env_clear(env);
 	return (i);
@@ -135,7 +135,7 @@ int	env_init(t_env *env, char **envp)
 		}
 		i++;
 	}
-	add_anderber(env);
+	add_underscore(env);
 	return (add_oldpwd(env));
 }
 
