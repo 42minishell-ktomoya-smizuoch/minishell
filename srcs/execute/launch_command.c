@@ -6,27 +6,27 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 10:38:22 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/20 14:52:49 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/29 16:04:37 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/execute.h"
 #include "../../includes/minishell.h"
 
-static int	wait_child(pid_t pid, t_env *env)
+static int	wait_child(pid_t pid)
 {
 	int	status;
 
 	if (wait(&status) != pid)
 		putsyserr_exit("wait");
 	if (WIFEXITED(status))
-		env->exit_status = WEXITSTATUS(status);
+		status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 	{
 		write(1, "\n", 1);
-		env->exit_status = WTERMSIG(status) + 128;
+		status = WTERMSIG(status) + 128;
 	}
-	return (env->exit_status);
+	return (status);
 }
 
 static int	execute_builtin(char *cmds[], t_env *env)
@@ -67,7 +67,7 @@ static int	execute_executable(char *const argv[], t_env *env)
 	else
 	{
 		set_signal(3);
-		status = wait_child(pid, env);
+		status = wait_child(pid);
 	}
 	return (status);
 }
@@ -75,10 +75,7 @@ static int	execute_executable(char *const argv[], t_env *env)
 int	launch_command(char *const argv[], t_env *env)
 {
 	if (is_builtin(argv[0]))
-	{
-		env->exit_status = execute_builtin((char **)argv, env);
-		return (0);
-	}
+		return (execute_builtin((char **)argv, env));
 	else
 		return (execute_executable(argv, env));
 }
