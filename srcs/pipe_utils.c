@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/28 17:11:37 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:28:16 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	pipe_child(t_node *ast, t_env *env, t_pipenode *tmp, char *tmp_file)
 	close(tmp->fd[0]);
 	close(tmp->fd[1]);
 	execute_command(ast->left, env);
-	// execute_pipe_command(ast->left, env, tmp_file);
 	exit(0);
 }
 

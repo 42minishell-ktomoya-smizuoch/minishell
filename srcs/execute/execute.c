@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:03:27 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/28 18:15:07 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:28:39 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,12 @@ char	**make_argument_list(t_node *ast, t_env *env)
 int	execute_command(t_node *ast, t_env *env)
 {
 	int		fd[4];
-	// char	*tmp_file;
 	int		status;
 	char	**args;
 
 	ft_memset(fd, 0, 4 * sizeof(int));
-	// tmp_file = NULL;
 	status = 0;
 	if (execute_redirect(ast, fd) == ERROR)
-	// if (execute_redirect(ast, fd, &tmp_file) == ERROR)
 	{
 		env->exit_status = 1;
 		restore_stdfd(fd);
@@ -98,7 +95,6 @@ int	execute_command(t_node *ast, t_env *env)
 		free_matrix(args);
 	}
 	restore_stdfd(fd);
-	// ft_unlink(tmp_file);
 	return (status);
 }
 

@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 10:32:45 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/28 16:43:34 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:29:00 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ int	execute_redirect(t_node *nd, int fd[4])
 		else if (nd->kind == NODE_DLESS)
 		{
 			if (execute_heredocument(nd->tmp_file, fd) == ERROR)
-			// if (execute_heredocument(file, fd, tmp_file) == ERROR)
 				return (ERROR);
 		}
 		free(file);

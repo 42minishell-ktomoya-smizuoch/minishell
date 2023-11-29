@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/28 17:10:27 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/29 10:27:59 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	end_child(t_node *ast, t_env *env, t_pipenode *tmp, char *tmp_file)
 		set_signal(1);
 		env->pipe_fd = 1;
 		exit(execute_command(ast, env));
-		// exit(execute_pipe_command(ast, env, tmp_file));
 	}
 	else if (tmp->pid == -1)
 		perror("fork");
@@ -78,8 +77,6 @@ int	pipe_cmd(t_node *ast, t_env *env)
 	tmp_file = NULL;
 	while (ast->kind == NODE_PIPE)
 	{
-		// if (srch_here_exec(ast, env, &tmp_file) == ERROR)
-		// 	break ;
 		setup_signal_and_pipe(&a_pipe, &tmp);
 		if (tmp->pid == 0)
 			pipe_child(ast, env, tmp, tmp_file);
