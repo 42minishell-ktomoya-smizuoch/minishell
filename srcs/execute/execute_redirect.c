@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/18 10:32:45 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/25 10:50:53 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/28 16:43:34 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,23 +39,15 @@ int	parse_file(t_node *node, char **file_here)
 	return (SUCCESS);
 }
 
-int	execute_heredocument(char *eof, int fd[4], char **tmp_file)
+int	execute_heredocument(char *tmp_file, int fd[4])
 {
-	ft_unlink(*tmp_file);
 	if (fd[0] != fd[1])
 		restore_fd(fd[0], fd[1]);
-	*tmp_file = here_document(eof);
-	if (g_signal == 2)
-	{
-		write (1, "\n", 1);
-		free (eof);
-		return (ERROR);
-	}
-	redirect_input(*tmp_file, fd);
+	redirect_input(tmp_file, fd);
 	return (SUCCESS);
 }
 
-int	execute_redirect(t_node *nd, int fd[4], char **tmp_file)
+int	execute_redirect(t_node *nd, int fd[4])
 {
 	char	*file;
 
@@ -73,7 +65,8 @@ int	execute_redirect(t_node *nd, int fd[4], char **tmp_file)
 			return (free_retint(file, ERROR));
 		else if (nd->kind == NODE_DLESS)
 		{
-			if (execute_heredocument(file, fd, tmp_file) == ERROR)
+			if (execute_heredocument(nd->tmp_file, fd) == ERROR)
+			// if (execute_heredocument(file, fd, tmp_file) == ERROR)
 				return (ERROR);
 		}
 		free(file);
@@ -81,3 +74,30 @@ int	execute_redirect(t_node *nd, int fd[4], char **tmp_file)
 	}
 	return (SUCCESS);
 }
+
+// int	execute_redirect(t_node *nd, int fd[4], char **tmp_file)
+// {
+// 	char	*file;
+
+// 	while (expect_command(nd))
+// 	{
+// 		if (consume_right(&nd, NODE_ARGUMENT))
+// 			continue ;
+// 		if (parse_file(nd, &file) == ERROR)
+// 			return (ERROR);
+// 		if (nd->kind == NODE_LESS && redirect_input(file, fd) == ERROR)
+// 			return (free_retint(file, ERROR));
+// 		else if (nd->kind == NODE_GREAT && redirect_output(file, fd) == ERROR)
+// 			return (free_retint(file, ERROR));
+// 		else if (nd->kind == NODE_DGREAT && redirect_append(file, fd) == ERROR)
+// 			return (free_retint(file, ERROR));
+// 		else if (nd->kind == NODE_DLESS)
+// 		{
+// 			if (execute_heredocument(file, fd, tmp_file) == ERROR)
+// 				return (ERROR);
+// 		}
+// 		free(file);
+// 		nd = nd->right;
+// 	}
+// 	return (SUCCESS);
+// }

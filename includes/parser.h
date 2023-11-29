@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:14:23 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/18 10:30:07 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/28 16:19:10 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_node
 	size_t			len;
 	char			*expand;
 	int				expand_flag;
+	char			*tmp_file;
 }	t_node;
 
 // nodeの構造体にcomanndの構造体を追加する

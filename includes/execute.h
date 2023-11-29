@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 19:00:33 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/22 14:13:17 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/11/28 16:40:06 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int		execute_command(t_node *ast, t_env *env);
 int		execute_pipe_command(t_node *ast, t_env *env, char *tmp_file);
 int		srch_here_exec(t_node *nd, t_env *env, char **tmp_file);
 int		parse_file(t_node *node, char **file_here);
-int		execute_redirect(t_node *ast, int fd[4], char **tmp_file);
+int		execute_redirect(t_node *ast, int fd[4]);
+// int		execute_redirect(t_node *ast, int fd[4], char **tmp_file);
 int		launch_command(char *const argv[], t_env *env);
 void	puterr(const char *input, const char *msg);
 void	puterr_len(const char *input, size_t n, const char *msg);
