@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/29 14:56:23 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/12/01 10:15:42 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,24 @@
 void	pipe_wait(t_env *env, t_pipenode *tmp, t_pipe *a_pipe, char *tmp_file)
 {
 	int	status;
+	int	f;
 
+	f = 1;
 	status = 0;
 	tmp = a_pipe->top;
 	restore_fd(a_pipe->save_fd, 0);
 	while (tmp->next)
 	{
 		waitpid(tmp->pid, &status, 0);
+		if (WIFSIGNALED(status))
+		{
+			if (g_signal == 4 && f == 1)
+			{
+				write (1, "\n", 1);
+				f = 0;
+			}
+			env->exit_status = WTERMSIG(status) + 128;
+		}
 		tmp = tmp->next;
 	}
 	waitpid(tmp->pid, &status, 0);
@@ -33,7 +44,8 @@ void	pipe_wait(t_env *env, t_pipenode *tmp, t_pipe *a_pipe, char *tmp_file)
 	}
 	else if (WIFSIGNALED(status))
 	{
-		write (1, "\n", 1);
+		if (f == 1)
+			write (1, "\n", 1);
 		env->exit_status = WTERMSIG(status) + 128;
 	}
 	tmp = a_pipe->top;
@@ -52,7 +64,7 @@ void	end_child(t_node *ast, t_env *env, t_pipenode *tmp, char *tmp_file)
 	}
 	else if (tmp->pid == -1)
 		perror("fork");
-	set_signal(3);
+	set_signal(4);
 }
 
 void	setup_signal_and_pipe(t_pipe *a_pipe, t_pipenode **tmp)
