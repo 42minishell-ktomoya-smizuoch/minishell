@@ -82,7 +82,6 @@ EXECUTE_FILES = execute.c \
 	execute_utils.c \
 	execute_redirect.c \
 	launch_command.c \
-	execute_pipe_command.c \
 
 EXECUTE_SRCS = $(addprefix $(EXECUTE_DIR)/, $(EXECUTE_FILES))
 EXECUTE_OBJS = $(EXECUTE_SRCS:.c=.o)
