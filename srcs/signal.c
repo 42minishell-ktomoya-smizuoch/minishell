@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 15:16:43 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/21 09:28:21 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/12/01 10:14:14 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,14 @@ void	signal_mode_one(struct sigaction *sa)
 	sa->sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, sa, NULL);
 	sigaction(SIGQUIT, sa, NULL);
+}
+
+void	handler_exec_pipe(int signum)
+{
+	if (signum == SIGINT)
+	{
+		g_signal = 4;
+	}
 }
 
 int	set_signal(int mode)
@@ -55,6 +63,14 @@ int	set_signal(int mode)
 		sigaction(SIGINT, &sa, NULL);
 		sigaction(SIGQUIT, &sa, NULL);
 	}
+	else if (mode == 4)
+    {
+		sa.sa_handler = handler_exec_pipe;
+		sa.sa_flags = SA_SIGINFO;
+		signal(SIGINT, handler_exec_pipe);
+		sa.sa_handler = SIG_IGN;
+		sigaction(SIGQUIT, &sa, NULL);
+    }
 	return (0);
 }
 
