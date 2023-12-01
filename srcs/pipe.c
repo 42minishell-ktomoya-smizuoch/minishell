@@ -3,17 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/12/01 10:15:42 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/12/01 11:03:23 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 #include "../includes/execute.h"
 
-void	pipe_wait(t_env *env, t_pipenode *tmp, t_pipe *a_pipe, char *tmp_file)
+void	endpid_wait(t_pipenode *end, int status, t_env *env, int f)
+{
+	waitpid(end->pid, &status, 0);
+	if (WIFEXITED(status))
+		env->exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+	{
+		if (f == 1)
+			write (1, "\n", 1);
+		env->exit_status = WTERMSIG(status) + 128;
+	}
+}
+
+void	pipe_wait(t_env *env, t_pipenode *tmp, t_pipe *a_pipe)
 {
 	int	status;
 	int	f;
@@ -36,18 +49,7 @@ void	pipe_wait(t_env *env, t_pipenode *tmp, t_pipe *a_pipe, char *tmp_file)
 		}
 		tmp = tmp->next;
 	}
-	waitpid(tmp->pid, &status, 0);
-	if (WIFEXITED(status))
-	{
-		env->exit_status = WEXITSTATUS(status);
-		ft_unlink(tmp_file);
-	}
-	else if (WIFSIGNALED(status))
-	{
-		if (f == 1)
-			write (1, "\n", 1);
-		env->exit_status = WTERMSIG(status) + 128;
-	}
+	endpid_wait(tmp, status, env, f);
 	tmp = a_pipe->top;
 	free_pipenode(a_pipe);
 }
@@ -99,6 +101,6 @@ int	pipe_cmd(t_node *ast, t_env *env)
 		if (ast->kind != NODE_PIPE)
 			end_child(ast, env, tmp, tmp_file);
 	}
-	pipe_wait(env, tmp, &a_pipe, tmp_file);
+	pipe_wait(env, tmp, &a_pipe);
 	return (0);
 }
