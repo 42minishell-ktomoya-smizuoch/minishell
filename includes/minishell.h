@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 17:57:32 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/22 15:36:31 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/12/01 11:11:22 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int			pipe_cmd(t_node *ast, t_env *env);
 void		free_pipenode(t_pipe *a_pipe);
 t_pipenode	*new_pipenode(t_pipe *a_pipe);
 void		pipe_child(t_node *ast, t_env *env,
-				t_pipenode *tmp, char *tmp_file);
+				t_pipenode *tmp);
 void		pipe_parent(t_pipenode	*tmp);
 
 int			g_signal;

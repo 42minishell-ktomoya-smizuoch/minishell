@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/12/01 11:03:23 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/12/01 11:10:40 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,8 @@ void	pipe_wait(t_env *env, t_pipenode *tmp, t_pipe *a_pipe)
 	free_pipenode(a_pipe);
 }
 
-void	end_child(t_node *ast, t_env *env, t_pipenode *tmp, char *tmp_file)
+void	end_child(t_node *ast, t_env *env, t_pipenode *tmp)
 {
-	(void)tmp_file;
 	tmp->pid = fork();
 	if (tmp->pid == 0)
 	{
@@ -82,16 +81,14 @@ int	pipe_cmd(t_node *ast, t_env *env)
 {
 	t_pipe		a_pipe;
 	t_pipenode	*tmp;
-	char		*tmp_file;
 
 	a_pipe.top = NULL;
 	a_pipe.save_fd = dup(0);
-	tmp_file = NULL;
 	while (ast->kind == NODE_PIPE)
 	{
 		setup_signal_and_pipe(&a_pipe, &tmp);
 		if (tmp->pid == 0)
-			pipe_child(ast, env, tmp, tmp_file);
+			pipe_child(ast, env, tmp);
 		else if (tmp->pid == -1 && perror_retint("fork", ERROR) == ERROR)
 			break ;
 		pipe_parent(tmp);
@@ -99,7 +96,7 @@ int	pipe_cmd(t_node *ast, t_env *env)
 		if (ast->kind != NODE_PIPE)
 			tmp = new_pipenode(&a_pipe);
 		if (ast->kind != NODE_PIPE)
-			end_child(ast, env, tmp, tmp_file);
+			end_child(ast, env, tmp);
 	}
 	pipe_wait(env, tmp, &a_pipe);
 	return (0);
