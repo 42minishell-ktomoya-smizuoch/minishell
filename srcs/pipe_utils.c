@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
+/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/29 10:28:16 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/12/01 11:10:58 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,8 @@ void	free_pipenode(t_pipe *a_pipe)
 	}
 }
 
-void	pipe_child(t_node *ast, t_env *env, t_pipenode *tmp, char *tmp_file)
+void	pipe_child(t_node *ast, t_env *env, t_pipenode *tmp)
 {
-	(void)tmp_file;
 	set_signal(1);
 	env->pipe_fd = 1;
 	dup2(tmp->fd[1], STDOUT_FILENO);
