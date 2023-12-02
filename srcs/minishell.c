@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/12/02 12:37:03 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/12/02 14:51:25 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,12 @@ int	ft_free(void *content)
 // 		continue ;
 // }
 
+void	ctrl_d_exit(t_env *env)
+{
+	check_signal(env);
+	exit(env->exit_status);
+}
+
 void	launch_minishell(t_env *env,
 		const char	*line, t_token *token, t_node *ast)
 {
@@ -62,7 +68,7 @@ void	launch_minishell(t_env *env,
 		check_signal(env);
 		line = readline("minishell$ ");
 		if (!line && write(1, "exit\n", 5) == 5)
-			exit(env->exit_status);
+			ctrl_d_exit(env);
 		else if (*line)
 			add_history(line);
 		else if (*line == '\0' && ft_free((void *)line) == SUCCESS)
