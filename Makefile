@@ -107,7 +107,7 @@ $(LIBFT):
 all: $(NAME)
 
 clean:
-	$(MAKE) fclean -C $(LIBFT_DIR)
+	$(MAKE) clean -C $(LIBFT_DIR)
 	$(RM) $(RMFLAGS) $(OBJS)
 
 fclean: clean
