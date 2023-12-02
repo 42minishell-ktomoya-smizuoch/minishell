@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_unset_utility.c                            :+:      :+:    :+:   */
+/*   builtin_utility.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:44 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/11/28 13:52:03 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/12/02 09:48:59 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,10 @@ void	change_key(char *name, int i, t_envnode *tmp)
 	free(tmp->key);
 	tmp->key = NULL;
 	tmp->key = ft_strdup(name);
+}
+
+void	normal_exit(t_env *env)
+{
+	write(STDERR_FILENO, "exit\n", 5);
+	exit(env->exit_status);
 }
