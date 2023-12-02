@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/14 14:14:21 by kudoutomoya       #+#    #+#             */
-/*   Updated: 2023/11/25 08:10:41 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/12/02 10:25:25 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,14 @@ void	search_path(char *const argv[], t_env *env)
 		ft_strlcpy(file_path, dir, PATH_MAX);
 		ft_strlcat(file_path, "/", PATH_MAX);
 		ft_strlcat(file_path, argv[0], PATH_MAX);
+		dir = ft_strtok(NULL, ":");
+		if (is_directory(file_path))
+			continue ;
 		if (access(file_path, F_OK) == 0)
 		{
 			if (execve(file_path, argv, env->envp) == ERROR)
 				puterr_exit(file_path, strerror(errno), 126);
 		}
-		dir = ft_strtok(NULL, ":");
 	}
 	puterr_exit(argv[0], "command not found", 127);
 }
