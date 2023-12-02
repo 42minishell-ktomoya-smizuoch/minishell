@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:28 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/12/01 11:10:40 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/12/02 17:25:24 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,11 @@ int	pipe_cmd(t_node *ast, t_env *env)
 		if (tmp->pid == 0)
 			pipe_child(ast, env, tmp);
 		else if (tmp->pid == -1 && perror_retint("fork", ERROR) == ERROR)
+		{
+			close(tmp->fd[0]);
+			close(tmp->fd[1]);
 			break ;
+		}
 		pipe_parent(tmp);
 		ast = ast->right;
 		if (ast->kind != NODE_PIPE)
