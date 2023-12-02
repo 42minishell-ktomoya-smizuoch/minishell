@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 09:39:54 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/12/02 09:49:23 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/12/02 12:52:52 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	put_exit_m(long ret, char **argv, t_env *env, int mode)
 		if (ft_strncmp("-9223372036854775808\0", argv[1], 22) == 0)
 		{
 			if (env->pipe_fd != 1)
-				write(STDERR_FILENO, "exit\n", 5);
+				write(0, "exit\n", 5);
 			exit(0);
 		}
 		if (env->pipe_fd != 1)
@@ -56,7 +56,7 @@ void	put_exit_m(long ret, char **argv, t_env *env, int mode)
 	if (mode == 3)
 	{
 		if (env->pipe_fd != 1)
-			write(STDERR_FILENO, "exit\n", 5);
+			write(0, "exit\n", 5);
 		exit((int)ret);
 	}
 }
