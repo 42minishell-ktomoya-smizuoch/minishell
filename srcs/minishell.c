@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/29 15:25:52 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/12/02 12:37:03 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	launch_minishell(t_env *env,
 		check_signal(env);
 		line = readline("minishell$ ");
 		if (!line && write(1, "exit\n", 5) == 5)
-			exit(0);
+			exit(env->exit_status);
 		else if (*line)
 			add_history(line);
 		else if (*line == '\0' && ft_free((void *)line) == SUCCESS)
