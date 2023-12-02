@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/08 11:32:44 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/12/02 09:48:59 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/12/02 12:43:55 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,6 @@ void	change_key(char *name, int i, t_envnode *tmp)
 
 void	normal_exit(t_env *env)
 {
-	write(STDERR_FILENO, "exit\n", 5);
+	write(0, "exit\n", 5);
 	exit(env->exit_status);
 }
