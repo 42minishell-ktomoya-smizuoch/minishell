@@ -6,7 +6,7 @@
 /*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 09:39:54 by smizuoch          #+#    #+#             */
-/*   Updated: 2023/12/02 09:31:02 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/12/02 09:49:23 by smizuoch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,7 @@ void	put_exit_m(long ret, char **argv, t_env *env, int mode)
 	if (mode == 1)
 	{
 		if (env->pipe_fd != 1)
-		{
-			write(STDERR_FILENO, "exit\n", 5);
-			exit(env->exit_status);
-		}
+			normal_exit(env);
 		exit(0);
 	}
 	if (mode == 2)
