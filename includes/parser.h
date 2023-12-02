@@ -6,7 +6,7 @@
 /*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 18:14:23 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/11/28 16:19:10 by ktomoya          ###   ########.fr       */
+/*   Updated: 2023/12/02 17:44:01 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,6 @@ typedef struct s_node
 	int				expand_flag;
 	char			*tmp_file;
 }	t_node;
-
-// nodeの構造体にcomanndの構造体を追加する
-// comanndの構造体にはargumentとリダイレクトの構造体を追加する
-// argumentとリダイレクト
 
 t_node	*command_line(t_token *tokens, int *flag);
 t_node	*cmd_suffix(t_token *tok);
