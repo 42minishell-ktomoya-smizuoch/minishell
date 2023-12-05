@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smizuoch <smizuoch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ktomoya <ktomoya@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/21 18:50:09 by ktomoya           #+#    #+#             */
-/*   Updated: 2023/12/02 14:51:25 by smizuoch         ###   ########.fr       */
+/*   Updated: 2023/12/06 07:31:21 by ktomoya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,6 @@ int	ft_free(void *content)
 	content = NULL;
 	return (SUCCESS);
 }
-
-// int	ft_readline(void)
-// {
-// 	line = readline("minishell$ ");
-// 	if (!line && write(1, "exit\n", 5) == 5)
-// 		exit(0);
-// 	else if (*line)
-// 		add_history(line);
-// 	else if (*line == '\0' && ft_free((void *)line) == SUCCESS)
-// 		continue ;
-// }
 
 void	ctrl_d_exit(t_env *env)
 {
